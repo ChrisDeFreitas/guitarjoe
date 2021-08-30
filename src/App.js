@@ -115,7 +115,8 @@ I was going crazy taking notes and diagraming chords, scales and intervals: I ne
 to facilitate my understanding so I could focus on the guitar instead of managing scraps of information.
 This application has successfully reduced my hair loss--I hope it has the same effect on you!
 <br /><br />
-The functionality is stable as I am working on other aspects of the project.
+The functionality is stable. 
+There is a lot more planned, but I am working on other aspects of the project.
 At this point it is a proof of concept as I wrangle technologies and concepts.  
 It will always be free; a warm thanks for those who have supported my various journeys.
 <br /><br />
