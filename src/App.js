@@ -106,31 +106,33 @@ function App(){
           <div className="content">
 Important: <br />
 &nbsp;&nbsp; please explore by clicking/tapping...<br />
-&nbsp;&nbsp; zoom using your browser's zoom tools
+&nbsp;&nbsp; clicking a fret and selecting a note provide different results<br />
+&nbsp;&nbsp; zoom using your browser's zoom controls
 <br /><br />
-GuitarJoe is a free web application, no ads, no logins.  
+GuitarJoe is a free web application, no ads, no logins, no tracking.  
 The goal was to create a tool that would make guitar theory accessible while practicing.
-I was going crazy taking notes and drawing diagrams of chords, scales and intervals: I needed a tool
-to facilitate my understanding so I could focus on the guitar instead of scraps of information.
+I was going crazy taking notes and diagraming chords, scales and intervals: I needed a tool
+to facilitate my understanding so I could focus on the guitar instead of managing scraps of information.
 This application has successfully reduced my hair loss--I hope it has the same effect on you!
 <br /><br />
 The functionality is stable as I am working on other aspects of the project.
-At this point it is a proof of concept as I wrangle various technologies and concepts.  
-It will always be free so I can send a warm Thanks to those who supported my various journeys.
+At this point it is a proof of concept as I wrangle technologies and concepts.  
+It will always be free; a warm thanks for those who have supported my various journeys.
 <br /><br />
 Send comments and bugs to chrisd@europa.com. Tested to work in Chrome, Firefox, and Safari(iPad).
 
 <br /><br />
 Thanks to:<br />
 &nbsp;&nbsp; Application hosted on <a href='https://github.com/ChrisDeFreitas/guitarjoe' target='_new'>Github</a>  <br />
-&nbsp;&nbsp; Built with the <a href='https://reactjs.org/' target='_new'>React</a> Javascript library  <br />
-&nbsp;&nbsp; Fuggles font by Robert Leuschke on <a href='https://fonts.google.com/?query=Robert+Leuschke/' target='_new'>Google Fonts</a>  <br />
-&nbsp;&nbsp; Guitar icon by monkik from the <a href='https://thenounproject.com/term/guitar/2588464/' target='_new'>Noun Project</a>  <br />
+&nbsp;&nbsp; Background image from <a href='https://www.flickr.com/photos/webtreatsetc/with/4514047664/' target='_new'>WebTreats ETC</a> <br />
+&nbsp;&nbsp; Built with the <a href='https://reactjs.org/' target='_new'>React</a> Javascript library <br />
+&nbsp;&nbsp; Fuggles font by Robert Leuschke on <a href='https://fonts.google.com/?query=Robert+Leuschke/' target='_new'>Google Fonts</a> <br />
+&nbsp;&nbsp; Guitar icon by monkik from the <a href='https://thenounproject.com/term/guitar/2588464/' target='_new'>Noun Project</a> <br />
 &nbsp;&nbsp; Guitar scales verified using <a href='https://jguitar.com/scale' target='_new'>jguitar.com</a><br />
 &nbsp;&nbsp; Music theory from <a href='https://www.wikipedia.org/' target='_new'>Wikipedia</a><br />
 &nbsp;&nbsp; Popup control from <a href='https://react-popup.elazizi.com/' target='_new'>reactjs-popup</a> <br />
 <br />
-Created by Chris DeFreitas, Surrey, BC Canada<br />
+Created by Chris DeFreitas, BC Canada<br />
           </div>
           <div className="actions">
             <button
