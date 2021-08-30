@@ -3,11 +3,6 @@
   - by Chris DeFreitas, chrisd@europa.com
   - entrypoint for GuitrJoe app
 
-References:
-  - colorizer.org
-  - https://mdigi.tools
-  - https://hslpicker.com/#2a1fad
-
 Tested with:
   - wikipedia.com
   - https://jguitar.com/scale?root=A&scale=Hungarian+Gypsy&fret=0&labels=tone&notes=sharps
@@ -23,7 +18,12 @@ import './Fretboard.css';
 import './FretPnl.css';
 import './Bgnd.css';
 // import Bgnd from "./Bgnd.js";
-import Fretboard from "./Fretboard.js";
+import Fretboard from "./Fretboard.js"
+
+// import InfoPopup from "./InfoPopup.js"
+import Popup from 'reactjs-popup';
+
+import { ReactComponent as Logo } from './resources/logo.svg'
 
 function App(){
 
@@ -94,9 +94,66 @@ function App(){
       list.push( el )
   }
 
+  const Modal = () => (  
+    <Popup
+      trigger={<button className="btnInfo">About</button>}
+      modal
+      nested
+    >
+      {close => (
+        <div className="modal">
+          <div className="header"> About GuitarJoe </div>
+          <div className="content">
+Important: <br />
+&nbsp;&nbsp; please explore by clicking/tapping...<br />
+&nbsp;&nbsp; zoom using your browser's zoom tools
+<br /><br />
+GuitarJoe is a free web application, no ads, no logins.  
+The goal was to create a tool that would make guitar theory accessible while practicing.
+I was going crazy taking notes and drawing diagrams of chords, scales and intervals: I needed a tool
+to facilitate my understanding so I could focus on the guitar instead of scraps of information.
+This application has successfully reduced my hair loss--I hope it has the same effect on you!
+<br /><br />
+The functionality is stable as I am working on other aspects of the project.
+At this point it is a proof of concept as I wrangle various technologies and concepts.  
+It will always be free so I can send a warm Thanks to those who supported my various journeys.
+<br /><br />
+Send comments and bugs to chrisd@europa.com. Tested to work in Chrome, Firefox, and Safari(iPad).
+
+<br /><br />
+Thanks to:<br />
+&nbsp;&nbsp; Application hosted on <a href='https://github.com/ChrisDeFreitas/guitarjoe' target='_new'>Github</a>  <br />
+&nbsp;&nbsp; Built with the <a href='https://reactjs.org/' target='_new'>React</a> Javascript library  <br />
+&nbsp;&nbsp; Fuggles font by Robert Leuschke on <a href='https://fonts.google.com/?query=Robert+Leuschke/' target='_new'>Google Fonts</a>  <br />
+&nbsp;&nbsp; Guitar icon by monkik from the <a href='https://thenounproject.com/term/guitar/2588464/' target='_new'>Noun Project</a>  <br />
+&nbsp;&nbsp; Guitar scales verified using <a href='https://jguitar.com/scale' target='_new'>jguitar.com</a><br />
+&nbsp;&nbsp; Music theory from <a href='https://www.wikipedia.org/' target='_new'>Wikipedia</a><br />
+&nbsp;&nbsp; Popup control from <a href='https://react-popup.elazizi.com/' target='_new'>reactjs-popup</a> <br />
+<br />
+Created by Chris DeFreitas, Surrey, BC Canada<br />
+          </div>
+          <div className="actions">
+            <button
+              className="button"
+              onClick={() => {
+                console.log('modal closed ');
+                close();
+              }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+    </Popup>
+  )
+
   return (
     <div className="App">
-			<header className="App-header header">GuitarJoe v0.1</header>
+			<header className="App-header header">
+        <Logo className="Logo" alt="Logo" />
+        GuitarJoe v0.1 <Modal />
+      </header>
 			{list}
     </div>
   )
