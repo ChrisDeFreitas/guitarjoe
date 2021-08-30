@@ -1,0 +1,54 @@
+{
+  "name": "guitarjoe",
+  "version": "0.1.0",
+  "private": false,
+  "homepage": "https://github.com/ChrisDeFreitas/guitarJoe/build/",
+  "description":"GuitarJoe is a web based tool that allows you to visually explore the guitar fretboard, scales, chords, intervals and notes. The current version is a proof of concept.",
+  "author":{
+    "name": "Chris DeFreitas",
+    "email": "chrisd@europa.com"
+   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ChrisDeFreitas/guitarJoe/"
+    },
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.6.1",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-redux": "^7.2.4",
+    "react-scripts": "4.0.3",
+    "redux": "^4.1.0",
+    "save": "^2.4.0",
+    "tinycolor2": "^1.4.2",
+    "web-vitals": "^1.1.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "test-lib": "react-scripts test guitar_lib.test.js",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

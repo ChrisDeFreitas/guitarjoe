@@ -1,0 +1,86 @@
+/*
+ FretPnl.css
+  - by Chris DeFreitas, chrisd@europa.com
+  - styles to manage construction of Fretboard frets and strings etc
+*/
+
+.fretPnl{ border:0; border-collapse:separate; border-spacing:0px; table-layout:fixed;
+  padding:0 0 0 10px; margin:0 auto;
+  position:relative; width:auto;
+}
+.fretPnl tr{ 
+  border:0;
+}
+.fretPnl tr td{   /* default cells */
+  background-color:#3d3b4fff; border:0; padding:0; 
+  height:2em; max-height:2em; width:5em; min-width:5em; position:relative;
+}
+.fretPnl .strg .fret{ cursor:pointer; }   /* all fret cells */
+ 
+.fretPnl .frameTop td[data-fretfilter="true"]{      /* filtered fret numbers */
+  color:#3c31a7; 
+}
+.fretPnl tr .fret[data-fretfilter="true"] .fretbar{      /* filtered fretbar */
+  background:#3a3a3a; 
+}
+.fretPnl tr .fret[data-fretfilter="true"]{      /* filtered frets */
+  cursor:default;
+}
+.fretbar{
+  width:1px; height:100%;
+  background-color:#999;
+  border:0;
+  border-right:1px solid #335;
+  float:right;
+}
+.fretPnl tr .fret0{     /* fret 0 */
+  background-color:transparent; border:0; width:7em; min-width:7em;
+}
+.fretPnl tr .fret0 .fretbar{      /* bar */
+  width:7px; 
+  background-color:#6f6f7f;
+}
+.fretPnl .frame .fret1{  /* hide bar in frames */
+  background-color:transparent; border:0;
+}
+.fretPnl .strg1 .tdBorder0{  /*  */
+  border:0;
+}
+.fretPnl tr .borderRight,
+.fretPnl .frame .borderBottom,
+.fretPnl .frame .borderRight{      /* format right border  */
+  background-color:transparent; width:0.5em;  min-width:0.5em;
+}
+.fretPnl .borderBottom .borderRight{
+  border-bottom:0;
+}
+.fretPnl tr td:last-child{ /* end of board */
+  border-right:0;
+}
+
+.fretPnl .strg1 td{ height:1em;  }    /*  height of top/bottom edge  */
+.fretPnl .borderBottom td{ cursor:pointer; height:1.25em; }
+
+.fretPnl .frame td{    /* format td's in frame and border rows */
+  background-color:transparent; cursor:pointer; 
+  color:#ffffff80;
+  font-size:1em;
+  text-shadow:1px 1px 5px #0008;
+  text-align:center;
+  height:0.5em;
+}
+.fretPnl .frameBottom .tdBottom{ position:relative; }
+
+/* strings */
+.fretPnl tr[data-fltr="true"] .stringdiv{ background-color:#ffffff20; }
+.fretPnl .stringdiv{ background-color:#fffffff0;  
+  position:absolute; top:100%; left:0px;
+  height:1px; width:100%; z-index:99;
+}
+.fretPnl .fret14 .stringdiv{ width:120%;  }
+.fretPnl .strg3 .stringdiv,
+.fretPnl .strg4 .stringdiv,
+.fretPnl .strg5 .stringdiv{ height:2px;  }
+.fretPnl .strg6 .stringdiv{ height:2.5px;  }
+
+

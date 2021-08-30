@@ -1,0 +1,115 @@
+/*
+  Fretboard.css
+  - by Chris DeFreitas, chrisd@europa.com
+  - styles for Fretboard and QueryPnl
+  
+*/
+
+.fretboard{
+  margin:0 auto 0 auto;
+  position: relative;  /* allow absolute psition elements to remain within this control*/
+}
+.fretboard[id="Fretboard0"]{ margin:1em auto 0 auto;}
+
+.queryPnl{ color:#ffffffd0; position:relative; margin:0 auto;   text-align:center; 
+  border:none; outline:none; padding:0; top:-0.5em;
+}
+.queryControls{ background-color:hsl(177deg 68% 31% / 92%); display:inline-table; position:relative; 
+  border: 1px solid #333; border-radius:5px; box-shadow:5px 5px 15px 1px #0000007a;
+  margin:0; padding:0 0.5em 0.5em 0.5em;
+  height:3em; width:fit-content; top:0px;
+}
+.dataPnl { border:none; display:inline-table; padding:0 0.5em; text-align:center;  }
+.dataPnl label{ color:#ffffffd0; font-weight:bold; font-size:1em; text-shadow:1px 1px 5px #00000090; }
+.dataPnl label[data-selected="true"]{ cursor:pointer; }
+.dataPnl select{ background-color:#ffffffa0; border:none; border-radius:3px; cursor:pointer;
+  display:block; margin:0 auto; padding:5px 0;
+  min-width:5em;  max-width:10em; 
+  outline:0;  text-align-last:center; /* center selected text in chrome; test other */
+}
+/*.dataPnl select option{}   not applicable because controlled by OS */
+
+.qryCollapsed .qryBtnCollapse,
+.qryCollapsed .queryControls,
+.qryCollapsed .qryBtnDupe,
+.qryCollapsed .qryBtnDel,
+.qryCollapsed .qryBtnClear{ display:none; }
+
+.qryBtn{ background-color:hsl(177deg 68% 31% / 92%); border:1px outset #0003; border-radius:5px; 
+  box-shadow: 5px 5px 15px 1px #0000007a; cursor:pointer; 
+  display:inline-table; margin:0 0.25em; top:20px; height:1.5em; width:1.5em; position:relative; 
+  color:#000; font-size:1.25em; font-weight:normal; text-shadow:1px 1px 1px #fff6; }
+.qryBtnCollapse div{ transform:rotateZ(-90deg); text-shadow:-1px 1px 1px #fff6; 
+  position:relative; top:0px; left:-2px; width:100%;  }
+
+/* .infoPnl{ } */
+.qryExpanded .infoPnl{ display:block; }
+.qryBtnCollapse .infoPnl{ display:inline-table; }
+.infoDiv{ display:inline-table; margin:5px 0 0 0.5em; text-shadow:1px 1px 3px #000;}
+.infoDiv .propName{ font-weight:bold; margin:0 0 0 0.5em;}
+.infoDiv .propName:first-child{ margin:0;}
+.infoDiv .ivl{ font-weight:normal; }
+.infoDiv .ivl sub{ font-size:0.6em; position:relative; left:-3px; }
+.qryBtnExpand{ display:inline-table; position:sticky; height:1em; width:1em; }
+.qryBtnExpand div{ position:relative; transform:rotateZ(90deg); height:1em; left:3px; top:2px;
+  font-size:0.8em; text-shadow:1px -1px 1px #fff6; }
+
+.btnFilter{ position:absolute; width:20px;
+  cursor:pointer; 
+  /* background-color:transparent; border:0; outline:0;  */
+  height:2em; width:48%; margin:0;
+  background:linear-gradient(-25deg, #fff,#eec 50%,#bba 100%);
+  border:2px outset #ffffff90;  border-radius:5px; box-shadow:-2px -2px 5px #00000080;
+}
+.btnFilter div{ color:#177d7f; background:transparent; border:none; outline:0;
+  font-size:2.5em; position:relative;  left:-2px; top:-14px;
+}
+.btnFretFilter{ width:80%; margin:0 auto; }
+
+.btnStrgFltr{
+   /* background:linear-gradient(-90deg, #fff,#eec 50%,#bba 100%); */
+  background:transparent; border:none; outline:0; box-shadow:none;
+  top:6px; left:0px; height:24px; width:25px; z-index:100;
+  transform: rotateZ(90deg);
+}
+.btnStrgFltr img{ position:relative; height:10px; top:0px; left:0px; }
+.btnStrgFltr2{  top:22px; }
+.btnStrgFltr3{  top:22px; }
+.btnStrgFltr4{  top:22px; }
+.btnStrgFltr5{  top:22px; }
+.btnStrgFltr6{  top:22px; }
+
+.fretButton{ 
+  color:#000; cursor:pointer;
+  border:none; border-radius:5px;  box-shadow:1px 1px 5px #0007;
+  text-align:left; margin:0; padding-left:10px;
+  position:absolute; top:5px; left:15px; height:2em; width:4.5em;
+  z-index:100;
+}
+/* .fretButton span{ cursor:alias; } */
+.fretButton[data-tag="0"] { background:linear-gradient(180deg, #fff,#eec 50%,hsl(60deg 5% 36%) 100%); }
+.fretButton[data-tag="1"] { background:#baac; }
+.fret0 .fretButton { left:39px; }
+.fretButton[data-selected="fretRoot"] { border: 1px #04ff00 solid; }
+.fretButton[data-selected="selNote"] { border: 1px #fffb00 solid;  }
+.fretButton sup{ color:#0f000fa0; font-size:0.7em; position:absolute; top:0px; text-shadow:none;  }
+.fretButton sub{ color:#00000050; text-shadow:none; position:relative; }
+.fretButton .subInterval{ cursor:alias; top:0px; right:-10px; }
+.fretButton .spanNote .subOctave{ color:#0008; font-size:0.6em; }
+.fretButton .spanIvl span{ color:#0007; font-size:0.7em; }
+.fretButton .subNote{ cursor:alias; top:0px; right:-10px; }
+/* .fretButton .subNote .subOctave{ color:red; } */
+.strg2 .fretButton,
+.strg3 .fretButton,
+.strg4 .fretButton{ top:calc( 1em + 6px) }
+.strg5 .fretButton,
+.strg6 .fretButton{ top:calc( 1em + 7px) }
+
+/* .fretButton[data-ivl="P1"],  */
+/* .fretButton[data-ivl="P1"] sub, */
+.fretButton[data-ivl="P1"] sup{ color: #fff; text-shadow:1px 1px 1px #441616; }
+.fretButton[data-ivl="m3"] .supInterval,
+.fretButton[data-ivl="M3"] .supInterval{ color: #fff; text-shadow:1px 1px 1px #000; }
+.fretButton[data-ivl="P5"] .supInterval{ color: #fff; text-shadow:1px 1px 1px #000; }
+.fretButton[data-ivl="m7"] .supInterval,
+.fretButton[data-ivl="M7"] .supInterval{ color: #fff; text-shadow:1px 1px 1px #000;  }
