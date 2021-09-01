@@ -7,12 +7,10 @@ Fretboard.js
 */
 
 import React from 'react';
-// import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import './Fretboard.css';
 
 import FretPnl from "./FretPnl.js";
 import QueryPnl from "./QueryPnl.js";
-
 import q from "./guitar_lib.js";
 
 class Fretboard extends React.Component{
@@ -208,16 +206,4 @@ class Fretboard extends React.Component{
   }
 }
 
-// Fretboard.propTypes = {
-//   fretNum:PropTypes.string,
-//   stateChange:PropTypes.func
-   // fretRoot:PropTypes.fretRoot
-// }
-//const mapStateToProps = function(state) {
-//  return {
-    // fretFirst: state.frets.fretFirst,
-    // fretMax: state.frets.fretMax,
-//  }
-//}
-
-export default connect()(Fretboard);
+export default Fretboard;

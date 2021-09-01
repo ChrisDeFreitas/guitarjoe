@@ -5,8 +5,6 @@
 
 */
 import React from 'react'
-// import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 import q from "./guitar_lib.js"
 
 
@@ -321,17 +319,4 @@ class QueryPnl extends React.Component {
   }
 }
 
-//global app state
-// QueryPnl.propTypes = {
-//   fretNum:PropTypes.number,
-//   fretMax:PropTypes.number,
-//   // propChange:PropTypes.func
-// }
-const mapStateToProps = function(state) {
-  return {
-    // fretFirst: state.frets.fretFirst,
-    // fretMax: state.frets.fretMax,
-  }
-}
-export default connect(mapStateToProps)(QueryPnl)
-// export default QueryPnl
+export default QueryPnl

@@ -5,10 +5,7 @@
   
 */
 
-.fretboard{
-  margin:0 auto 0 auto;
-  position: relative;  /* allow absolute psition elements to remain within this control*/
-}
+.fretboard{ display:inline-table;  margin:0 auto 0 auto; position:relative; }
 .fretboard[id="Fretboard0"]{ margin:1em auto 0 auto;}
 
 .queryPnl{ color:#ffffffd0; position:relative; margin:0 auto;   text-align:center; 
@@ -25,7 +22,7 @@
 .dataPnl select{ background-color:#ffffffa0; border:none; border-radius:3px; cursor:pointer;
   display:block; margin:0 auto; padding:5px 0;
   min-width:5em;  max-width:10em; 
-  outline:0;  text-align-last:center; /* center selected text in chrome; test other */
+  outline:0;  text-align-last:center;
 }
 /*.dataPnl select option{}   not applicable because controlled by OS */
 

@@ -6,10 +6,7 @@
 */
 
 import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-//import tinycolor from "tinycolor2"
-
+import './FretPnl.css';
 import q from "./guitar_lib.js";
 
 class FretPnl extends React.Component{
@@ -121,13 +118,16 @@ class FretPnl extends React.Component{
         return null      
       capStyle = 'NoteFirst' //force for this selection
     }else
-    if(note.letter === root.letter){
-      if(qry.rootType === 'fretRoot'){
-         if(note.semis === root.semis)
-          selected = qry.rootType
-      }else
-      if(qry.rootType === 'selNote')
+    if(qry.rootType === 'fretRoot'){
+      if(note.letter === root.letter && note.semis === root.semis)
         selected = qry.rootType
+    }else
+    if(qry.rootType === 'selNote'){
+      if(q.intervals.byLetter( note.letter ).semis === root.semis){ 
+        selected = qry.rootType
+        if(note.letter !== root.letter)   //resolve # vs flat
+          note.letter = root.letter
+      }
     }
 
     //format button caption
@@ -373,19 +373,4 @@ class FretPnl extends React.Component{
   }
 }
 
-FretPnl.propTypes = {
-  fretFirst:PropTypes.number,
-  fretMax:PropTypes.number,
-  // semis:PropTypes.string,    //promoted to state
-  propChange:PropTypes.func,
-}
-
-//handle global app state
-const mapStateToProps = function(state) {
-  return {
-    // fretFirst: state.frets.fretFirst,
-    // fretMax: state.frets.fretMax,
-  }
-}
-export default connect(mapStateToProps)(FretPnl)
-// export default FretPnl
+export default FretPnl

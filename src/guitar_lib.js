@@ -7,17 +7,11 @@
    notes:
     - "letter" refers to what we usually call a note, ie C#
     - note is an object, requires refactoring for consistency
+    - note.semis is unique
     - assume: exception handling performed by caller
 
-  references:
-  - https://www.webnots.com/alt-code-shortcuts-for-music-symbols/
-  - https://en.wikipedia.org/wiki/Chord_(music)#Notation_in_popular_music
-  - https://en.wikipedia.org/wiki/Diatonic_scale
-  - https://www.thejazzpianosite.com/jazz-piano-lessons/jazz-scales/chord-scale-system/
-  - https://www.secretsofsongwriting.com/2018/07/09/chord-progressions-for-pentatonic-melodies/
-  
   todo:
-		- refactor for code consistency
+    - refactor for code consistency
     - refactor to create a standard note object
     - fix q.chords.make() (when code needed)
   
@@ -163,6 +157,11 @@ var q = {
 
   intervals:{
     list:[
+      //rules:
+      // prefer perfect, major, minor first
+      // prefer minor over diminished
+      // prefer augmented last
+      // 
       {name:'Perfect unison', abr:'P1',  semis:0, letter:'C' },
       // {name:'Root', abr:'r', semis:0, letter:'' },
       {name:'Diminished second', abr:'d2', semis:0, letter:'D♭♭' },
@@ -171,10 +170,10 @@ var q = {
       {name:'Augmented unison', abr:'A1', semis:1, letter:'C#' },
       
       {name:'Major second', abr:'M2', semis:2, letter:'D' },
-      {name:'Diminished third', abr:'M2', semis:2, letter:'E♭♭' },
+      {name:'Diminished third', abr:'d3', semis:2, letter:'E♭♭' },
       
-      {name:'Minor third', abr:'m3', semis:3, letter:'D#' },
       {name:'Minor third', abr:'m3', semis:3, letter:'E♭' },
+      {name:'Augmented second', abr:'A2', semis:3, letter:'D#' },
       
       {name:'Major third', abr:'M3', semis:4, letter:'E' },
       {name:'Diminished fourth', abr:'d4', semis:4, letter:'F♭' },
@@ -182,9 +181,9 @@ var q = {
       {name:'Perfect fourth', abr:'P4', semis:5, letter:'F'},
       {name:'Augmented third', abr:'A3', semis:5, letter:'E#'},
       
+      {name:'Diminished fifth', abr:'d5', semis:6, letter:'G♭' },
       {name:'Augmented fourth', abr:'A4', semis:6, letter:'F#' },
       {name:'Tritone', abr:'TT', semis:6, letter:'TT' },
-      {name:'Diminished fifth', abr:'d5', semis:6, letter:'G♭' },
       
       {name:'Perfect fifth', abr:'P5', semis:7, letter:'G' },
       {name:'Diminished sixth', abr:'d6', semis:7, letter:'A♭♭' },
@@ -343,7 +342,7 @@ var q = {
         // semis:[0,2,3,6,7,8,11],    //step pattern is W, H, +, H, H, +, H -- https://en.wikipedia.org/wiki/Hungarian_minor_scale
         intervals:['P1','M2','m3','A4','P5','m6','M7']
       },
-  		{ name:'Hungarian major', abr:'HM', short:'Hung.maj`',
+      { name:'Hungarian major', abr:'HM', short:'Hung.maj`',
         // semis:[0,3,4,6,7,9,10],    //semitones: 3, 1, 2, 1, 2, 1, 2 -- https://en.wikipedia.org/wiki/Hungarian_major_scale
         intervals:['P1','m3','M3','A4','P5','M6','m7']
       }

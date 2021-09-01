@@ -55,7 +55,7 @@
   border-bottom:0;
 }
 .fretPnl tr td:last-child{ /* end of board */
-  border-right:0;
+  border-right:0; width:1.5em;
 }
 
 .fretPnl .strg1 td{ height:1em;  }    /*  height of top/bottom edge  */
