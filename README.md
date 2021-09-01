@@ -1,7 +1,7 @@
 # GuitarJoe
-GuitarJoe is a web based tool that allows you to visually explore the guitar fretboard, scales, chords, intervals and notes. The current version is a proof of concept.  
+GuitarJoe is a web based tool that allows you to visually explore the guitar fretboard, scales, chords, intervals and notes. The current version is a proof of concept.  You try it via the GitHub.io link that publishes the ./docs folder for public access:  https://chrisdefreitas.github.io/guitarjoe/  
 
-GuitarJoe is a free web application, no ads, no logins, no tracking.  The goal was to create a tool that would make guitar theory accessible while practicing.  I was going crazy taking notes and diagraming chords, scales and intervals: I needed a tool to facilitate my understanding so I could focus on the guitar instead of managing scraps of information.  This application has successfully reduced my hair loss--I hope it has the same effect on you!
+The goal was to create a tool that would make guitar theory accessible while practicing.  I was going crazy taking notes and diagraming chords, scales and intervals: I needed a tool to facilitate my understanding so I could focus on the guitar instead of managing scraps of information.  This application has successfully reduced my hair loss--I hope it has the same effect on you!
 
 The name is based on the slang "Joe Workie," a synonym for construction worker. At the tender age of 12 it felt like one of those adults terms I had to learn--it wasn't. But in this context, GuitarJoe does the heavy lifting of translating music theory to the guitar fretboard.  
 
