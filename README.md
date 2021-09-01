@@ -1,5 +1,7 @@
 # GuitarJoe
-GuitarJoe is a web based tool that allows you to visually explore the guitar fretboard, scales, chords, intervals and notes. The current version is a proof of concept.  You try it via the GitHub.io link that publishes the ./docs folder for public access:  https://chrisdefreitas.github.io/guitarjoe/  
+GuitarJoe is a web based tool that allows you to visually explore the guitar fretboard, scales, chords, intervals and notes. The current version is a proof of concept.  
+
+The application is published to the web through GitHub Pages.  I plan to leave it publicly accessible until it wears out its GitHub welcome. So you can use it via the GitHub.io link that publishes the ./docs folder for public access:  https://chrisdefreitas.github.io/guitarjoe  
 
 The goal was to create a tool that would make guitar theory accessible while practicing.  I was going crazy taking notes and diagraming chords, scales and intervals: I needed a tool to facilitate my understanding so I could focus on the guitar instead of managing scraps of information.  This application has successfully reduced my hair loss--I hope it has the same effect on you!
 
@@ -8,11 +10,11 @@ The name is based on the slang "Joe Workie," a synonym for construction worker. 
 ## Music Theory
 The data is taken from Wikipedia and verified against other online sources.  The Blues Heptatonic scale has different representations by online sources, so it is debatable.
 
-## Technology
+## Technical Notes
 - The entire application is contained within the single web page; the application does not require an external server.  The only external link (I am aware of) is to the <a href='https://fonts.google.com/?query=Robert+Leuschke/' target='_new'>Fuggles Google Font</a> used in the header. So one could use the ./docs folder on any webserver.
 - The logic of the application resides in <a href='https://github.com/ChrisDeFreitas/guitarjoe/blob/main/src/guitar_lib.js'>guitar_lib.js</a>--the code should be readable by non-techies so  feel free to review/use/suggest changes.  I created the library's test suite as I initially built the library, so it will not test all functionality, only the complex bits.
 - In terms of security, the application currently does not store or access browser data.  The futrue plans include saving/restoring application state using <a href='https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage'>HTML5 Local Storage</a>--but that is way in the future.
-- The application is a standard <a href='https://create-react-app.dev/'>Create React App</a>, except the ./build folder is renamed to ./docs to work with <a href='https://pages.github.com/'>Github Pages</a>.  See <a href='https://create-react-app.dev/docs/advanced-configuration'>BUILD_PATH environment variable</a> for info on that redirection.
+- The application is a standard <a href='https://create-react-app.dev/'>Create React App</a>, except the ./build folder is renamed to ./docs to work with <a href='https://pages.github.com/'>GitHub Pages</a>.  See <a href='https://create-react-app.dev/docs/advanced-configuration'>BUILD_PATH environment variable</a> for info on that redirection.
 
 
 ## Helpful References
@@ -24,7 +26,7 @@ The data is taken from Wikipedia and verified against other online sources.  The
  
 
 ## Thanks to
- - Application hosted on <a href='https://github.com/ChrisDeFreitas/guitarjoe' target='_new'>Github</a>   
+ - Application hosted on <a href='https://github.com/ChrisDeFreitas/guitarjoe' target='_new'>GitHub</a>   
  - Background image from <a href='https://www.flickr.com/photos/webtreatsetc/with/4514047664/' target='_new'>WebTreats ETC</a>  
  - Built with the <a href='https://reactjs.org/' target='_new'>React</a> Javascript library  
  - Fuggles font by Robert Leuschke on <a href='https://fonts.google.com/?query=Robert+Leuschke/' target='_new'>Google Fonts</a>  
