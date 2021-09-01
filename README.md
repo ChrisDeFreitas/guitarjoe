@@ -1,19 +1,19 @@
 # GuitarJoe
 GuitarJoe is a web based tool that allows you to visually explore the guitar fretboard, scales, chords, intervals and notes. The current version is a proof of concept.  
 
-The application is published to the web through GitHub Pages.  I plan to leave it publicly accessible until it wears out its GitHub welcome. So you can use it via the GitHub.io link that publishes the ./docs folder for public access:  https://chrisdefreitas.github.io/guitarjoe  
+The application is published to the web through GitHub Pages.  I plan to leave it publicly accessible until it wears out its GitHub welcome. So you can use and share it via the GitHub.io link that publishes the ./docs folder for public access:  https://chrisdefreitas.github.io/guitarjoe  
 
-The goal was to create a tool that would make guitar theory accessible while practicing.  I was going crazy taking notes and diagraming chords, scales and intervals: I needed a tool to facilitate my understanding so I could focus on the guitar instead of managing scraps of information.  This application has successfully reduced my hair loss--I hope it has the same effect on you!
+The goal was to create a tool that would make guitar theory accessible while practicing.  I was going crazy taking notes and diagramming chords, scales and intervals: I needed a tool to facilitate my understanding so I could focus on the guitar instead of managing scraps of information.  This application has successfully reduced my hair loss--I hope it has the same effect on you!
 
-The name is based on the slang "Joe Workie," a synonym for construction worker. At the tender age of 12 it felt like one of those adults terms I had to learn--it wasn't. But in this context, GuitarJoe does the heavy lifting of translating music theory to the guitar fretboard.  
+The name is based on the slang "Joe Workie," a synonym for construction worker. At the tender age of 12 it felt like one of those adults terms I had to learn--it wasn't. In this context, GuitarJoe does the heavy lifting of translating music theory to the guitar fretboard.  
 
 ## Music Theory
-The data is taken from Wikipedia and verified against other online sources.  The Blues Heptatonic scale has different representations by online sources, so it is debatable.
+I am not a musician (I tell my daughter that I'll be ready to play in a band around the age of 90).  So the data is taken from Wikipedia and verified against other online sources.  The Blues Heptatonic scale has different representations by online sources, so it is debatable.  Please forward any discrepancies to me.
 
 ## Technical Notes
 - The entire application is contained within the single web page; the application does not require an external server.  The only external link (I am aware of) is to the <a href='https://fonts.google.com/?query=Robert+Leuschke/' target='_new'>Fuggles Google Font</a> used in the header. So one could use the ./docs folder on any webserver.
 - The logic of the application resides in <a href='https://github.com/ChrisDeFreitas/guitarjoe/blob/main/src/guitar_lib.js'>guitar_lib.js</a>--the code should be readable by non-techies so  feel free to review/use/suggest changes.  I created the library's test suite as I initially built the library, so it will not test all functionality, only the complex bits.
-- In terms of security, the application currently does not store or access browser data.  The futrue plans include saving/restoring application state using <a href='https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage'>HTML5 Local Storage</a>--but that is way in the future.
+- In terms of security, the application currently does not store or access browser data.  The future plans include saving/restoring application state using <a href='https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage'>HTML5 Local Storage</a>--but that is way in the future.
 - The application is a standard <a href='https://create-react-app.dev/'>Create React App</a>, except the ./build folder is renamed to ./docs to work with <a href='https://pages.github.com/'>GitHub Pages</a>.  See <a href='https://create-react-app.dev/docs/advanced-configuration'>BUILD_PATH environment variable</a> for info on that redirection.
 
 
@@ -43,7 +43,7 @@ The data is taken from Wikipedia and verified against other online sources.  The
 - browser bug: zooming out causes random frets and strings to disappear
 -- assume due to x/y location; test by adjusting 
 - critical: test for unexpected web activity with Pi-Hole
--  qryPnl collapsed==true: relpace fret numbers with green line above key frets (like fret inlays, but on top)  
+-  qryPnl collapsed==true: replace fret numbers with green line above key frets (like fret inlays, but on top)  
 - fret click: allow for multiple frets to be selected:  
 -- 1 fret clicked == current behaviour  
 -- 2 or more == disable scale, ?chord?; keep btn.click/transparency or second click deletes?   
