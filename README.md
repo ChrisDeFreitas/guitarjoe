@@ -25,7 +25,7 @@ I am not a musician (I tell my daughter that I'll be ready to play in a band aro
   - https://fretastic.com/guitar
  
 
-## Thanks to
+### Thanks to
  - Application hosted on <a href='https://github.com/ChrisDeFreitas/guitarjoe' target='_new'>GitHub</a>   
  - Background image from <a href='https://www.flickr.com/photos/webtreatsetc/with/4514047664/' target='_new'>WebTreats ETC</a>  
  - Built with the <a href='https://reactjs.org/' target='_new'>React</a> Javascript library  
@@ -37,10 +37,10 @@ I am not a musician (I tell my daughter that I'll be ready to play in a band aro
  - Popup control from <a href='https://react-popup.elazizi.com/' target='_new'>reactjs-popup</a>  
  - <a href='https://code.visualstudio.com/'>Visual Studio Code</a> development environment
 
-## ToDo
+### ToDo
 - bug: selecting C# Major scale, infoPnl displays bD, bE...; should be #C, #D  
 -- need logic to calc sharp vs flat consistently
-- browser bug: zooming out causes random frets and strings to disappear
+- browser bug: zooming out causes random frets and strings to disappear  
 -- assume due to x/y location; test by adjusting 
 - critical: test for unexpected web activity with Pi-Hole
 -  qryPnl collapsed==true: replace fret numbers with green line above key frets (like fret inlays, but on top)  
@@ -48,6 +48,6 @@ I am not a musician (I tell my daughter that I'll be ready to play in a band aro
 -- 1 fret clicked == current behaviour  
 -- 2 or more == disable scale, ?chord?; keep btn.click/transparency or second click deletes?   
 - add settings dlg:  
--- create dlg to select bgndImgUrl or color or default
+-- create dlg to select bgndImgUrl or color or default  
 -- other?  
-- add Inversions: ?can integrate with Chord selection?
+- add Inversions: ?integrate with Chord selection?
