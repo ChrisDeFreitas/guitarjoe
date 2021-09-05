@@ -147,9 +147,9 @@ class Fretboard extends React.Component{
   }
   makeQuery(){
     let qry = {
-      letter: (this.state.rootType === 'fretRoot' ?this.state.fretRoot.letter :this.state.selNoteVal), 
-      root:   (this.state.rootType === 'fretRoot' ?this.state.fretRoot :q.intervals.byLetter( this.state.selNoteVal )),
       rootType: this.state.rootType,
+      root: null,
+      letter: (this.state.rootType === 'fretRoot' ?this.state.fretRoot.letters[0] :this.state.selNoteVal), 
       octave: this.state.octave,
       scale: null,
       chord:null,
@@ -157,13 +157,17 @@ class Fretboard extends React.Component{
       fretBtnText: this.state.fretBtnText,
       fretFilter: this.state.fretFilter
     }
+    if(qry.rootType === 'fretRoot')
+      qry.root = this.state.fretRoot    //note object, set in FretPnl.fretClick()
+    if(qry.rootType === 'selNote' && qry.letter !== '' && qry.letter !== 'All')
+      qry.root = q.noteByLetter( qry.letter )    //note object
     if(this.state.scaleName !== '' && qry.root)
-      qry.scale = q.scales.toObj(qry.root, this.state.scaleName)
+      qry.scale = q.scales.toObj( qry.letter, this.state.scaleName )
     if(this.state.chordName !== '' && qry.root)
-      qry.chord = q.chords.toObj( qry.root, this.state.chordName )
-    if(this.state.ivlName !== ''){
+      qry.chord = q.chords.toObj( qry.letter, this.state.chordName )
+    if(this.state.ivlName !== '' && qry.root){
       qry.ivl = q.intervals.byName( this.state.ivlName )    //this.props.ivlName == abr
-      qry.ivl.letter = q.letterCalc(qry.letter, qry.ivl)
+      qry.ivl.letter = q.letterCalc( qry.letter, qry.ivl )
     }
     return qry
   }

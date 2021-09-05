@@ -1,12 +1,12 @@
 /*
   //♭ &flat;
   
-  GuitarJoe
+  GuitarJoe application logic
   by Chris DeFreitas, chrisd@europa.com
   
-   notes:
+   Note:
     - "letter" refers to what we usually call a note, ie C#
-    - note is an object, requires refactoring for consistency
+    - note is an object, requires refactoring for consistency: { letter:'C#', semis:49, ... }
     - note.semis is unique
     - assume: exception handling performed by caller
 
@@ -20,6 +20,7 @@
 var q = {
 
   chords: {
+    //verified against: https://www.omnicalculator.com/other/chord
     list:[
       {
         name:'Major triad', abr:'maj',
@@ -41,7 +42,7 @@ var q = {
         intervals:[ 'P1', 'M3', 'P5', 'M7' ]
       },{
         name:'Minor seventh', abr:'min7',
-        intervals:[ 'P1', 'm3', 'P5', 'd7' ]
+        intervals:[ 'P1', 'm3', 'P5', 'm7' ]
       },{
         name:'Major sixth', abr:'maj6',
         intervals:[ 'P1', 'M3', 'P5', 'M6' ]
@@ -85,12 +86,16 @@ var q = {
       if(chord === null) return null
 
       if(typeof root === 'string')
-        root = q.intervals.byName( root )
+        root = q.intervals.byName( root )   //object returned to caller
       if(root === null) return null
 
+      let preferFlats = ( 
+          chord.name.indexOf('Minor') >= 0  
+        ||chord.name.indexOf('Diminished') >= 0 
+        || root.letter.indexOf('♭') >= 0)
       for(let iname of chord.intervals){
         let ivl = q.intervals.byName( iname )
-        let letter = q.letterBySemis( root.semis +ivl.semis )
+        let letter = q.letterCalc( root, ivl, preferFlats )
         ivls.push( Object.assign({}, ivl, { letter:letter } ))
       }
 
@@ -121,16 +126,7 @@ var q = {
       for(let ii = 0; ii <= q.fretboard.strings.length -1; ii++){
         let strg = q.fretboard.strings[ii]
         strg.semis = q.semisCalc(strg.letter, strg.octave)
-        // strg.frets = new Array(q.fretboard.fretMax)
-        // for( let ii=0; ii < strg.frets.length; ii++){
-        //   strg.frets[ii] = { 
-        //     num: ii,
-        //     letter: q.letterBySemis( strg.semis + ii ),
-        //     semis: strg.semis + ii
-        //   }
-        // }
       }
-      //q.fretboard.showStrings()
     },
     fretMark( strg, semis, val){    //todo: not used, delete
       let fretnum = ( (strg.root -semis) / 100)
@@ -158,19 +154,20 @@ var q = {
   intervals:{
     list:[
       //rules:
-      // prefer perfect, major, minor first
-      // prefer minor over diminished
-      // prefer augmented last
+      // 1. order by semitones
+      // 2. prefer perfect, major, minor first
+      // 3. prefer minor over diminished
+      // 4. prefer augmented last
+      // 5. removed (♭♭, TT, P8) because added complexity not relevant to most uses
       // 
       {name:'Perfect unison', abr:'P1',  semis:0, letter:'C' },
-      // {name:'Root', abr:'r', semis:0, letter:'' },
-      {name:'Diminished second', abr:'d2', semis:0, letter:'D♭♭' },
+      //{name:'Diminished second', abr:'d2', semis:0, letter:'D♭♭' },
       
       {name:'Minor second', abr:'m2', semis:1, letter:'D♭' },
       {name:'Augmented unison', abr:'A1', semis:1, letter:'C#' },
       
       {name:'Major second', abr:'M2', semis:2, letter:'D' },
-      {name:'Diminished third', abr:'d3', semis:2, letter:'E♭♭' },
+      // {name:'Diminished third', abr:'d3', semis:2, letter:'E♭♭' },
       
       {name:'Minor third', abr:'m3', semis:3, letter:'E♭' },
       {name:'Augmented second', abr:'A2', semis:3, letter:'D#' },
@@ -183,16 +180,16 @@ var q = {
       
       {name:'Diminished fifth', abr:'d5', semis:6, letter:'G♭' },
       {name:'Augmented fourth', abr:'A4', semis:6, letter:'F#' },
-      {name:'Tritone', abr:'TT', semis:6, letter:'TT' },
+      // {name:'Tritone', abr:'TT', semis:6, letter:'TT' },
       
       {name:'Perfect fifth', abr:'P5', semis:7, letter:'G' },
-      {name:'Diminished sixth', abr:'d6', semis:7, letter:'A♭♭' },
+      // {name:'Diminished sixth', abr:'d6', semis:7, letter:'A♭♭' },
       
       {name:'Minor sixth', abr:'m6', semis:8, letter:'A♭' },
       {name:'Augmented fifth', abr:'A5', semis:8, letter:'G#' },
       
       {name:'Major sixth', abr:'M6', semis:9, letter:'A' },
-      {name:'Diminished seventh', abr:'d7', semis:9, letter:'B♭♭' },
+      // {name:'Diminished seventh', abr:'d7', semis:9, letter:'B♭♭' },
       
       {name:'Minor seventh', abr:'m7', semis:10, letter:'B♭' },
       {name:'Augmented sixth', abr:'A6', semis:10, letter:'A#' },
@@ -220,7 +217,7 @@ var q = {
       }
       return null
     },
-    bySemis( semis ){
+    bySemis( semis ){   //return first interval where semis match
       semis = semis % 12
       for(let ivl of q.intervals.list){
         if(ivl.semis === semis)
@@ -228,32 +225,97 @@ var q = {
       }
       return null
     },
+    allBySemis( semis ){   //return all intervals where semis
+      let semis2 = semis % 12
+      let list = []
+      for(let ivl of q.intervals.list){
+        if(ivl.semis === semis2)
+          list.push( Object.assign({}, ivl) )
+      }
+      return list
+    },
   },
 
 
-  letters:['C♭','C','C#','D♭','D','D#','E♭','E','E#','F♭','F','F#','G♭','G','G#','A♭','A','A#','B♭','B','B#'],
-  lettersBySemis( semis ){  //find all notes with the same number of semitones
+  letters:['C','C#','D♭','D','D#','E♭','E','F','F#','G♭','G','G#','A♭','A','A#','B♭','B'],
+  lttrs:['C','D','E','F','G','A','B'],
+  lettersBySemis( semis ){
     let letters = []
     semis = semis % 12
     for(let ivl of q.intervals.list ){
-      if(ivl.semis === semis)
-        letters.push(ivl.letter) 
+      if(ivl.semis === semis){
+        letters.push(ivl.letter)
+      }
+      if(ivl.semis > semis) break //intervals ordered by semis
     }
     return letters
   },
-  letterBySemis( semis ){
-    let ivl = q.intervals.bySemis(semis)
-    if(ivl !== null)
-      return ivl.letter
-    return null
-  },
-  letterCalc( rootLetter, ivlOrSemis ){    //add interval or semitones to letter, return new letter
-    let semis = (typeof ivlOrSemis === 'object' ?ivlOrSemis.semis :Number(ivlOrSemis) ),
-      ivl = q.intervals.byName( rootLetter )
-    semis = ivl.semis +semis
-    return q.letterBySemis( semis )
-  },
+  letterCalc( root, ivlOrName, preferFlats = false){  //iterate by semitones to get new letter with correct #/b
+    // assume: preferFlats === true: return flats, no sharps 
 
+    if(typeof root === 'object') root = root.letter
+    let rprefix = root.substr(0,1)
+    let rsuffix = root.substr(1,2)
+    // console.log('root='+root, 'rprefix='+rprefix, 'rsuffix='+rsuffix)
+
+    let ivl = (typeof ivlOrName === 'object' ?ivlOrName : q.intervals.byName(ivlOrName))
+    let iprefix = ivl.abr.substr(0,1)    // A as in A1
+    // console.log('ivl.abr='+ivl.abr, 'iprefix='+iprefix )
+
+    // test: display matching intervals
+    // let rivl = q.intervals.byName( root )
+    // let list = q.intervals.allBySemis( rivl.semis +ivl.semis )
+    // console.log( 'ivl.semis='+ivl.semis, '\nlist=', list  )
+
+    //assume: no ## or bb used
+    let max = ivl.semis, idx = 0
+    let newlet = rprefix, newsfx = rsuffix
+    function local_inc( ltr ){
+      idx = q.lttrs.indexOf( ltr )
+      idx++
+      return q.lttrs[ idx % 7]
+    }
+    for(let ii = 0; ii < max; ii++){
+      // console.log('root='+root, 'newlet='+newlet+newsfx)
+      if(newlet === 'B' && newsfx === ''){ 
+        newlet = 'C'; 
+      }else
+      if(newlet === 'E' && newsfx === ''){ 
+         newlet = 'F'; 
+      }else
+      if(newsfx === '♭'){
+        newsfx = ''
+      }else
+      if(newsfx === '#'){
+        newsfx = ''
+        newlet = local_inc( newlet )
+      } 
+      else  //newsfx === ''
+      if(iprefix === 'm' || iprefix === 'd'  || preferFlats === true){
+        newsfx = '♭'
+        newlet = local_inc( newlet )
+      }
+      else
+        newsfx = '#'
+    }
+    // console.log('root='+root, 'newlet='+newlet+newsfx)
+    return newlet+newsfx
+  },
+  noteByLetter( letter ){
+    let ivl = q.intervals.byLetter( letter ),
+        semis = ivl.semis,
+        // octave = q.octave(semis),
+        letters = q.lettersBySemis(semis)
+    return {
+      strg:null, 
+      fretN:null,
+      letter:letter,
+      letters:letters,
+      octave:0,
+      semis:semis,
+      noteByLetter:true
+    }
+  },
   noteByFret( strN, fretN ){
     let strg = q.strg( strN ),
         semis = strg.semis +fretN,
@@ -262,10 +324,10 @@ var q = {
     return {
       strg:strg, 
       fretN:(semis -strg.semis),
-      letter:q.letterBySemis(semis), 
+      letter:letters[0],
+      letters:letters,
       octave:octave,
       semis:semis,
-      letters:letters,
       noteByFret:true
     }
   },
@@ -278,25 +340,32 @@ var q = {
         break
       }
     }
+    let letters = q.lettersBySemis(semis)
     return {
       strg:strNote, 
       fretN:(strNote===null ?null :(semis -strNote.semis)), 
-      letter:q.letterBySemis(semis), 
+      letter:letters[0], 
+      letters:letters, 
       octave:q.octave(semis),
-      semis:semis 
+      semis:semis, 
+      noteBySeis:true
     }
   },
   noteByTab( tab ){
     let strg = q.strgByTab( tab ),
       fretN = Number( tab.substr(1,2) ),
-      semis = strg.semis +fretN
+      semis = strg.semis +fretN,
+      letters = q.lettersBySemis(semis)
     return {
       strg: strg, 
       fretN:fretN, 
-      letter:q.letterBySemis(semis), 
+      // letter:q.letterBySemis(semis), 
+      // letter:q.intervals.bySemis(semis).letter, 
+      letter:letters[0], 
+      letters:letters, 
       octave:q.octave(semis),
       semis:semis,
-      tab:tab
+      // tab:tab
     }
   },
 
@@ -307,32 +376,36 @@ var q = {
 
   scales:{
     list:[
+      // tested with: https://www.omnicalculator.com/other/music-scale
+      //            https://www.scales-chords.com/scalenav.php
+      // rules:
+      //   keep accidentals of the same type -- all flat or sharp
       { name:'Major', abr:'M', short:'Major',
-        // semis:[0,2,4,5,7,9,11],  // list:[ 'C', 'D', 'E', 'F', 'G', 'A', 'B'],
+        // list:[ 'C', 'D', 'E', 'F', 'G', 'A', 'B'],
         intervals:['P1','M2','M3','P4','P5','M6','M7']
       },
       { name:'Natural minor', abr:'m', short:'Nat.min', 
-        // semis:[0,2,3,5,7,9,10],  // list:[ 'C', 'D', 'D#', 'F', 'G', 'A', 'A#'],
-        intervals:['P1','M2','m3','P4','P5','M6','m7']
+        // list:[ 'C', 'D', 'D#', 'F', 'G', 'A', 'A#'],
+        intervals:['P1','M2','m3','P4','P5','m6','m7']
       },
       { name:'Pentatonic major', abr:'P', short:'Pen.maj', 
-        // semis:[0,2,4,7,9],   // list:[ 'C', 'D', 'E', 'G', 'A'],
-        intervals:['P1','M2','P4','P5','M6']
+        // list:[ 'C', 'D', 'E', 'G', 'A'],
+        intervals:['P1','M2','M3','P5','M6']
       },
       { name:'Pentatonic minor', abr:'p', short:'Pen.min',
-        // semis:[0,3,5,7,10],     // list:[ 'C', 'D#', 'F', 'G', 'A#'],
+        // list:[ 'C', 'D#', 'F', 'G', 'A#'],
         intervals:['P1','m3','P4','P5','m7']
       },
       { name:'Blues heptatonic', abr:'B7', short:'Blues7',
-        intervals:['P1','M2','M3','P4','d5','M6','m7']
+        intervals:['P1','M2','m3','P4','d5','M6','m7']
       },
       { name:'Blues hexatonic', abr:'B6', short:'Blues6',
-        // semis:[0,3,5,6,7,10],
-        intervals:['P1','m3','P4','A4','P5','m7']
+        // 1, ♭3, 4, ♭5, 5, ♭7
+        intervals:['P1','m3','P4','d5','P5','m7']
       },
       { name:'Chromatic', abr:'Ch', short:'Chrom',
-        // semis:[0,1,2,3,4,5,6,7,8,9,10,11],  // list:[ 'C', 'D', 'E', 'F', 'G', 'A', 'B'],
-        intervals:['P1','m2','M2','m3','M3','P4','A4','P5','m6','M6','m7','M7']
+        // list:[ 'C', 'D', 'E', 'F', 'G', 'A', 'B'],
+        intervals:['P1','m2','M2','m3','M3','P4','d5','P5','m6','M6','m7','M7']
       },
       { name:'Double harmonic', abr:'DH', short:'Dbl.har',
         // semis:[0,1,4,5,7,8,11], //minor second, major third, perfect fourth and fifth, minor sixth, major seventh -- https://en.wikipedia.org/wiki/Double_harmonic_scale
@@ -340,11 +413,11 @@ var q = {
       },
       { name:'Gypsy minor', abr:'Gm', short:'Gypsy.min',
         // semis:[0,2,3,6,7,8,11],    //step pattern is W, H, +, H, H, +, H -- https://en.wikipedia.org/wiki/Hungarian_minor_scale
-        intervals:['P1','M2','m3','A4','P5','m6','M7']
+        intervals:['P1','M2','m3','d5','P5','m6','M7']
       },
       { name:'Hungarian major', abr:'HM', short:'Hung.maj`',
         // semis:[0,3,4,6,7,9,10],    //semitones: 3, 1, 2, 1, 2, 1, 2 -- https://en.wikipedia.org/wiki/Hungarian_major_scale
-        intervals:['P1','m3','M3','A4','P5','M6','m7']
+        intervals:['P1','m3','M3','d5','P5','M6','m7']
       }
     ],
     byName( scaleName ){
@@ -364,9 +437,11 @@ var q = {
       let scale = q.scales.byName( scaleName )
       if(scale === null) return null
 
+      let preferFlats = ( scaleName.indexOf('minor') >= 0 || root.letter.indexOf('♭') >= 0 )
+
       for(let ivlAbr of scale.intervals){   //generate intervals for scale built on root
         let ivl = q.intervals.byName( ivlAbr )
-        let letter = q.letterBySemis( root.semis +ivl.semis )
+        let letter = q.letterCalc( root, ivl, preferFlats )
         ivl = Object.assign( {}, ivl, {
           abr: ivlAbr,    //abbreviation may differ from one assigned to scale
           letter:letter,

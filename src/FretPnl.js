@@ -73,8 +73,7 @@ class FretPnl extends React.Component{
       return
 
     // console.log('fretPnl.fretClick:', strN, fretN, cell.className)
-    let note = q.noteByFret( strN, fretN ),
-        root = { strN:strN, fretN:fretN, type:'note', name:'note', letter:note.letter, octave:note.octave, semis:note.semis }
+    let root = q.noteByFret( strN, fretN )
 		this.props.stateChange( 'fretRoot', root )
   }
   fretFltrClick( event ){ //toggle state for frets
@@ -119,14 +118,15 @@ class FretPnl extends React.Component{
       capStyle = 'NoteFirst' //force for this selection
     }else
     if(qry.rootType === 'fretRoot'){
-      if(note.letter === root.letter && note.semis === root.semis)
+      // if(note.letter === root.letter && note.semis === root.semis)
+      if(note.letters.indexOf( root.letter ) >= 0  &&  note.semis === root.semis)
         selected = qry.rootType
     }else
     if(qry.rootType === 'selNote'){
-      if(q.intervals.byLetter( note.letter ).semis === root.semis){ 
+      if(root.letters.indexOf( note.letter ) >= 0){ 
         selected = qry.rootType
-        if(note.letter !== root.letter)   //resolve # vs flat
-          note.letter = root.letter
+        // if(note.letter !== root.letter)   //resolve # vs flat
+        //   note.letter = root.letter
       }
     }
 
@@ -170,7 +170,8 @@ class FretPnl extends React.Component{
     function local_rootFind(note){    //select fret = selected fret
       if(qry.rootType !== 'fretRoot') return null
 
-      if(note.fretN === qry.root.fretN && note.strg.num === qry.root.strN){
+      if(note.fretN === qry.root.fretN && note.strg.num === qry.root.strg.num){
+        // note.letter = qry.root.letter
         return qq.button( note, qry.root  )
       }
       return null
@@ -193,6 +194,7 @@ class FretPnl extends React.Component{
 
       if(qry.octave === note.octave){
         note.ivl = qry.ivl
+        // note.letter = note.letters[0]
         return qq.button( note, qry.root  )
       }
       return null
@@ -204,15 +206,18 @@ class FretPnl extends React.Component{
       let btn = null
       if(qry.rootType === 'fretRoot' && q.fretInRange(note, qry.root) === true){
         let nn = q.noteBySemis(qry.root.semis +qry.ivl.semis)
-        if(nn.letter === note.letter)
+        // if(nn.letter === note.letter)
+        if( note.letters.indexOf(nn.letter) >= 0 )
           btn = true
       }else
-      if(qry.rootType === 'selNote' && qry.ivl.letter === note.letter){
+      // if(qry.rootType === 'selNote' && qry.ivl.letter === note.letter){
+      if(qry.rootType === 'selNote' && note.letters.indexOf(qry.ivl.letter) >= 0){
         btn = true
       }
 
       if(btn === true && (qry.octave === 0 || qry.octave === note.octave)){
         note.ivl = qry.ivl
+        note.letter = qry.ivl.letter
         return qq.button( note, qry.root  )
       }
       return null
@@ -228,10 +233,12 @@ class FretPnl extends React.Component{
       }
       for(let ivl of qry.scale.ivls){
         // if(ivl.scaleLetter === note.letter){
-        if(ivl.letter === note.letter){
+        // if(ivl.letter === note.letter){
+        if( note.letters.indexOf(ivl.letter) >= 0){
           if(qry.octave === 0 || qry.octave === note.octave){
             // note.ivl = Object.assign({}, ivl)
             note.ivl = ivl
+            note.letter = ivl.letter
             return qq.button( note, qry.root )
           }
         }
@@ -246,21 +253,15 @@ class FretPnl extends React.Component{
           return null
       }
       for(let ivl of qry.chord.ivls){
-        if(ivl.letter === note.letter){
+        // if(ivl.letter === note.letter){
+        if( note.letters.indexOf(ivl.letter) >= 0){
           if(qry.octave === 0 || qry.octave === note.octave){
             note.ivl = ivl
+            note.letter = ivl.letter
             return qq.button( note, qry.root )
           }
         }
       }
-      // for(let ivl of qry.chord.ivls){
-      //   if(ivl.chordLetter === note.letter){
-      //     if(qry.octave === 0 || qry.octave === note.octave){
-      //       note.ivl = Object.assign({}, ivl)
-      //       return qq.button( note, qry.root )
-      //     }
-      //   }
-      // }
       return null
     }
 

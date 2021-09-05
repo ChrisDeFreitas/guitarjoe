@@ -223,16 +223,16 @@ class QueryPnl extends React.Component {
   drawSelInterval(){
     let qry = this.props.qry,
       list = [<option key='aaa' ></option>],
-      ii = 0, last = '', selected = ''
+      ii = 0, selected = '' //, last = ''
     for(let ivl of q.intervals.list){
       if(ivl.semis === 0) continue
       if(ivl.semis === 12) continue
-      if(ivl.abr === last) continue
+      // if(ivl.abr === last) continue  should be unique
       let html = `${ivl.name} (${ivl.abr}, ${ivl.semis})`
       list.push(<option key={++ii} data-abr={ivl.abr} >{html}</option>)
       if(qry.ivl !== null && selected === '' && qry.ivl.abr === ivl.abr)
         selected = html
-      last = ivl.abr
+      // last = ivl.abr
     }
     return (
       <div className='dataPnl pnlInterval'>
