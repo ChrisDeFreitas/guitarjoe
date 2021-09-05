@@ -47,6 +47,7 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo
+- update: add ability to play videos in background
 - browser bug: zooming out causes random frets and strings to disappear 
 (assume due to x/y location; test by adjusting)  
 - critical: test for unexpected web activity with Pi-Hole
