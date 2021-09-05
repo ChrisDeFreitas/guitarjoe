@@ -44,11 +44,13 @@ Thanks to<br />
 &nbsp;- Application hosted on <a href='https://github.com/ChrisDeFreitas/guitarjoe' target='_new'>Github</a>  <br />
 &nbsp;- Background image from <a href='https://www.flickr.com/photos/webtreatsetc/with/4514047664/' target='_new'>WebTreats ETC</a> <br />
 &nbsp;- Built with the <a href='https://reactjs.org/' target='_new'>React</a> Javascript library <br />
+&nbsp;- Chords verified using <a href='https://www.omnicalculator.com/other/chord' target='_new'>Omni Chord Calculator</a><br />
 &nbsp;- Fuggles font by Robert Leuschke on <a href='https://fonts.google.com/?query=Robert+Leuschke/' target='_new'>Google Fonts</a> <br />
 &nbsp;- Guitar icon by monkik from the <a href='https://thenounproject.com/term/guitar/2588464/' target='_new'>Noun Project</a> <br />
-&nbsp;- Guitar scales verified using <a href='https://jguitar.com/scale' target='_new'>jguitar.com</a><br />
+&nbsp;- Intervals verified using <a href='https://www.omnicalculator.com/other/music-interval' target='_new'>Omni Music Interval Calculator</a><br />
 &nbsp;- Music theory from <a href='https://www.wikipedia.org/' target='_new'>Wikipedia</a><br />
 &nbsp;- Popup control from <a href='https://react-popup.elazizi.com/' target='_new'>reactjs-popup</a> <br />
+&nbsp;- Scales verified using <a href='https://www.scales-chords.com/scalenav.php' target='_new'>ScaleChords Musical Scale Navigator</a><br />
 <br />
 Created by Chris DeFreitas, BC Canada<br />
         </div>

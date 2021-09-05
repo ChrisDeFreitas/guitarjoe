@@ -76,7 +76,6 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
  - Built with the <a href='https://reactjs.org/' target='_new'>React</a> Javascript library  
  - Fuggles font by Robert Leuschke on <a href='https://fonts.google.com/?query=Robert+Leuschke/' target='_new'>Google Fonts</a>  
  - Guitar icon by monkik from the <a href='https://thenounproject.com/term/guitar/2588464/' target='_new'>Noun Project</a>  
- - Guitar scales verified using <a href='https://jguitar.com/scale' target='_new'>jguitar.com</a><br />
  - <a href='https://developer.mozilla.org/'>Mozilla Developer Network</a> web technology reference
  - Music theory from <a href='https://www.wikipedia.org/' target='_new'>Wikipedia</a><br />
  - Popup control from <a href='https://react-popup.elazizi.com/' target='_new'>reactjs-popup</a>  
