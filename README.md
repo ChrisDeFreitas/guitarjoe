@@ -22,7 +22,7 @@ I am not a musician (I often say I'll be ready to play in a band around the age 
 20210905:  
 This was a rewrite of the interval calculation functionality.  Originally based on semitones but that lost track of the ♭/# info.  The new algorithm took a long time to develop and ripped the guts out of the app.  But it works well and has room for expansion, see [guitar_lib.letterCalc()](https://github.com/ChrisDeFreitas/guitarjoe/blob/6cee48132713c0c7bd2a7d21f468f1c74f2fb70e/src/guitar_lib.js#L253).  In the testing I fixed many transcription errors in scales, chords and intervals--another bonus for the grueling effort.  
 
-Usage of ♭♭ and ## removed from app. This simplifies manipulation of intervals by the library.  It is assumed anyone needing to calculate ♭♭ and ## has requirements beyond the scope of the guitar fretboard.  
+Usage of ♭♭ and ## removed from app. This simplifies manipulation of intervals by the library.  It is assumed anyone needing to calculate ♭♭ and ## have requirements beyond the scope of the guitar fretboard.  
 
 - upgraded to v.0.1.1
 - fixed bug: selecting C# Major scale, infoPnl displays D♭, E♭...; should be C#, D#; need logic to display sharp vs flat consistently  
