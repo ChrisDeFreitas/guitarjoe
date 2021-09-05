@@ -8,7 +8,7 @@ The goal was to create a tool that would make guitar theory accessible while pra
 The name is based on the slang "Joe Workie," a synonym for construction worker. At the tender age of 12 it felt like one of those adults terms I had to learn--it wasn't. In this context, GuitarJoe does the heavy lifting of translating music theory to the guitar fretboard.  
 
 ## Music Theory
-I am not a musician (I often say I'll be ready to play in a band around the age of 90).  So the data is taken from Wikipedia and verified against other online sources.  The Blues Heptatonic scale has different representations by online sources, so it is debatable.  Please forward any discrepancies to me.
+I am not a musician (I often say I'll be ready to play in a band around the age of 90).  So the data is taken from Wikipedia and verified against other online sources.  The Blues Heptatonic scale has different representations online, so it is debatable.  Please forward any discrepancies to me.
 
 ## Technical Notes
 - The entire application is contained within the single web page; it does not require a remote server.  The only external link is to the <a href='https://fonts.google.com/?query=Robert+Leuschke/' target='_new'>Fuggles Google Font</a> used in the header. So one could use the ./docs folder on any webserver.
@@ -26,11 +26,12 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 - upgraded to v.0.1.1
 - fixed bug: selecting C# Major scale, infoPnl displays D♭, E♭...; should be C#, D#; need logic to display sharp vs flat consistently  
--- rewrote guitar_lib.letterCalc() because the algorithm was based on semitones
--- removed guitar_lib.letterBySemis() because the the idea was wrong
--- refactored code using letterBySemis() to use the new letterCalc()
--- refactoring affected most operations so it is a big update
+-- rewrote guitar_lib.letterCalc() because the algorithm was based on semitones  
+-- removed guitar_lib.letterBySemis() because the the idea was wrong  
+-- refactored code using letterBySemis() to use the new letterCalc()  
+-- refactoring affected most operations so it is a big update  
 - scale and chord definition error updates
+- added Phrygian dominant scale   
 
 
 ## Helpful References
@@ -39,10 +40,18 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
   - [Chord shape calculator](https://jguitar.com/chord)
   - [Chord note calculator](https://www.omnicalculator.com/other/chord)
   - [Chord shape identifier](https://jguitar.com/chordname) 
+  - [Music interval caculator](https://www.omnicalculator.com/other/music-interval)
   - [Scale calculator](https://www.scales-chords.com/scalenav.php)
   - Web based fretboard with paid services: [Fretastic](https://fretastic.com/guitar)
   - Wikipedia: [Chord names and symbols](https://en.wikipedia.org/wiki/Chord_names_and_symbols_(popular_music))
   - Wikipedia: [Diatonic scale](https://en.wikipedia.org/wiki/Diatonic_scale)
+  - Wikipedia: [Intervals](https://en.wikipedia.org/wiki/Interval_(music))
+  - Wikipedia: [Scales](https://en.wikipedia.org/wiki/Scale_(music))
+  - Wikipedia: [Scale: Blues](https://en.wikipedia.org/wiki/Blues_scale)
+  - Wikipedia: [Scale: Double harmonic](https://en.wikipedia.org/wiki/Double_harmonic_scale)
+  - Wikipedia: [Scale: Gypsy minor](https://en.wikipedia.org/wiki/Hungarian_minor_scale)
+  - Wikipedia: [Scale: Hungarian major](https://en.wikipedia.org/wiki/Hungarian_major_scale)
+  - Wikipedia: [Scale: Phrygian dominant](https://en.wikipedia.org/wiki/Phrygian_dominant_scale)
   - Youtube: [200 Guitar Riffs and Licks from the '60s](https://www.youtube.com/watch?v=gWc7RN61qaU)
 
 
@@ -71,6 +80,5 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
  - <a href='https://developer.mozilla.org/'>Mozilla Developer Network</a> web technology reference
  - Music theory from <a href='https://www.wikipedia.org/' target='_new'>Wikipedia</a><br />
  - Popup control from <a href='https://react-popup.elazizi.com/' target='_new'>reactjs-popup</a>  
- - Tested against Music Interval Chart at <a href='http://www.socraticmethod.net/music_theory/ch_up.htm'>The Music Theory Advantage</a> (note application does not use ## or ♭♭ notes) 
  - <a href='https://code.visualstudio.com/'>Visual Studio Code</a> development environment
 

@@ -408,16 +408,20 @@ var q = {
         intervals:['P1','m2','M2','m3','M3','P4','d5','P5','m6','M6','m7','M7']
       },
       { name:'Double harmonic', abr:'DH', short:'Dbl.har',
-        // semis:[0,1,4,5,7,8,11], //minor second, major third, perfect fourth and fifth, minor sixth, major seventh -- https://en.wikipedia.org/wiki/Double_harmonic_scale
+        // minor second, major third, perfect fourth and fifth, minor sixth, major seventh -- https://en.wikipedia.org/wiki/Double_harmonic_scale
         intervals:['P1','m2','M3','P4','P5','m6','M7']
       },
       { name:'Gypsy minor', abr:'Gm', short:'Gypsy.min',
-        // semis:[0,2,3,6,7,8,11],    //step pattern is W, H, +, H, H, +, H -- https://en.wikipedia.org/wiki/Hungarian_minor_scale
+        // step pattern is W, H, +, H, H, +, H -- https://en.wikipedia.org/wiki/Hungarian_minor_scale
         intervals:['P1','M2','m3','d5','P5','m6','M7']
       },
       { name:'Hungarian major', abr:'HM', short:'Hung.maj`',
-        // semis:[0,3,4,6,7,9,10],    //semitones: 3, 1, 2, 1, 2, 1, 2 -- https://en.wikipedia.org/wiki/Hungarian_major_scale
+        // semitones: 3, 1, 2, 1, 2, 1, 2 -- https://en.wikipedia.org/wiki/Hungarian_major_scale
         intervals:['P1','m3','M3','d5','P5','M6','m7']
+      },
+      { name:'Phrygian dominant', abr:'Pd', short:'Phr.dom`',
+        //1 – ♭2 – 3 – 4 – 5 – ♭6 – ♭7 – 1  https://en.wikipedia.org/wiki/Phrygian_dominant_scale
+        intervals:['P1','m2','M3','P4','P5','m6','m7']
       }
     ],
     byName( scaleName ){

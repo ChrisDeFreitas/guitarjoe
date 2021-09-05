@@ -37,8 +37,8 @@ There is a lot more planned, but I am working on other aspects of the project.
 It will always be free; a warm thanks for those who have supported my various journeys.
 <br /><br />
 &nbsp;- Tested to work in Chrome, Firefox, and Safari(iPad)<br />
-&nbsp;- Send comments and bugs to chrisd@europa.com <br />
-&nbsp;- Review project documentation and code in the <a href='https://github.com/ChrisDeFreitas/guitarjoe/'>GitHub Repository</a>
+&nbsp;- Review documentation, updates and references in the <a href='https://github.com/ChrisDeFreitas/guitarjoe/' target='_new'>GitHub Repository</a> <br />
+&nbsp;- Send comments and bugs to <a href='mailto:chrisd@europa.com?subject=GuitarJoe:'>chrisd@europa.com</a>
 <br /><br />
 Thanks to<br />
 &nbsp;- Application hosted on <a href='https://github.com/ChrisDeFreitas/guitarjoe' target='_new'>Github</a>  <br />
