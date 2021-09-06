@@ -1,19 +1,23 @@
 /*
-  //♭ &flat;
+  //♭ &flat; alt+?
   
-  GuitarJoe application logic
+  GuitarJoe app's guitar theory logic
   by Chris DeFreitas, chrisd@europa.com
   
    Note:
     - "letter" refers to what we usually call a note, ie C#
     - note is an object, requires refactoring for consistency: { letter:'C#', semis:49, ... }
     - note.semis is unique
+    - ivl is an interval object
     - assume: exception handling performed by caller
 
   todo:
     - refactor for code consistency
     - refactor to create a standard note object
+    - refactor .fretboard for unused code
+    - move strng and tab functions under .fretboard
     - fix q.chords.make() (when code needed)
+    - (when needed) update letterCalc() for ##/bb -- see comments in function
   
  */
 
@@ -111,7 +115,7 @@ var q = {
     }
   },
 
-  fretboard: {    //is this used??
+  fretboard: {    //is this used?
     fretMax:14,
     
     strings: [    //assume: frets == null or array of frets with content
@@ -236,7 +240,6 @@ var q = {
     },
   },
 
-
   letters:['C','C#','D♭','D','D#','E♭','E','F','F#','G♭','G','G#','A♭','A','A#','B♭','B'],
   lttrs:['C','D','E','F','G','A','B'],
   lettersBySemis( semis ){
@@ -251,7 +254,11 @@ var q = {
     return letters
   },
   letterCalc( root, ivlOrName, preferFlats = false){  //iterate by semitones to get new letter with correct #/b
-    // assume: preferFlats === true: return flats, no sharps 
+    // assume: preferFlats === true: return only flats
+
+    // to handle ##/bb:
+    // 1. pre-loop: resolve to standard note, get new root interval, proceed as normal
+    // 2. post loop(???): if ivl requires ##/bb, manually resolve based on new note: C => Dbb
 
     if(typeof root === 'object') root = root.letter
     let rprefix = root.substr(0,1)
@@ -268,10 +275,10 @@ var q = {
     // console.log( 'ivl.semis='+ivl.semis, '\nlist=', list  )
 
     //assume: no ## or bb used
-    let max = ivl.semis, idx = 0
+    let max = ivl.semis, idx = 0    //idx = q.lttrs.indexOf( ltr ) ::: test
     let newlet = rprefix, newsfx = rsuffix
     function local_inc( ltr ){
-      idx = q.lttrs.indexOf( ltr )
+      idx = q.lttrs.indexOf( ltr ) // this can probably be refactored out: lttrs[idx % 7] always === newlet; lookup not required
       idx++
       return q.lttrs[ idx % 7]
     }
@@ -304,14 +311,14 @@ var q = {
   noteByLetter( letter ){
     let ivl = q.intervals.byLetter( letter ),
         semis = ivl.semis,
-        // octave = q.octave(semis),
+        octave = q.octave(semis),
         letters = q.lettersBySemis(semis)
     return {
       strg:null, 
       fretN:null,
       letter:letter,
       letters:letters,
-      octave:0,
+      octave:octave,
       semis:semis,
       noteByLetter:true
     }
@@ -334,7 +341,7 @@ var q = {
   noteBySemis( semis ){
     let strNote = null,
       fretMax = q.fretboard.fretMax
-    for(let strg of q.fretboard.strings){
+    for(let strg of q.fretboard.strings){  // create: strgBySemis()
       if(semis >= strg.semis && semis <= (strg.semis +fretMax)){
         strNote = strg
         break
@@ -368,7 +375,6 @@ var q = {
       // tab:tab
     }
   },
-
 
   octave( semis ){
     return Math.floor( semis / 12 )
@@ -404,7 +410,6 @@ var q = {
         intervals:['P1','m3','P4','d5','P5','m7']
       },
       { name:'Chromatic', abr:'Ch', short:'Chrom',
-        // list:[ 'C', 'D', 'E', 'F', 'G', 'A', 'B'],
         intervals:['P1','m2','M2','m3','M3','P4','d5','P5','m6','M6','m7','M7']
       },
       { name:'Double harmonic', abr:'DH', short:'Dbl.har',
@@ -478,6 +483,7 @@ var q = {
       return semis
   },
 
+  //todo: move all to q.fretboard...
   strg( strngN ){  
     return Object.assign({}, q.fretboard.strings[ strngN -1 ])
   },
@@ -494,7 +500,6 @@ var q = {
         throw new Error(`guitar_lib.strgByTab() error, tab letter not found:[${ltr}].`)
     }
   },
-  
   tabByFret( strN, fretN ){  
     let tab = ''
     switch( strN ){

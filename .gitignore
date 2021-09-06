@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules/
 /.pnp
 .pnp.js
+.vscode/
 
 # misc
 package-lock.json

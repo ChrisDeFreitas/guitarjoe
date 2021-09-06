@@ -56,18 +56,24 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo
+- fix ./public/logo.svg colors: image appears dim on white backgrounds  
+- fix ./public/logo.svg colors: rename to differentiate from ./src/resources/logo.svg  
+- About button: design consistent style for header buttons  
+- click a note in infoPnl to toggle its disable status
 - update: add ability to play videos in background
 - browser bug: zooming out causes random frets and strings to disappear 
 (assume due to x/y location; test by adjusting)  
-- critical: test for unexpected web activity with Pi-Hole
 -  qryPnl collapsed==true: replace fret numbers with green line above key frets (like fret inlays, but on top)  
 - fret click: allow for multiple frets to be selected:  
 -- 1 fret clicked == current behaviour  
 -- 2 or more == disable scale, ?chord?; keep btn.click/transparency or second click deletes?   
 - add settings dlg:  
 -- create dlg to select bgndImgUrl or color or default  
+-- select button colors  
 -- other?  
-- add Inversions: ?integrate with Chord selection?
+- add Inversions: ?integrate with Chord selection?  
+- refactor letter/note obj
+- refactor guitar_lib.fretboard: remove dead code, add strng ans tab functions
 
 
 ## Thanks to
