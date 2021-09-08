@@ -94,11 +94,11 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 -- 1 fret clicked: current behaviour  
 -- 2 or more clicked:  
   --- new state rootType = 'fretSelect'  
-  --- state stored in complex object: {frets[e12, ...], intervals:[P1, ...], ... }  
+  --- store frets in Fretboard.state.fretSelect[]  
+  --- state is complex object: {frets[e12, ...], intervals:[P1, ...], ... }  
   --- fretButton.dataset.select = fretSelect  
   --- root (first button clicked) border-color = purple (ish)  
   --- how to turn off state? perhaps second click on root, click lblSelNote, click reset button  
-  --- store frets in Fretoboard.state.fretSelect[]  
   --- should other button colors change to indicate new state?  
   --- selScale displays only scales with selected notes (becomes scale finder)  
   --- selChord displays only chords with selected notes (becomes chord finder)  
