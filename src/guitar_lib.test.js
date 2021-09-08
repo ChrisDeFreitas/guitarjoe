@@ -5,7 +5,7 @@
 */
 import q from "./guitar_lib.js";
 
-q.fretMaxSet( 8 )
+q.fretboard.fretMaxSet( 8 )
 
 describe('test interval functions', () => {
   it("expect q.semis('m3').semis === 3 ", () => {
