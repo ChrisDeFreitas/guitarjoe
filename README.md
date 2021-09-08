@@ -17,23 +17,6 @@ I am not a musician (I often say I'll be ready to play in a band around the age 
 - The application is a standard <a href='https://create-react-app.dev/'>Create React App</a>, except the ./build folder is renamed to ./docs to work with <a href='https://pages.github.com/'>GitHub Pages</a>.  See <a href='https://create-react-app.dev/docs/advanced-configuration'>BUILD_PATH environment variable</a> for info on that redirection.
 
 
-## Updates
-
-20210905:  
-This was a rewrite of the interval calculation functionality.  Originally based on semitones but that lost track of the ♭/# info.  The new algorithm took a long time to develop and ripped the guts out of the app.  But it works well and has room for expansion, see [guitar_lib.letterCalc()](https://github.com/ChrisDeFreitas/guitarjoe/blob/6cee48132713c0c7bd2a7d21f468f1c74f2fb70e/src/guitar_lib.js#L253).  In the testing I fixed many transcription errors in scales, chords and intervals--another bonus for the grueling effort.  
-
-Usage of ♭♭ and ## removed from app. This simplifies manipulation of intervals by the library.  It is assumed anyone needing to calculate ♭♭ and ## have requirements beyond the scope of the guitar fretboard.  
-
-- upgraded to v.0.1.1
-- fixed bug: selecting C# Major scale, infoPnl displays D♭, E♭...; should be C#, D#; need logic to display sharp vs flat consistently  
--- rewrote guitar_lib.letterCalc() because the algorithm was based on semitones  
--- removed guitar_lib.letterBySemis() because the the idea was wrong  
--- refactored code using letterBySemis() to use the new letterCalc()  
--- refactoring affected most operations so it is a big update  
-- scale and chord definition error updates
-- added Phrygian dominant scale   
-
-
 ## Helpful References
   - Article: [Chord Progressions for Pentatonic Melodies](https://www.secretsofsongwriting.com/2018/07/09/chord-progressions-for-pentatonic-melodies/)
   - Article: [How Chords and Scales are Related](https://www.thejazzpianosite.com/jazz-piano-lessons/jazz-scales/chord-scale-system/)
@@ -55,27 +38,6 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
   - Youtube: [200 Guitar Riffs and Licks from the '60s](https://www.youtube.com/watch?v=gWc7RN61qaU)
 
 
-## ToDo
-- fix ./public/logo.svg colors: image appears dim on white backgrounds  
-- fix ./public/logo.svg colors: rename to differentiate from ./src/resources/logo.svg  
-- About button: design consistent style for header buttons  
-- click a note in infoPnl to toggle its disable status
-- update: add ability to play videos in background
-- browser bug: zooming out causes random frets and strings to disappear 
-(assume due to x/y location; test by adjusting)  
--  qryPnl collapsed==true: replace fret numbers with green line above key frets (like fret inlays, but on top)  
-- fret click: allow for multiple frets to be selected:  
--- 1 fret clicked == current behaviour  
--- 2 or more == disable scale, ?chord?; keep btn.click/transparency or second click deletes?   
-- add settings dlg:  
--- create dlg to select bgndImgUrl or color or default  
--- select button colors  
--- other?  
-- add Inversions: ?integrate with Chord selection?  
-- refactor letter/note obj
-- refactor guitar_lib.fretboard: remove dead code, add strng ans tab functions
-
-
 ## Thanks to
  - Application hosted on <a href='https://github.com/ChrisDeFreitas/guitarjoe' target='_new'>GitHub</a>   
  - Background image from <a href='https://www.flickr.com/photos/webtreatsetc/with/4514047664/' target='_new'>WebTreats ETC</a>  
@@ -86,4 +48,57 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
  - Music theory from <a href='https://www.wikipedia.org/' target='_new'>Wikipedia</a><br />
  - Popup control from <a href='https://react-popup.elazizi.com/' target='_new'>reactjs-popup</a>  
  - <a href='https://code.visualstudio.com/'>Visual Studio Code</a> development environment
+
+
+## Updates
+
+20210908:
+This update allows note buttons to be highlighted by clicking on a note in the infoPnl.
+To save space, when the queryPnl is collapsed, fret numbers will be replaced by green 
+bars over the 5,7,9 and 12 frets.  The click to disable fret functionality will remain
+active when collapsed.
+
+- upgraded to v.0.1.2
+- on collapse fret numbers hidden, 5,7,9,12 replaced by green line
+- clicking a note in the infoPnl changes background color of similar fretButtons to blue
+- created style for header buttons
+- renamed ./public/logo.svg to favicon.svg
+- refactored: guitar_lib.fretboard, included string and fret functions  
+- refactored fretPnl.button()
+- refactored to create button.dataset.selected and associated css
+- installed source-map-explorer, found no glaring errors
+
+
+20210905:  
+This was a rewrite of the interval calculation functionality.  Originally based on semitones but that lost track of the ♭/# info.  The new algorithm took a long time to develop and ripped the guts out of the app.  But it works well and has room for expansion, see [guitar_lib.letterCalc()](https://github.com/ChrisDeFreitas/guitarjoe/blob/6cee48132713c0c7bd2a7d21f468f1c74f2fb70e/src/guitar_lib.js#L253).  In the testing I fixed many transcription errors in scales, chords and intervals--another bonus for the grueling effort.  
+
+Usage of ♭♭ and ## removed from app. This simplifies manipulation of intervals by the library.  It is assumed anyone needing to calculate ♭♭ and ## have requirements beyond the scope of the guitar fretboard.  
+
+- upgraded to v.0.1.1
+- fixed bug: selecting C# Major scale, infoPnl displays D♭, E♭...; should be C#, D#; need logic to display sharp vs flat consistently  
+-- rewrote guitar_lib.letterCalc() because the algorithm was based on semitones  
+-- removed guitar_lib.letterBySemis() because the the idea was wrong  
+-- refactored code using letterBySemis() to use the new letterCalc()  
+-- refactoring affected most operations so it is a big update  
+- scale and chord definition error updates
+- added Phrygian dominant scale   
+
+
+## ToDo
+- fix ./public/favicon.svg colors: image appears dim on white backgrounds  
+- refactor Fretboard states to be arrays: fretFilter, strgFltrList
+- refactor fretPnl.render(): simplify, optimize
+- update: add ability to play videos in background
+- browser bug: zooming out causes random frets and strings to disappear 
+(assume due to x/y location; test by adjusting)  
+-  fret click: allow for multiple frets to be selected:  
+-- 1 fret clicked == current behaviour  
+-- 2 or more == disable scale, ?chord?; keep btn.click/transparency or second click deletes?   
+- add settings dlg:  
+-- create dlg to select bgndImgUrl or color or default    
+-- other?  
+- add Inversions: ?integrate with Chord selection?  
+- refactor letter/note obj
+- dig into source-map-explorer details
+
 

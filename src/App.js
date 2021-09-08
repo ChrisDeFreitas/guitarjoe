@@ -62,11 +62,13 @@ function App(){
       state = fbs[ii].state  //one of: true, state object, false(a deleted fretboard)
     if(id === newid){   //create new fretboard
       el = <Fretboard key={id} fbid={id} duplicate={duplicate} remove={remove} 
+				collapsed={state.collapsed}
 				fretFirst={state.fretFirst}
 				fretLast={state.fretLast}
 				fretBtnText={state.fretBtnText}
 				fretFilter={state.fretFilter}
 				strgFltrList={state.strgFltrList}
+        noteFilter={state.noteFilter}
 				rootType={state.rootType}
 				fretRoot={state.fretRoot}
 				selNoteVal={state.selNoteVal} 
@@ -87,7 +89,7 @@ function App(){
     <div className="App">
 			<header className="App-header header">
         <Logo className="Logo" alt="Logo" />
-        GuitarJoe v0.1.1 <About />
+        GuitarJoe v0.1.2 <About />
       </header>
 			{list}
     </div>

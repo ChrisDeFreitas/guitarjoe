@@ -1,6 +1,6 @@
 {
   "name": "guitarjoe",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": false,
   "homepage": ".",
   "description": "GuitarJoe is a web based tool that allows you to visually explore the guitar fretboard, scales, chords, intervals and notes. The current version is a proof of concept.",
@@ -23,11 +23,13 @@
     "react-scripts": "4.0.3",
     "reactjs-popup": "^2.0.5",
     "save": "^2.4.0",
+    "source-map-explorer": "^2.5.2",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "analyze": "source-map-explorer 'docs/static/js/*.js' --html >> source-map-explorer.html",
     "build": "BUILD_PATH='./docs' react-scripts build",
+    "start": "react-scripts start",
     "test": "react-scripts test",
     "test-lib": "react-scripts test guitar_lib.test.js",
     "eject": "react-scripts eject"

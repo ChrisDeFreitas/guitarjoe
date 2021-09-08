@@ -6,7 +6,7 @@
 */
 
 .popup-content{background:#282c34; border:3px solid #7771; border-radius:15px;
-  color:#eee; 
+  color:#fff; 
   margin:auto; padding:0 1em; max-width:40em;
 }[role=tooltip]
 .popup-content{box-shadow:0 0 3px rgba(0,0,0,.16);border-radius:5px}
@@ -18,7 +18,7 @@
  }
 
  /* modal dialog */
-.modal{ font-size:1em; }
+.modal{ font-size:0.9em; }
 .modal > .header { width: 100%;
   border-bottom: 1px solid gray;
   /* font-size: 1.5em; */

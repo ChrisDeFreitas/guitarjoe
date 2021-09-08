@@ -13,10 +13,6 @@ class QueryPnl extends React.Component {
   constructor(props){
     super(props)
 
-    this.state = {
-      collapsed:(props.collapsed ?props.collapsed :false),
-    }
-
     this.btnDupeClick = this.btnDupeClick.bind(this)
     this.btnDelClick = this.btnDelClick.bind(this)
 
@@ -31,6 +27,7 @@ class QueryPnl extends React.Component {
     this.selNoteChange = this.selNoteChange.bind(this)
     this.selOctaveChange = this.selOctaveChange.bind(this)
     this.selScaleChange = this.selScaleChange.bind(this)
+    this.infoNoteClick = this.infoNoteClick.bind(this)
   }
 
   //event handlers
@@ -41,13 +38,22 @@ class QueryPnl extends React.Component {
     this.props.duplicate()
   }
   btnCollapseClick(){
-    // console.log('btnCollapseClick')
-    let val = !this.state.collapsed
-    this.setState({ collapsed:val })
+    let val = !this.props.qry.collapsed
+    this.props.stateChange( 'collapsed', val )
   }
   btnClearClick(){
     // this.props.dispatch({ type:"FretboardActions/fretFirstUpdate", payload:'' })
     this.props.reset()
+  }
+  infoNoteClick(event){
+    let btn = event.target   
+    if(btn.className !== 'ivl')
+      btn = btn.parentNode
+      
+    let letter = btn.dataset.letter     
+    // console.log('infoNoteClick', btn, letter)
+    if(typeof letter === 'string')
+      this.props.stateChange( 'noteFilter', letter, btn.className )
   }
   selLabelClick( event ){     //reset param to off value
     let qry = this.props.qry,
@@ -246,7 +252,7 @@ class QueryPnl extends React.Component {
     )
   }  
   drawInfo( collapsed ){
-    let qry = this.props.qry, arrow = null
+    let qry = this.props.qry, arrow = null, selected = 0
     // console.log('queryPnl.drawInfo', qry)
     if(collapsed === 'qryCollapsed')
       arrow = (<div className='qryBtn qryBtnExpand' onClick={this.btnCollapseClick} title="Show query panel" > <div>&#10148;</div> </div>)
@@ -262,18 +268,33 @@ class QueryPnl extends React.Component {
       if(qry.scale !== null){
         html.push( <span key='qryScale' className='propName'>{qry.root.letter +' ' +qry.scale.name +':'}</span> )
         qry.scale.ivls.forEach( ivl => {
-          html.push( <span key={'qryScale'+ivl.abr} className='ivl'> {ivl.letter} <sub>{ivl.abr}</sub> </span> )
+          if(qry.noteFilter.indexOf( ivl.letter ) >= 0) selected = 'noteFilter'
+          else selected = 0
+          
+          html.push( <span key={'qryScale'+ivl.abr} className='ivl'
+            onClick={this.infoNoteClick} data-letter={ivl.letter} data-selected={selected}
+          >&nbsp;{ivl.letter} <sub>{ivl.abr}</sub> </span> )
         })
       }
       if(qry.chord !== null){
         html.push( <span key='qryChord' className='propName'>{qry.root.letter +' ' +qry.chord.name +':'}</span> )
         qry.chord.ivls.forEach( ivl => {
-          html.push( <span key={'qryChord'+ivl.abr} className='ivl'> {ivl.letter} <sub>{ivl.abr}</sub> </span> )
+          if(qry.noteFilter.indexOf( ivl.letter ) >= 0) selected = 'noteFilter'
+          else selected = 0
+
+          html.push( <span key={'qryChord'+ivl.abr} className='ivl'
+            onClick={this.infoNoteClick} data-letter={ivl.letter} data-selected={selected}
+           >&nbsp;{ivl.letter} <sub>{ivl.abr}</sub> </span> )
         })
       }
       if(qry.ivl !== null){
+        if(qry.noteFilter.indexOf( qry.ivl.letter ) >= 0) selected = 'noteFilter'
+        else selected = 0
+        
         html.push( <span key='qryIvl' className='propName'>{qry.letter +' +' +qry.ivl.name +':'}</span> )
-        html.push( <span key={'qryIvl'+qry.ivl.abr} className='ivl'> {qry.ivl.letter} <sub>{qry.ivl.abr}</sub> </span> )
+        html.push( <span key={'qryIvl'+qry.ivl.abr} className='ivl'
+          onClick={this.infoNoteClick} data-letter={qry.ivl.letter} data-selected={selected}
+        >&nbsp;{qry.ivl.letter} <sub>{qry.ivl.abr}</sub> </span> )
       }
     }
     return (
@@ -287,7 +308,7 @@ class QueryPnl extends React.Component {
   render(){
     // console.log('queryPnl.render()', this.props)
 
-    let collapsed = (this.state.collapsed ?'qryCollapsed' :'qryExpanded')
+    let collapsed = (this.props.qry.collapsed ?'qryCollapsed' :'qryExpanded')
  
     let selNote = this.drawSelNote()
     let selOct = this.drawSelOctave()

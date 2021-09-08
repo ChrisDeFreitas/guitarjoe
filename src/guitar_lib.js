@@ -14,8 +14,6 @@
   todo:
     - refactor for code consistency
     - refactor to create a standard note object
-    - refactor .fretboard for unused code
-    - move strng and tab functions under .fretboard
     - fix q.chords.make() (when code needed)
     - (when needed) update letterCalc() for ##/bb -- see comments in function
   
@@ -115,44 +113,72 @@ var q = {
     }
   },
 
-  fretboard: {    //is this used?
-    fretMax:14,
-    
-    strings: [    //assume: frets == null or array of frets with content
-      {num:1, letter:'E', octave:4, frets:null, semis:0 },
-      {num:2, letter:'B', octave:3, frets:null, semis:0 },
-      {num:3, letter:'G', octave:3, frets:null, semis:0 },
-      {num:4, letter:'D', octave:3, frets:null, semis:0 },
-      {num:5, letter:'A', octave:2, frets:null, semis:0 },
-      {num:6, letter:'E', octave:2, frets:null, semis:0 }
+  fretboard: {
+    strings: [
+      {num:1, letter:'E', octave:4, semis:0, tabLetter:'e' },
+      {num:2, letter:'B', octave:3, semis:0, tabLetter:'B' },
+      {num:3, letter:'G', octave:3, semis:0, tabLetter:'G' },
+      {num:4, letter:'D', octave:3, semis:0, tabLetter:'D' },
+      {num:5, letter:'A', octave:2, semis:0, tabLetter:'A' },
+      {num:6, letter:'E', octave:2, semis:0, tabLetter:'E' }
     ],
-    clear(){
+
+    fretMin:1,
+    fretMax:14,
+    fretMinSet( nn ){   //not used as yet
+      q.fretboard.fretMin = nn
+      q.fretboard.init()
+    },
+    fretMaxSet( nn ){   //not used as yet
+      q.fretboard.fretMax = nn
+      q.fretboard.init()
+    },
+
+    init(){
       for(let ii = 0; ii <= q.fretboard.strings.length -1; ii++){
         let strg = q.fretboard.strings[ii]
-        strg.semis = q.semisCalc(strg.letter, strg.octave)
+        q.fretboard.strings[ii].semis = q.semisCalc(strg.letter, strg.octave)
       }
     },
-    fretMark( strg, semis, val){    //todo: not used, delete
-      let fretnum = ( (strg.root -semis) / 100)
-      if( fretnum > q.fretMax )
-        throw new Error(`fretBoard.fretMark() error, semis is too large (semis=[${semis}]).`)
-    
-      strg.frets[fretnum] = val
+    strg( strgN ){  
+      return Object.assign({}, q.fretboard.strings[ strgN -1 ])
     },
-    show(){
-      console.log('guitar_lib.show():')
-      console.dir(q.fretboard)
+    fretInRange(note, root){
+      if((root.fretN <= 1 && note.fretN <= 5)
+      || (root.fretN > 1 && note.fretN >= (root.fretN -3)  &&  note.fretN <= (root.fretN +3) ))
+        return true
+      return null
     },
-    showStrings(){
-      console.log('guitar_lib.showStrings():', q.fretboard.strings)
-    }
-  },
-
-  fretInRange(note, root){
-    if((root.fretN <= 1 && note.fretN <= 5)
-    || (root.fretN > 1 && note.fretN >= (root.fretN -3)  &&  note.fretN <= (root.fretN +3) ))
-      return true
-    return null
+    fretBySemis( semis ){   // returns fretObject: {fretN, strg, tab}
+      let fretN = null,
+        fretMax = q.fretboard.fretMax
+      for(let strg of q.fretboard.strings){
+        if(semis >= strg.semis && semis <= (strg.semis +fretMax)){
+          fretN = ( semis -strg.semis )
+          return { fretN: fretN, strg:Object.assign( {}, strg ), tab:(strg.tabLetter +fretN) }
+        }
+      }
+      return null
+    },
+    fretByTab( tab ){   // returns fretObject: {fretN, strg, tab}
+      let ltr = tab.substr(0,1),
+        fretN = Number(tab.substr(1))
+      for( let strg of q.fretboard.strings ){
+        if(strg.tabLetter === ltr){
+          return { fretN:fretN, strg:Object.assign({}, strg), tab:(strg.tabLetter +fretN) }
+        }
+      }
+      return null
+    },
+    tabByFret( strN, fretN ){  // return example: 'e12'
+      strN = Number( strN )
+      for( let strg of q.fretboard.strings ){
+        if(strg.num === strN){
+          return ( strg.tabLetter +fretN )
+        }
+      }
+      return null
+    },
   },
 
   intervals:{
@@ -313,9 +339,11 @@ var q = {
         semis = ivl.semis,
         octave = q.octave(semis),
         letters = q.lettersBySemis(semis)
+        //, fobj = q.fretboard.fretBySemis( semis )
     return {
-      strg:null, 
-      fretN:null,
+      strg: null, // fobj.strg,    //should be null because input being not specific to a fret
+      fretN: null, // fobj.fretN,
+      tab: null, // fobj.tab,
       letter:letter,
       letters:letters,
       octave:octave,
@@ -324,13 +352,14 @@ var q = {
     }
   },
   noteByFret( strN, fretN ){
-    let strg = q.strg( strN ),
+    let strg = q.fretboard.strg( strN ),
         semis = strg.semis +fretN,
         octave = q.octave(semis),
         letters = q.lettersBySemis(semis)
     return {
       strg:strg, 
       fretN:(semis -strg.semis),
+      tab: strg.tabLetter +fretN,
       letter:letters[0],
       letters:letters,
       octave:octave,
@@ -339,40 +368,34 @@ var q = {
     }
   },
   noteBySemis( semis ){
-    let strNote = null,
-      fretMax = q.fretboard.fretMax
-    for(let strg of q.fretboard.strings){  // create: strgBySemis()
-      if(semis >= strg.semis && semis <= (strg.semis +fretMax)){
-        strNote = strg
-        break
-      }
-    }
+    let fobj = q.fretboard.fretBySemis( semis )
     let letters = q.lettersBySemis(semis)
     return {
-      strg:strNote, 
-      fretN:(strNote===null ?null :(semis -strNote.semis)), 
+      strg: fobj.strg, 
+      fretN: fobj.fretN, 
+      tab: fobj.strg.tabLetter +(semis -fobj.strg.semis),
       letter:letters[0], 
       letters:letters, 
       octave:q.octave(semis),
       semis:semis, 
-      noteBySeis:true
+      noteBySemis:true
     }
   },
   noteByTab( tab ){
-    let strg = q.strgByTab( tab ),
-      fretN = Number( tab.substr(1,2) ),
+    let fobj = q.fretboard.fretByTab( tab ),
+      strg = fobj.strg,
+      fretN = fobj.fret,
       semis = strg.semis +fretN,
       letters = q.lettersBySemis(semis)
     return {
       strg: strg, 
       fretN:fretN, 
-      // letter:q.letterBySemis(semis), 
-      // letter:q.intervals.bySemis(semis).letter, 
+      tab:tab,
       letter:letters[0], 
       letters:letters, 
       octave:q.octave(semis),
       semis:semis,
-      // tab:tab
+      noteByTab:true
     }
   },
 
@@ -482,46 +505,8 @@ var q = {
       semis += q.intervals.byName( note ).semis
       return semis
   },
-
-  //todo: move all to q.fretboard...
-  strg( strngN ){  
-    return Object.assign({}, q.fretboard.strings[ strngN -1 ])
-  },
-  strgByTab( tab ){
-    let ltr = tab.substr(0,1)
-    switch(ltr){
-      case 'e': return Object.assign({}, q.strg(1) )
-      case 'B': return Object.assign({}, q.strg(2) )
-      case 'G': return Object.assign({}, q.strg(3) )
-      case 'D': return Object.assign({}, q.strg(4) )
-      case 'A': return Object.assign({}, q.strg(5) )
-      case 'E': return Object.assign({}, q.strg(6) )
-      default:
-        throw new Error(`guitar_lib.strgByTab() error, tab letter not found:[${ltr}].`)
-    }
-  },
-  tabByFret( strN, fretN ){  
-    let tab = ''
-    switch( strN ){
-      case 1: tab = 'e'; break
-      case 2: tab = 'B'; break
-      case 3: tab = 'G'; break
-      case 4: tab = 'D'; break
-      case 5: tab = 'A'; break
-      case 6: tab = 'E'; break
-      default:
-        throw new Error(`guitar_lib.tabByFret() error, string number not found:[${strN}].`)
-    }
-    return tab+String(fretN)
-  },
-
-  //is this needed?
-  fretMaxSet( nn ){
-    q.fretboard.fretMax = nn
-    q.fretboard.clear()
-  }
 }
 
 
-q.fretboard.clear()
+q.fretboard.init()
 export default q

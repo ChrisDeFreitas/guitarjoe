@@ -22,14 +22,10 @@
   align-items: left;
   justify-content: left;
 }
-.header{ 
-  font-family:'Fuggles'; font-size:2.5em;  text-shadow:2px 2px 3px #000;
-  position:relative; 
-}
+.header{ font-family:'Fuggles'; font-size:2.5em;  text-shadow:2px 2px 3px #000; position:relative; }
 .Logo{ height:0.8em; position:relative; top:8px; left:-5px; }
 
-.btnInfo{ height:2em; position:absolute; top:15px; right:15em; 
-  background:linear-gradient(180deg, #fff,#eec 50%,hsl(60deg 5% 36%) 100%);
-  border-radius:5px; border:none; padding:0 1em;
+.btnInfo{ background-color:#282c34; border:1px #eee solid; border-radius:5px; color:#fff; 
+  height:2em; padding:0 1em; position:absolute; top:15px; right:15em; 
 }
 

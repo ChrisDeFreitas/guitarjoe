@@ -22,11 +22,13 @@ class Fretboard extends React.Component{
     this.state = {
 			fbid:(props.fbid ?props.fbid :0),
 			
+      collapsed:(props.collapsed ?props.collapsed :false),
       fretFirst:(props.fretFirst ?props.fretFirst :0),
       fretLast:(props.fretLast ?props.fretLast :q.fretboard.fretMax),
       fretBtnText:(props.fretBtnText ?props.fretBtnText :'NoteFirst'),    //one of: NoteFirst, IvlFirst
       fretFilter:(props.fretFilter ?props.fretFilter :''),      //csv of fretN, if found then disable fret
       strgFltrList:(props.strgFltrList ?props.strgFltrList :''),    //csv of strN, if found then hide notes
+      noteFilter:(props.noteFilter ?props.noteFilter :[]),    //notes on fetboard where button.data-selected=2; set be clicking infoPnl note
 
       rootType:(props.rootType ?props.rootType :'s'),    //one of: [null, fretRoot, selNote]
       fretRoot:(props.fretRoot ?props.fretRoot :null),          //note object, set when fret clicked
@@ -44,6 +46,8 @@ class Fretboard extends React.Component{
     this.makeQuery = this.makeQuery.bind(this)
   }  
   reset(){
+    this.setState({ collapsed:false })
+    this.setState({ noteFilter:[] })
     this.setState({ strgFltrList:'' })
     this.setState({ fretFilter:'' })
     this.setState({ scaleName:'' })
@@ -70,6 +74,18 @@ class Fretboard extends React.Component{
     // if(key === 'rootType')   //only manually set below; can be prop instead of state
     //   this.setState({ rootType:val })
     // else
+    if(key === 'collapsed'){
+      this.setState({ collapsed:val })
+    }else
+    if(key === 'noteFilter'){
+      let list = this.state.noteFilter.slice()
+      let idx = list.indexOf( val )
+ 
+      if(idx < 0) list.push( val )
+      else list.splice( idx, 1 )
+      
+      this.setState({ noteFilter:list })
+    }else
     if(key === 'fretBtnText'){
       this.setState({ fretBtnText:val })
     }else
@@ -130,9 +146,6 @@ class Fretboard extends React.Component{
     if(key === 'fretLast')
       this.setState({ fretLast:val })
     else
-    // if(key === 'fretNum')
-    //   this.setState({ fretNum:val })
-    // else
     if(key === 'octave')
       this.setState({ octave:val })
     else
@@ -154,8 +167,11 @@ class Fretboard extends React.Component{
       scale: null,
       chord:null,
       ivl: null,
+
+      collapsed: this.state.collapsed,
       fretBtnText: this.state.fretBtnText,
-      fretFilter: this.state.fretFilter
+      fretFilter: this.state.fretFilter,
+      noteFilter: this.state.noteFilter
     }
     if(qry.rootType === 'fretRoot')
       qry.root = this.state.fretRoot    //note object, set in FretPnl.fretClick()
@@ -177,6 +193,7 @@ class Fretboard extends React.Component{
     return(
       <div className='fretboard' id={'Fretboard'+this.props.fbid}>
         <FretPnl
+          collapsed={this.state.collapsed}
           fretFirst={this.state.fretFirst}
           fretLast={this.state.fretLast}
 
@@ -190,6 +207,7 @@ class Fretboard extends React.Component{
         />
         <QueryPnl 
           fbid={this.props.fbid}
+          collapsed={this.state.collapsed}
           fretFirst={this.state.fretFirst}
           fretLast={this.state.fretLast}
 

@@ -20,19 +20,22 @@ class FretPnl extends React.Component{
     this.strgFltrClick = this.strgFltrClick.bind(this)
   }
   buttonClick( event ){
-    // console.log('buttonClick:')
     let btn = event.target
     if(btn.nodeName !== 'BUTTON'){ 
       btn = btn.parentNode      //span
       if(btn.nodeName !== 'BUTTON') 
         btn = btn.parentNode    //span span
     }
+    if(btn.nodeName !== 'BUTTON') return
     
-    let tag = Number( btn.dataset.tag )
-    if(tag === 0)
-      btn.dataset.tag = 1
+    //toggle button
+    let selected = Number( btn.dataset.selected )
+    if(selected === 0)
+      btn.dataset.selected = 1
     else
-      btn.dataset.tag = 0
+    if(selected === 1)
+      btn.dataset.selected = 0
+ 
     event.stopPropagation()
   }
   fretBtnTextChange( event ){   //toggle formatting of fret button captions
@@ -92,16 +95,16 @@ class FretPnl extends React.Component{
     this.props.stateChange( 'strgFltr'+strN, newstate )
     event.stopPropagation()
   }  
-  tabDelete( tab ){
-    if(this.state.tabs === '') return
-    let list = this.state.tabs.split(','),
-      idx = list.indexOf( tab )
-    if(idx >= 0) {
-      // console.log('tabDelete', tab)
-      list.splice(idx, 1)
-      this.setState({ tabs:list.join(',') })
-    }
-  }
+  // tabDelete( tab ){
+  //   if(this.state.tabs === '') return
+  //   let list = this.state.tabs.split(','),
+  //     idx = list.indexOf( tab )
+  //   if(idx >= 0) {
+  //     // console.log('tabDelete', tab)
+  //     list.splice(idx, 1)
+  //     this.setState({ tabs:list.join(',') })
+  //   }
+  // }
 
   button( note, root ){
     // sample:
@@ -111,7 +114,7 @@ class FretPnl extends React.Component{
     // </button>
     let qry = this.props.qry, ivl = note.ivl, capStyle = qry.fretBtnText
 
-    let selected = ''
+    let selected = 0
     if(root === 'ALL'){   //user selected All Notes
       if(qry.octave !== 0 && qry.octave !== note.octave)
         return null      
@@ -125,42 +128,58 @@ class FretPnl extends React.Component{
     if(qry.rootType === 'selNote'){
       if(root.letters.indexOf( note.letter ) >= 0){ 
         selected = qry.rootType
-        // if(note.letter !== root.letter)   //resolve # vs flat
-        //   note.letter = root.letter
       }
     }
-
+ 
+    //test against props.noteFilter -- allow overriding roottype because user selected
+   // if(selected === 0){
+      if(qry.noteFilter.indexOf( note.letter ) >= 0)
+        selected = 'noteFilter'
+   // }
+    
+    //test against props.tabFilter
+    // if(selected === 0){}
+    
     //format button caption
+    let btncaption = [], key=0
     if(capStyle === 'IvlFirst'){
-      return(
-        <button key={note.semis} className='fretButton'  onClick={this.buttonClick}
-          data-strn={note.strg.num} data-fretn={note.fretN} 
-          data-selected={selected} data-tag={0}
-        >
-          {note.ivl ?<span className='spanIvl'  onClick={this.buttonClick} >
-            <span onClick={this.buttonClick} >{ivl.abr.substr(0,1)}</span>
+      if(note.ivl){
+        btncaption.push(
+          <span key={++key} className='spanIvl'  onClick={this.buttonClick} >
+            <span key={++key} onClick={this.buttonClick} >{ivl.abr.substr(0,1)}</span>
               {ivl.abr.substr(1)}
-            </span> 
-            :null}
-          <sub className='subNote' onClick={this.fretBtnTextChange}>{note.letter}
-            <sub className='subOctave' >{note.octave}</sub>
-          </sub>
-        </button>
-      )
-    }else{
-    // if(qry.fretBtnText === 'NoteFirst'){
-      return(
-        <button key={note.semis} className='fretButton'  onClick={this.buttonClick}
-          data-strn={note.strg.num} data-fretn={note.fretN} 
-          data-selected={selected} data-tag={0}
-        >
-          <span className='spanNote'  onClick={this.buttonClick} >{note.letter}
-            <sub className='subOctave' onClick={this.buttonClick} >{note.octave}</sub>
           </span>
-          {note.ivl ?<sub className='subInterval' onClick={this.fretBtnTextChange} >{ivl.abr}</sub> :null}
-        </button>
+        )
+      }
+      btncaption.push(
+        <sub key={++key} className='subNote' onClick={this.fretBtnTextChange}>{note.letter}
+            <sub key={++key} className='subOctave' >{note.octave}</sub>
+        </sub>
       )
+    } else {
+    // if(capStyle === 'NoteFirst'){
+      btncaption.push(
+        <span key={++key} className='spanNote'  onClick={this.buttonClick} >{note.letter}
+            <sub key={++key} className='subOctave' onClick={this.buttonClick} >{note.octave}</sub>
+        </span>
+      )
+      if(note.ivl){
+        btncaption.push(
+          <sub key={++key} className='subInterval' onClick={this.fretBtnTextChange} >
+            {ivl.abr}
+          </sub>
+        )
+      }
     }
+ 
+    return(
+      <button key={note.semis} className='fretButton'  onClick={this.buttonClick}
+        data-strn={note.strg.num} data-fretn={note.fretN} 
+        data-selected={selected}
+      >
+        {btncaption}
+      </button>
+    )  
   }
   render(){
     let qq = this,
@@ -204,7 +223,7 @@ class FretPnl extends React.Component{
       if(qry.ivl === null) return null
       
       let btn = null
-      if(qry.rootType === 'fretRoot' && q.fretInRange(note, qry.root) === true){
+      if(qry.rootType === 'fretRoot' && q.fretboard.fretInRange(note, qry.root) === true){
         let nn = q.noteBySemis(qry.root.semis +qry.ivl.semis)
         // if(nn.letter === note.letter)
         if( note.letters.indexOf(nn.letter) >= 0 )
@@ -228,7 +247,7 @@ class FretPnl extends React.Component{
       if(qry.scale === null) return null
 
       if(qry.rootType === 'fretRoot'){    //exclude frets
-        if(q.fretInRange(note, qry.root) !== true)
+        if(q.fretboard.fretInRange(note, qry.root) !== true)
           return null
       }
       for(let ivl of qry.scale.ivls){
@@ -249,7 +268,7 @@ class FretPnl extends React.Component{
     function local_chordFind(note){
       if(qry.chord === null) return null
       if(qry.rootType === 'fretRoot'){    //exclude frets
-        if(q.fretInRange(note, qry.root) !== true)
+        if(q.fretboard.fretInRange(note, qry.root) !== true)
           return null
       }
       for(let ivl of qry.chord.ivls){
@@ -290,10 +309,16 @@ class FretPnl extends React.Component{
 
         if(row === 1){  //top border, fret filter disabled because may not be needed
           let cls = (col === (fretMax +1) ?'borderRight tdBorder'+col :'tdBorder'+col)
-          let btn = (col === first || col === (fretMax +1) ?' ' :col)
+          let ss = (col === first || col === (fretMax +1) ?' ' :col)
+          if(ss === col && qry.collapsed === true){
+            if([5,7,9,12].indexOf(col) >= 0)
+              ss = <div data-fretn={col} className='collapsed' >&nbsp;</div>
+            else
+              ss = ''
+          }
           frets.push( <td key={col} 
             data-fretn={col} data-fretfilter={fretFltr}
-            onMouseDown={this.fretFltrClick} className={cls}>{btn}</td> 
+            onMouseDown={this.fretFltrClick} className={cls}>{ss}</td> 
           )
         }else
         if(row === 9){  //bottom frame

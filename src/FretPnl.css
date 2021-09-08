@@ -69,6 +69,11 @@
   text-align:center;
   height:0.5em;
 }
+.fretPnl .frame td .collapsed{    /* show a bar every third fret when qry.collpased=true */
+  background-color:#71b578;
+  height:3px;
+  margin-top:0.5em;
+}
 .fretPnl .frameBottom .tdBottom{ position:relative; }
 
 /* strings */
