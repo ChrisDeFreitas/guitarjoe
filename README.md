@@ -88,17 +88,24 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 - fix ./public/favicon.svg colors: image appears dim on white backgrounds  
 - refactor Fretboard states to be arrays: fretFilter, strgFltrList
 - refactor fretPnl.render(): simplify, optimize
-- update: add ability to play videos in background
+- refactor letter/note obj
 - browser bug: zooming out causes random frets and strings to disappear 
 (assume due to x/y location; test by adjusting)  
 -  fret click: allow for multiple frets to be selected:  
--- 1 fret clicked == current behaviour  
--- 2 or more == disable scale, ?chord?; keep btn.click/transparency or second click deletes?   
-- add settings dlg:  
--- create dlg to select bgndImgUrl or color or default    
--- other?  
-- add Inversions: ?integrate with Chord selection?  
-- refactor letter/note obj
+-- 1 fret clicked: current behaviour  
+-- 2 or more clicked:  
+  --- new state rootType = 'fretSelect', btn.dataset.select = fretSelect  
+  --- root (first button) border color = blue  
+  --- store frets in Fretoboard.state.fretSelect[]
+  --- should other button colors change to indicate new state?  
+  --- selScale displays only scales with selected notes  
+  --- selChord displays only chords with selected notes  
+  --- selInterval displays only intervals not selected 
+- add Inversions:  
+-- can this be integrated with Chord selection  
+-- perhaps integrate with scale to highlight inversion?  
+-- perhaps only active when selScale has a value?  
+- update: add ability to play videos in background
 - dig into source-map-explorer details
 
 
