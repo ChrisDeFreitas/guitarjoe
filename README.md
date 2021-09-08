@@ -89,7 +89,7 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 - browser bug: zooming out causes random frets and strings to disappear (assume due to x/y location; test by adjusting)   
 - refactor Fretboard states to be arrays: fretFilter, strgFltrList (rename to strgFilter)  
 - refactor fretPnl.render(): simplify, optimize  
-- refactor letter/note obj  
+- refactor letter/note obj: provide consistent, logical nomenclature; optimize  
 -  fret click: allow for multiple frets to be selected:  
 -- 1 fret clicked: current behaviour  
 -- 2 or more clicked:  
