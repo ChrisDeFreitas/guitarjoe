@@ -85,6 +85,7 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo
+- bug in v0.1.2 Fretboard.state.noteFilter: resetting to [] requires additoinal logic  
 - fix ./public/favicon.svg colors: image appears dim on white backgrounds  
 - browser bug: zooming out causes random frets and strings to disappear (assume due to x/y location; test by adjusting)   
 - refactor Fretboard states to be arrays: fretFilter, strgFltrList (rename to strgFilter)  
