@@ -93,8 +93,11 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 -  fret click: allow for multiple frets to be selected:  
 -- 1 fret clicked: current behaviour  
 -- 2 or more clicked:  
-  --- new state rootType = 'fretSelect', btn.dataset.select = fretSelect  
-  --- root (first button) border color = blue  
+  --- new state rootType = 'fretSelect'  
+  --- state stored in complex object: {frets[e12, ...], intervals:[P1, ...], ... }  
+  --- fretButton.dataset.select = fretSelect  
+  --- root (first button clicked) border-color = purple (ish)  
+  --- how to turn off state? perhaps second click on root, click lblSelNote, click reset button  
   --- store frets in Fretoboard.state.fretSelect[]  
   --- should other button colors change to indicate new state?  
   --- selScale displays only scales with selected notes (becomes scale finder)  
@@ -106,11 +109,11 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 -- perhaps only active when selScale has a value?  
 - add backup feature:  
 -- allow multiple backups by user assigning backup name  
--- default backup name = 'Auto', will restore on startup; others must be manually loaded by user  
+-- default backup name = 'Auto', will restore on startup; others must be manually loaded by user   
 -- add header button: Backups  
 -- functions: backup, restore, delete, save/load from file?  
 -- default save to Local Storage  
-- add ability to play videos in background
-- dig into source-map-explorer details
+- add ability to play videos in background  
+- dig into source-map-explorer details  
 
 
