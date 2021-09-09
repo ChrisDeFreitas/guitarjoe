@@ -38,7 +38,7 @@ My aim is to keep the app freely available to support those learning guitar; a w
 <br /><br />
 &nbsp;- Tested to work in Chrome, Firefox, and Safari(iPad)<br />
 &nbsp;- Review documentation, updates and references in the <a href='https://github.com/ChrisDeFreitas/guitarjoe/' target='_new'>GitHub Repository</a> <br />
-&nbsp;- Send comments and bugs to <a href='mailto:chrisd@europa.com?subject=GuitarJoe:'>chrisd@europa.com</a>
+&nbsp;- Send comments and bugs to <a href='mailto:ChrisDeFreitas777@gmail.com?subject=GuitarJoe:'>ChrisDeFreitas777@gmail.com</a>
 <br /><br />
 Thanks to<br />
 &nbsp;- Application hosted on <a href='https://github.com/ChrisDeFreitas/guitarjoe' target='_new'>Github</a>  <br />

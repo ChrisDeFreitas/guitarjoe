@@ -52,6 +52,9 @@ I am not a musician (I often say I'll be ready to play in a band around the age 
 
 ## Updates
 
+20210909:  
+- Email address update.
+
 20210908:  
 This update allows note buttons to be highlighted by clicking on a note in the infoPnl.  Once a note is selected within the infoPnl, it will remain selected until clicked again or the reset button is clicked.  To save space, when the queryPnl is collapsed, fret numbers will be replaced by green 
 bars over the 5,7,9 and 12 frets.  The click to disable fret functionality will remain
@@ -84,6 +87,7 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo
+- change behaviour when user clicks root fret button:  allow user click to toggle root button state to "Selected"; currently the button state remains the default root state.  This highlights the principle that user selections should take precedence over system selected states.  
 - fix ./public/favicon.svg colors: image appears dim on white backgrounds  
 - browser bug: zooming out causes random frets and strings to disappear (assume due to x/y location; test by adjusting)   
 - refactor Fretboard states to be arrays: fretFilter, strgFltrList (rename to strgFilter)  
@@ -103,7 +107,7 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
   --- selChord displays only chords with selected notes (becomes chord finder)  
   --- selInterval displays only intervals not selected (becomes scale/chord builder)  
 - add Inversions:  
--- can this be integrated with Chord selection  
+-- can this be integrated with Chord selections?  
 -- perhaps integrate with scale to highlight inversion?  
 -- perhaps only active when selScale has a value?  
 - add backup feature:  
