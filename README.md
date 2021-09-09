@@ -53,8 +53,7 @@ I am not a musician (I often say I'll be ready to play in a band around the age 
 ## Updates
 
 20210908:  
-This update allows note buttons to be highlighted by clicking on a note in the infoPnl.
-To save space, when the queryPnl is collapsed, fret numbers will be replaced by green 
+This update allows note buttons to be highlighted by clicking on a note in the infoPnl.  Once a note is selected within the infoPnl, it will remain selected until clicked again or the reset button is clicked.  To save space, when the queryPnl is collapsed, fret numbers will be replaced by green 
 bars over the 5,7,9 and 12 frets.  The click to disable fret functionality will remain
 active when collapsed.
 
@@ -85,7 +84,6 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo
-- bug in v0.1.2 Fretboard.state.noteFilter: resetting to [] requires additoinal logic  
 - fix ./public/favicon.svg colors: image appears dim on white backgrounds  
 - browser bug: zooming out causes random frets and strings to disappear (assume due to x/y location; test by adjusting)   
 - refactor Fretboard states to be arrays: fretFilter, strgFltrList (rename to strgFilter)  

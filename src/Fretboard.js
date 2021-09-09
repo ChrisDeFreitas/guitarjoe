@@ -99,7 +99,6 @@ class Fretboard extends React.Component{
       this.setState({ fretFilter:val })
     }else
     if(key === 'fretRoot'){
-      this.setState({ noteFilter:[] })
       this.setState({ fretRoot:val })
       if(val === null){
          this.setState({ rootType:'' })
@@ -108,7 +107,6 @@ class Fretboard extends React.Component{
         this.setState({ rootType:'fretRoot' })
     }else
     if(key === 'selNoteVal'){
-      this.setState({ noteFilter:[] })
       this.setState({ selNoteVal:val })
       if(val === ''){
         this.setState({ rootType:'' })
@@ -149,15 +147,12 @@ class Fretboard extends React.Component{
       this.setState({ octave:val })
     else
     if(key === 'scaleName'){
-      this.setState({ noteFilter:[] })
       this.setState({ scaleName:val })
     }else
     if(key === 'chordName'){
-      this.setState({ noteFilter:[] })
       this.setState({ chordName:val })
     }else
     if(key === 'ivlName'){
-      this.setState({ noteFilter:[] })
       this.setState({ ivlName:val })
     }else
     if(key === 'semis')
