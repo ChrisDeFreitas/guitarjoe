@@ -143,9 +143,10 @@ var q = {
     strg( strgN ){  
       return Object.assign({}, q.fretboard.strings[ strgN -1 ])
     },
-    fretInRange(note, root){
-      if((root.fretN <= 1 && note.fretN <= 5)
-      || (root.fretN > 1 && note.fretN >= (root.fretN -3)  &&  note.fretN <= (root.fretN +3) ))
+    fretInRange(note, root, num = 3){
+      let max = (num <= 5 ?5 :num)
+      if((root.fretN <= 1 && note.fretN <= max)
+      || (root.fretN > 1 && note.fretN >= (root.fretN -num)  &&  note.fretN <= (root.fretN +num) ))
         return true
       return null
     },

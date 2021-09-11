@@ -58,6 +58,7 @@ I am not a musician (I often say I'll be ready to play in a band around the age 
 - changed the Selected fret button background color to green  
 - clicking a fret button now Selects the button (green background color) despite the previous button state (fretRoot, selRoot, or noteFilter)
 - fixed bug: when an Interval is selected, the root fret button now displays the P1 interval caption
+- when a fret is clicked (a fret root selected), and an Interval is selected, mathching notes within 4 frets will appear. Previously, the range was 3 notes.
 
 20210909:  
 - Email address update.

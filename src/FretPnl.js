@@ -262,7 +262,7 @@ class FretPnl extends React.Component{
         note.letter = qry.letter
         return qq.button( note, qry.root  )
       } else
-      if(qry.rootType === 'fretRoot' && q.fretboard.fretInRange(note, qry.root) === true){
+      if(qry.rootType === 'fretRoot' && q.fretboard.fretInRange(note, qry.root, 4) === true){
         let nn = q.noteBySemis(qry.root.semis +qry.ivl.semis)
         if( note.letters.indexOf(nn.letter) >= 0 )
           btn = true
