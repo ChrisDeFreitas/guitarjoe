@@ -77,6 +77,7 @@ class FretPnl extends React.Component{
 
     // console.log('fretPnl.fretClick:', strN, fretN, cell.className)
     let root = q.noteByFret( strN, fretN )
+    // root.ivl = q.intervals.byName('P1')
 		this.props.stateChange( 'fretRoot', root )
   }
   fretFltrClick( event ){ //toggle state for frets
@@ -95,16 +96,6 @@ class FretPnl extends React.Component{
     this.props.stateChange( 'strgFltr'+strN, newstate )
     event.stopPropagation()
   }  
-  // tabDelete( tab ){
-  //   if(this.state.tabs === '') return
-  //   let list = this.state.tabs.split(','),
-  //     idx = list.indexOf( tab )
-  //   if(idx >= 0) {
-  //     // console.log('tabDelete', tab)
-  //     list.splice(idx, 1)
-  //     this.setState({ tabs:list.join(',') })
-  //   }
-  // }
 
   button( note, root ){
     // sample:
@@ -114,7 +105,7 @@ class FretPnl extends React.Component{
     // </button>
     let qry = this.props.qry, ivl = note.ivl, capStyle = qry.fretBtnText
 
-    let selected = 0
+    let btnState = '', selected = 0
     if(root === 'ALL'){   //user selected All Notes
       if(qry.octave !== 0 && qry.octave !== note.octave)
         return null      
@@ -122,19 +113,23 @@ class FretPnl extends React.Component{
     }else
     if(qry.rootType === 'fretRoot'){
       // if(note.letter === root.letter && note.semis === root.semis)
-      if(note.letters.indexOf( root.letter ) >= 0  &&  note.semis === root.semis)
-        selected = qry.rootType
+      if(note.letters.indexOf( root.letter ) >= 0  &&  note.semis === root.semis){
+        btnState = qry.rootType
+        // selected = qry.rootType
+      }
     }else
     if(qry.rootType === 'selNote'){
       if(root.letters.indexOf( note.letter ) >= 0){ 
-        selected = qry.rootType
+        btnState = qry.rootType
+        // selected = qry.rootType
       }
     }
  
     //test against props.noteFilter -- allow overriding roottype because user selected
    // if(selected === 0){
       if(qry.noteFilter.indexOf( note.letter ) >= 0)
-        selected = 'noteFilter'
+        btnState = 'noteFilter'
+        // selected = 'noteFilter'
    // }
     
     //test against props.tabFilter
@@ -175,7 +170,7 @@ class FretPnl extends React.Component{
     return(
       <button key={note.semis} className='fretButton'  onClick={this.buttonClick}
         data-strn={note.strg.num} data-fretn={note.fretN} 
-        data-selected={selected}
+        data-state={btnState} data-selected={selected}
       >
         {btncaption}
       </button>
@@ -218,31 +213,6 @@ class FretPnl extends React.Component{
       }
       return null
     }
-
-    function local_ivlFind(note){     //select frets matching interval
-      if(qry.ivl === null) return null
-      
-      let btn = null
-      if(qry.rootType === 'fretRoot' && q.fretboard.fretInRange(note, qry.root) === true){
-        let nn = q.noteBySemis(qry.root.semis +qry.ivl.semis)
-        // if(nn.letter === note.letter)
-        if( note.letters.indexOf(nn.letter) >= 0 )
-          btn = true
-      }else
-      // if(qry.rootType === 'selNote' && qry.ivl.letter === note.letter){
-      if(qry.rootType === 'selNote' && note.letters.indexOf(qry.ivl.letter) >= 0){
-        btn = true
-      }
-
-      if(btn === true && (qry.octave === 0 || qry.octave === note.octave)){
-        note.ivl = qry.ivl
-        note.letter = qry.ivl.letter
-        return qq.button( note, qry.root  )
-      }
-      return null
-    }
-
-    //handle scale
     function local_scaleFind(note){
       if(qry.scale === null) return null
 
@@ -264,7 +234,6 @@ class FretPnl extends React.Component{
       }
       return null
     }
-
     function local_chordFind(note){
       if(qry.chord === null) return null
       if(qry.rootType === 'fretRoot'){    //exclude frets
@@ -280,6 +249,32 @@ class FretPnl extends React.Component{
             return qq.button( note, qry.root )
           }
         }
+      }
+      return null
+    }
+    function local_ivlFind(note){     //select frets matching interval
+      if(qry.ivl === null) return null
+      
+      let btn = null
+      if( (qry.rootType === 'fretRoot' && note.tab === qry.root.tab)
+      ||  (qry.rootType === 'selRoot' && note.letters.indexOf(qry.root.letter) >= 0) ){ //this is the root note
+        note.ivl = q.intervals.byName('P1')
+        note.letter = qry.letter
+        return qq.button( note, qry.root  )
+      } else
+      if(qry.rootType === 'fretRoot' && q.fretboard.fretInRange(note, qry.root) === true){
+        let nn = q.noteBySemis(qry.root.semis +qry.ivl.semis)
+        if( note.letters.indexOf(nn.letter) >= 0 )
+          btn = true
+      }else
+      if(qry.rootType === 'selNote' && note.letters.indexOf(qry.ivl.letter) >= 0){
+        btn = true
+      }
+
+      if(btn === true && (qry.octave === 0 || qry.octave === note.octave)){
+        note.ivl = qry.ivl
+        note.letter = qry.ivl.letter
+        return qq.button( note, qry.root  )
       }
       return null
     }

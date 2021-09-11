@@ -175,8 +175,10 @@ class Fretboard extends React.Component{
     }
     if(qry.rootType === 'fretRoot')
       qry.root = this.state.fretRoot    //note object, set in FretPnl.fretClick()
-    if(qry.rootType === 'selNote' && qry.letter !== '' && qry.letter !== 'All')
+    if(qry.rootType === 'selNote' && qry.letter !== '' && qry.letter !== 'All'){
       qry.root = q.noteByLetter( qry.letter )    //note object
+      // qry.root.ivl = q.intervals.byName('P1')
+    }
     if(this.state.scaleName !== '' && qry.root)
       qry.scale = q.scales.toObj( qry.letter, this.state.scaleName )
     if(this.state.chordName !== '' && qry.root)

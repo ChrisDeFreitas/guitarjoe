@@ -36,6 +36,8 @@ I am not a musician (I often say I'll be ready to play in a band around the age 
   - Wikipedia: [Scale: Hungarian major](https://en.wikipedia.org/wiki/Hungarian_major_scale)
   - Wikipedia: [Scale: Phrygian dominant](https://en.wikipedia.org/wiki/Phrygian_dominant_scale)
   - YouTube: [200 Guitar Riffs and Licks from the '60s](https://www.youtube.com/watch?v=gWc7RN61qaU)
+  - YouTube: [Advanced Music Theory - Harmony](https://www.youtube.com/watch?v=-xZ6m1vBQg8)
+  - YouTube: [La Muchacha - Pal´ Monte](https://www.youtube.com/watch?v=gMtCmxy5Umc)
 
 
 ## Thanks to
@@ -51,6 +53,11 @@ I am not a musician (I often say I'll be ready to play in a band around the age 
 
 
 ## Updates
+
+20210911:  
+- changed the Selected fret button background color to green  
+- clicking a fret button now Selects the button (green background color) despite the previous button state (fretRoot, selRoot, or noteFilter)
+- fixed bug: when an Interval is selected, the root fret button now displays the P1 interval caption
 
 20210909:  
 - Email address update.
@@ -87,7 +94,6 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo
-- change behaviour when user clicks root fret button:  allow user click to toggle root button state to "Selected"; currently the button state remains the default root state.  This highlights the principle that user selections should take precedence over system selected states.  
 - fix ./public/favicon.svg colors: image appears dim on white backgrounds  
 - browser bug: zooming out causes random frets and strings to disappear (assume due to x/y location; test by adjusting)   
 - refactor Fretboard states to be arrays: fretFilter, strgFltrList (rename to strgFilter)  

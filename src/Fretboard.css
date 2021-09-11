@@ -84,11 +84,11 @@
   z-index:100;
 }
 .fretButton{ background:linear-gradient(180deg, #fff,#eec 50%,hsl(60deg 5% 36%) 100%); }
-.fretButton[data-selected="fretRoot"] { border: 1px #04ff00 solid; }
-.fretButton[data-selected="selNote"] { border: 1px #fffb00 solid;  }
+.fretButton[data-state="fretRoot"] { border: 1px #04ff00 solid; }
+.fretButton[data-state="selNote"] { border: 1px #fffb00 solid;  }
+.fretButton[data-state="noteFilter"] { background:#aaf; }  /* note found in props.noteFilter */
 /* .fretButton[data-selected="0"] {} */
-.fretButton[data-selected="1"] { background:#867171; }
-.fretButton[data-selected="noteFilter"] { background:#aaf; }  /* note found in props.noteFilter */
+.fretButton[data-selected="1"] { background:#3ac664; }
 .fret0 .fretButton { left:39px; }
 .fretButton sup{ color:#0f000fa0; font-size:0.7em; position:absolute; top:0px; text-shadow:none;  }
 .fretButton sub{ color:#00000050; text-shadow:none; position:relative; }
