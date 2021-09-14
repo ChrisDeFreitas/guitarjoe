@@ -120,7 +120,7 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 - add Inversions:  
 -- can this be integrated with Chord selections?  
 -- perhaps integrate with scale to highlight inversion?  
--- perhaps only active when selScale has a value?  
+-- perhaps only active when selChord has a value?  
 - add backup feature:  
 -- allow multiple backups by user assigning backup name  
 -- default backup name = 'Auto', will restore on startup; others must be manually loaded by user   
