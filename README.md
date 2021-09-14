@@ -54,6 +54,11 @@ I am not a musician (I often say I'll be ready to play in a band around the age 
 
 ## Updates
 
+20210914:  
+- refactored to create guitar_lib.notes; created consistent nomenclature for notes and note objects
+- refactored guitar_lib.fretboard: fret is an integer, fobj is an object returned by fretboard.obj()
+- various fixes, tweaks, and optimizations
+
 20210911:  
 - changed the Selected fret button background color to green  
 - clicking a fret button now Selects the button (green background color) despite the previous button state (fretRoot, selRoot, or noteFilter)
@@ -99,8 +104,7 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 - browser bug: zooming out causes random frets and strings to disappear (assume due to x/y location; test by adjusting)   
 - refactor Fretboard states to be arrays: fretFilter, strgFltrList (rename to strgFilter)  
 - refactor fretPnl.render(): simplify, optimize  
-- refactor letter/note obj: provide consistent, logical nomenclature; optimize  
--  fret click: allow for multiple frets to be selected:  
+- fret click: allow for multiple frets to be selected:  
 -- 1 fret clicked: current behaviour  
 -- 2 or more clicked:  
   --- new state rootType = 'fretSelect'  
@@ -123,6 +127,7 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 -- add header button: Backups  
 -- functions: backup, restore, delete, save/load from file?  
 -- default save to Local Storage  
+- allow for number and range of frets to changed by user 
 - add ability to play videos in background  
 - dig into source-map-explorer details  
 

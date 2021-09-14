@@ -22,7 +22,7 @@ class QueryPnl extends React.Component {
     this.selChordChange = this.selChordChange.bind(this)
     this.btnClearClick = this.btnClearClick.bind(this)
     this.btnCollapseClick = this.btnCollapseClick.bind(this)
-    this.selFretNoChange = this.selFretNoChange.bind(this)
+    // this.selFretNoChange = this.selFretNoChange.bind(this)
     this.selIntervalChange = this.selIntervalChange.bind(this)
     this.selNoteChange = this.selNoteChange.bind(this)
     this.selOctaveChange = this.selOctaveChange.bind(this)
@@ -50,10 +50,10 @@ class QueryPnl extends React.Component {
     if(btn.className !== 'ivl')
       btn = btn.parentNode
       
-    let letter = btn.dataset.letter     
-    // console.log('infoNoteClick', btn, letter)
-    if(typeof letter === 'string')
-      this.props.stateChange( 'noteFilter', letter, btn.className )
+    let note = btn.dataset.note     
+    // console.log('infoNoteClick', btn, note)
+    if(typeof note === 'string')
+      this.props.stateChange( 'noteFilter', note, btn.className )
   }
   selLabelClick( event ){     //reset param to off value
     let qry = this.props.qry,
@@ -95,7 +95,7 @@ class QueryPnl extends React.Component {
         if( !this.last.rootType ) return
         if(this.last.rootType === 'selNote'){
           if(this.last['root'] !== null)
-            this.props.stateChange( 'selNoteVal', this.last['root'].letter )
+            this.props.stateChange( 'selNoteVal', this.last['root'].note )
         } else
         if(this.last.rootType === 'fretRoot'){
           if(this.last['root'] !== null)
@@ -120,12 +120,12 @@ class QueryPnl extends React.Component {
       }
     }
   }
-  selFretNoChange( event ){
-    let sel = event.target,
-      fretN = sel.options[sel.selectedIndex].value
-    this.props.stateChange( 'fretN', fretN )
-    //   this.props.dispatch({ type:"FretboardActions/fretFirstUpdate", payload:fretN })
-  }
+  // selFretNoChange( event ){
+  //   let sel = event.target,
+  //    fret = sel.options[sel.selectedIndex].value
+  //  this.props.stateChange( 'fret', fret )
+  //  //   this.props.dispatch({ type:"FretboardActions/fretFirstUpdate", payload:fret })
+  // }
   selNoteChange( event ){
     let sel = event.target,
       val = sel.options[sel.selectedIndex].text
@@ -161,16 +161,16 @@ class QueryPnl extends React.Component {
   drawSelNote(){
     let qry = this.props.qry,
       list = [<option key='' ></option>,<option key='999' >All</option>]
-    for(let ii=0; ii < q.letters.length; ii++){
-      let note = q.letters[ii]
+    for(let ii=0; ii < q.notes.list.length; ii++){
+      let note = q.notes.list[ii]
       list.push(<option key={ii} >{note}</option>)
     }
 
-    let letter = (qry.letter === null ?'' :qry.letter)
+    let note = (qry.note === null ?'' :qry.note)
     return (
       <div className='dataPnl pnlNote'>
-        <label data-selected={letter !== ''} data-type='note' onClick={this.selLabelClick} >Note</label>
-        <select value={letter} className='selNote' onChange={this.selNoteChange} >{list}</select>
+        <label data-selected={note !== ''} data-type='note' onClick={this.selLabelClick} >Note</label>
+        <select value={note} className='selNote' onChange={this.selNoteChange} >{list}</select>
       </div>
     )
   }
@@ -180,8 +180,8 @@ class QueryPnl extends React.Component {
       omin = 0, omax = 0,
       list = [<option key={999} ></option>]
 
-    omin = q.noteByFret(6, 0).octave
-    omax = q.noteByFret(1, q.fretboard.fretMax).octave
+    omin = q.notes.obj(6, 0).octave
+    omax = q.notes.obj(1, q.fretboard.fretMax).octave
 
     for(let ii = omax; ii >= omin; ii--){
       list.push(<option key={ii} >{ii}</option>)
@@ -266,35 +266,35 @@ class QueryPnl extends React.Component {
     }
     else{
       if(qry.scale !== null){
-        html.push( <span key='qryScale' className='propName'>{qry.root.letter +' ' +qry.scale.name +':'}</span> )
+        html.push( <span key='qryScale' className='propName'>{qry.root.note +' ' +qry.scale.name +':'}</span> )
         qry.scale.ivls.forEach( ivl => {
-          if(qry.noteFilter.indexOf( ivl.letter ) >= 0) selected = 'noteFilter'
+          if(qry.noteFilter.indexOf( ivl.note ) >= 0) selected = 'noteFilter'
           else selected = 0
           
           html.push( <span key={'qryScale'+ivl.abr} className='ivl'
-            onClick={this.infoNoteClick} data-letter={ivl.letter} data-selected={selected}
-          >&nbsp;{ivl.letter} <sub>{ivl.abr}</sub> </span> )
+            onClick={this.infoNoteClick} data-note={ivl.note} data-selected={selected}
+          >&nbsp;{ivl.note} <sub>{ivl.abr}</sub> </span> )
         })
       }
       if(qry.chord !== null){
-        html.push( <span key='qryChord' className='propName'>{qry.root.letter +' ' +qry.chord.name +':'}</span> )
+        html.push( <span key='qryChord' className='propName'>{qry.root.note +' ' +qry.chord.name +':'}</span> )
         qry.chord.ivls.forEach( ivl => {
-          if(qry.noteFilter.indexOf( ivl.letter ) >= 0) selected = 'noteFilter'
+          if(qry.noteFilter.indexOf( ivl.note ) >= 0) selected = 'noteFilter'
           else selected = 0
 
           html.push( <span key={'qryChord'+ivl.abr} className='ivl'
-            onClick={this.infoNoteClick} data-letter={ivl.letter} data-selected={selected}
-           >&nbsp;{ivl.letter} <sub>{ivl.abr}</sub> </span> )
+            onClick={this.infoNoteClick} data-note={ivl.note} data-selected={selected}
+           >&nbsp;{ivl.note} <sub>{ivl.abr}</sub> </span> )
         })
       }
       if(qry.ivl !== null){
-        if(qry.noteFilter.indexOf( qry.ivl.letter ) >= 0) selected = 'noteFilter'
+        if(qry.noteFilter.indexOf( qry.ivl.note ) >= 0) selected = 'noteFilter'
         else selected = 0
         
-        html.push( <span key='qryIvl' className='propName'>{qry.letter +' +' +qry.ivl.name +':'}</span> )
+        html.push( <span key='qryIvl' className='propName'>{qry.note +' +' +qry.ivl.name +':'}</span> )
         html.push( <span key={'qryIvl'+qry.ivl.abr} className='ivl'
-          onClick={this.infoNoteClick} data-letter={qry.ivl.letter} data-selected={selected}
-        >&nbsp;{qry.ivl.letter} <sub>{qry.ivl.abr}</sub> </span> )
+          onClick={this.infoNoteClick} data-note={qry.ivl.note} data-selected={selected}
+        >&nbsp;{qry.ivl.note} <sub>{qry.ivl.abr}</sub> </span> )
       }
     }
     return (

@@ -30,79 +30,79 @@ describe('test semisCalc()', () => {
 })
 
 
-describe('test letterCalc()', () => {
-  it("expect q.letterCalc('C', 'A1') === C#", () => {
-		let letter = q.letterCalc('C', 'A1')
+describe('test notes.calc()', () => {
+  it("expect q.notes.calc('C', 'A1') === C#", () => {
+		let letter = q.notes.calc('C', 'A1')
     expect( letter ).toBeTruthy()
     expect( letter ).toBe( 'C#' )
   })
-  it("expect q.letterCalc('B', 'A1') === C", () => {
-		let letter = q.letterCalc('B', 'A1')
+  it("expect q.notes.calc('B', 'A1') === C", () => {
+		let letter = q.notes.calc('B', 'A1')
     expect( letter ).toBeTruthy()
     expect( letter ).toBe( 'C' )
   })
-  it("expect q.letterCalc('E', 'A1') === F", () => {
-		let letter = q.letterCalc('E', 'A1')
+  it("expect q.notes.calc('E', 'A1') === F", () => {
+		let letter = q.notes.calc('E', 'A1')
     expect( letter ).toBeTruthy()
     expect( letter ).toBe( 'F' )
   })
-  it("expect q.letterCalc('C#', 'A1') === D", () => {
-		let letter = q.letterCalc('C#', 'A1')
+  it("expect q.notes.calc('C#', 'A1') === D", () => {
+		let letter = q.notes.calc('C#', 'A1')
     expect( letter ).toBeTruthy()
     expect( letter ).toBe( 'D' )
   })
-  it("expect q.letterCalc('C♭', 'A1') === C", () => {
-		let letter = q.letterCalc('C♭', 'A1')
+  it("expect q.notes.calc('C♭', 'A1') === C", () => {
+		let letter = q.notes.calc('C♭', 'A1')
     expect( letter ).toBeTruthy()
     expect( letter ).toBe( 'C' )
   })
 
-  it("expect q.letterCalc('C', 'm2') === D♭", () => {
-		let letter = q.letterCalc('C', 'm2')
+  it("expect q.notes.calc('C', 'm2') === D♭", () => {
+		let letter = q.notes.calc('C', 'm2')
     expect( letter ).toBeTruthy()
     expect( letter ).toBe( 'D♭' )
   })
-  it("expect q.letterCalc('D#', 'm2') === E", () => {
-		let letter = q.letterCalc('D#', 'm2')
+  it("expect q.notes.calc('D#', 'm2') === E", () => {
+		let letter = q.notes.calc('D#', 'm2')
     expect( letter ).toBeTruthy()
     expect( letter ).toBe( 'E' )
   })
-  it("expect q.letterCalc('B', 'm2') === C", () => {
-		let letter = q.letterCalc('B', 'm2')
+  it("expect q.notes.calc('B', 'm2') === C", () => {
+		let letter = q.notes.calc('B', 'm2')
     expect( letter ).toBeTruthy()
     expect( letter ).toBe( 'C' )
   })
 
-  it("expect q.letterCalc('E', 'M2') === F#", () => {
-		let letter = q.letterCalc('E', 'M2')
+  it("expect q.notes.calc('E', 'M2') === F#", () => {
+		let letter = q.notes.calc('E', 'M2')
     expect( letter ).toBeTruthy()
     expect( letter ).toBe( 'F#' )
   })
 
-  it("expect q.letterCalc('C', 'M3') === E", () => {
-		let letter = q.letterCalc('C', 'M3')
+  it("expect q.notes.calc('C', 'M3') === E", () => {
+		let letter = q.notes.calc('C', 'M3')
     expect( letter ).toBeTruthy()
     expect( letter ).toBe( 'E' )
   })
-  it("expect q.letterCalc('C#', 'M3') === F", () => {
-		let letter = q.letterCalc('C#', 'M3')
+  it("expect q.notes.calc('C#', 'M3') === F", () => {
+		let letter = q.notes.calc('C#', 'M3')
     expect( letter ).toBeTruthy()
     expect( letter ).toBe( 'F' )
   })
 
-  it("expect q.letterCalc('C', 'm3') === E♭", () => {
-		let letter = q.letterCalc('C', 'm3')
+  it("expect q.notes.calc('C', 'm3') === E♭", () => {
+		let letter = q.notes.calc('C', 'm3')
     expect( letter ).toBeTruthy()
     expect( letter ).toBe( 'E♭' )
   })
-  it("expect q.letterCalc('C#', 'm3') === E", () => {
-		let letter = q.letterCalc('C#', 'm3')
+  it("expect q.notes.calc('C#', 'm3') === E", () => {
+		let letter = q.notes.calc('C#', 'm3')
     expect( letter ).toBeTruthy()
     expect( letter ).toBe( 'E' )
   })
 
-  it("expect q.letterCalc('D#', 'M6') === C", () => {
-		let letter = q.letterCalc('D#', 'M6')
+  it("expect q.notes.calc('D#', 'M6') === C", () => {
+		let letter = q.notes.calc('D#', 'M6')
     expect( letter ).toBeTruthy()
     expect( letter ).toBe( 'C' )
   })
@@ -124,18 +124,20 @@ describe('test chord functions', () => {
 })
 
 
-describe('test noteBySemis()', () => {
-  it("expect q.noteBySemis('48').letter = C", () => {
-		let result = q.noteBySemis('48')
+describe('test fretboard.objBySemis()', () => {
+  it("expect q.notes.bySemis('48', true).notes[0] = C", () => {
+		let result = q.fretboard.objBySemis('48')
     expect( result ).not.toBe( false )
-    expect( result.fretN ).toBe( 1 )
-    expect( result.letter ).toBe( 'C' )
+    expect( result.notes[0] ).toBe( 'C' )
+    expect( result.strg.note ).toBe( 'B' )
+    expect( result.fret ).toBe( 1 )
   })
-  it("expect q.noteBySemis(50).fretN === 3 ", () => {
-		let result = q.noteBySemis(50)
+  it("expect q.fretboard.objBySemis(35).notes[0] === B ", () => {
+		let result = q.fretboard.objBySemis(35)
     expect( result ).not.toBe( false )
-    expect( result.fretN ).toBe( 3 )
-    expect( result.letter ).toBe( 'D' )
-    expect( result.strg.letter ).toBe( 'B' )
+    expect( result.notes[0] ).toBe( 'B' )
+    expect( result.notes[1] ).toBe( 'C♭' )
+    expect( result.strg.note ).toBe( 'A' )
+    expect( result.fret ).toBe( 2 )
   })
 })
