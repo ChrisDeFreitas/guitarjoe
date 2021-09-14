@@ -1,6 +1,6 @@
 /*
   FretPnl.js
-  - by Chris DeFreitas, chrisd@europa.com
+  - by Chris DeFreitas, ChrisDeFreitas777@gmail.com
   - manage activation of fretboard controls for GuitarJoe app
 
 */

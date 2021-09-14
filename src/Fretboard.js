@@ -1,6 +1,6 @@
 /*
 Fretboard.js
-  - by Chris DeFreitas, chrisd@europa.com
+  - by Chris DeFreitas, ChrisDeFreitas777@gmail.com
   - top level container for fretboard controls of GuitrJoe app
   - store shared state for FretPnl.js and QueryPnl.js
 

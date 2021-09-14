@@ -1,6 +1,6 @@
 /*
   App.js
-  - by Chris DeFreitas, chrisd@europa.com
+  - by Chris DeFreitas, ChrisDeFreitas777@gmail.com
   - entrypoint for GuitrJoe app
 
 */

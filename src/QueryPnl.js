@@ -1,6 +1,6 @@
 /*
   QueryPnl.js
-  - by Chris DeFreitas, chrisd@europa.com
+  - by Chris DeFreitas, ChrisDeFreitas777@gmail.com
   - manage query controls for GuitarJoe app
 
 */

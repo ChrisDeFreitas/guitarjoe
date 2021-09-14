@@ -2,7 +2,7 @@
   //♭ &flat; alt+?
   
   GuitarJoe's guitar logic
-  by Chris DeFreitas, chrisd@europa.com
+  by Chris DeFreitas, ChrisDeFreitas777@gmail.com
   
    Note:
     - note refers to what we usually call a note: C#
