@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "./static/css/main.e78c59ff.chunk.css",
-    "main.js": "./static/js/main.72d43f7a.chunk.js",
-    "main.js.map": "./static/js/main.72d43f7a.chunk.js.map",
+    "main.css": "./static/css/main.99a149fb.chunk.css",
+    "main.js": "./static/js/main.54554398.chunk.js",
+    "main.js.map": "./static/js/main.54554398.chunk.js.map",
     "runtime-main.js": "./static/js/runtime-main.6b531226.js",
     "runtime-main.js.map": "./static/js/runtime-main.6b531226.js.map",
     "static/js/2.89373b72.chunk.js": "./static/js/2.89373b72.chunk.js",
     "static/js/2.89373b72.chunk.js.map": "./static/js/2.89373b72.chunk.js.map",
     "index.html": "./index.html",
-    "static/css/main.e78c59ff.chunk.css.map": "./static/css/main.e78c59ff.chunk.css.map",
+    "static/css/main.99a149fb.chunk.css.map": "./static/css/main.99a149fb.chunk.css.map",
     "static/js/2.89373b72.chunk.js.LICENSE.txt": "./static/js/2.89373b72.chunk.js.LICENSE.txt",
     "static/media/logo.97fcb56e.svg": "./static/media/logo.97fcb56e.svg",
     "static/media/index.css": "./static/media/turbulent-blue-patterns-2.8bc8fb10.jpg"
@@ -16,7 +16,7 @@
   "entrypoints": [
     "static/js/runtime-main.6b531226.js",
     "static/js/2.89373b72.chunk.js",
-    "static/css/main.e78c59ff.chunk.css",
-    "static/js/main.72d43f7a.chunk.js"
+    "static/css/main.99a149fb.chunk.css",
+    "static/js/main.54554398.chunk.js"
   ]
 }
