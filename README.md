@@ -58,8 +58,8 @@ I am not a musician (I often say I'll be ready to play in a band around the age 
 
 ## Updates
 
-202109__:  
-Finally added the ability to select frets, then view scales and chords containing those notes (it's been a probelm vexing me for a while). The new mode is called "Fret Select" and appears automatically after you click the second fret.  The list of related scales and chords will appear below within the InfoPnl, click one to have it drawn on the fretboard.  I've limited the scales searched to the typical Western ones: Major, Minor, Pentatonic, and Blues--this is easily changed.  As usual everything is clickable, so please experiment to learn about the functionality.   
+20210921:  
+Finally added the ability to select multiple frets, then view scales and chords containing those notes (it's been a probelm vexing me for a while). The new mode is called "Fret Select" and appears automatically after you click the second fret.  The list of related scales and chords will appear below within the InfoPnl, click one to have it drawn on the fretboard.  I've limited the scales searched to the typical Western ones: Major, Minor, Pentatonic, and Blues--this is easily changed.  As usual everything is clickable, so please experiment to learn about the functionality.   
 
 Research into unusual scales found that pentatonic scales are [ancient, and common](https://en.wikipedia.org/wiki/Pentatonic_scale) throughout the world. I thought it would be interesting to experiment with those intervals while practising so I added the Japanese Akebono I and II, and the Pygmy scales.  They appear to be consistently referenced across the web, and used in many cultures. In this context its important to note that the Western Pentatonic Major and Minor scales are native to many cultures from the past and the present. Also note, I couldn't find any theoretical references to the Pygmy scale but it is consistently used in modern Handpans and Tongue drums.   
 
@@ -68,7 +68,7 @@ Research into unusual scales found that pentatonic scales are [ancient, and comm
 - implemented fretSelect mode: clicking multiple frets displays related chords and scales
 - added green highlight when mouse hovers over items in InfoPnl
 - clicking a label in the InfoPnl will turn off all manually highlighted notes, scales, and chords
-- added scales: Akebono I (aka "Dorian Pentatonic"), Akebono II (aka "Hon-kumoi-joshi"), and the Pygmy Scale (aka "Aeolian Pentatonic").  Links to references are in their [guitar_lib.scales.list[]](https://github.com/ChrisDeFreitas/guitarjoe/blob/ce89942765f278a7b95613d9fbc8cd37ede71d7e/src/guitar_lib.js#L393) definition.
+- added scales: Akebono I (aka "Dorian Pentatonic"), Akebono II (aka "Hon-kumoi-joshi"), and the Pygmy Scale (aka "Aeolian Pentatonic").  Links to references are in their guitar_lib.scales.list[] definition.
 - changed short form of Natural minor triad to "Minor" from "Nat.min" for readability, and to conform to the confusing standard of notating all minor scales the same way.
 - clicking a fret with a button, will now route to buttonClick() instead of fretClick()
 
@@ -103,7 +103,7 @@ active when collapsed.
 
 
 20210905:  
-This was a rewrite of the interval calculation functionality.  Originally based on semitones but that lost track of the ♭/# info.  The new algorithm took a long time to develop and ripped the guts out of the app.  But it works well and has room for expansion, see [guitar_lib.letterCalc()](https://github.com/ChrisDeFreitas/guitarjoe/blob/6cee48132713c0c7bd2a7d21f468f1c74f2fb70e/src/guitar_lib.js#L253).  In the testing I fixed many transcription errors in scales, chords and intervals--another bonus for the grueling effort.  
+This was a rewrite of the interval calculation functionality.  Originally based on semitones but that lost track of the ♭/# info.  The new algorithm took a long time to develop and ripped the guts out of the app.  But it works well and has room for expansion, see guitar_lib.letterCalc().  In the testing I fixed many transcription errors in scales, chords and intervals--another bonus for the grueling effort.  
 
 Usage of ♭♭ and ## removed from app. This simplifies manipulation of intervals by the library.  It is assumed anyone needing to calculate ♭♭ and ## have requirements beyond the scope of the guitar fretboard.  
 
@@ -121,14 +121,14 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 - allow the first created Fretboard control to be deleted.  Currently, only its children may be deleted.
 - when selecting a Scale from the QryPnl: allow selected chords and intervals to be overlayed by altering their button colors; change the respective select control's color to match the button color.  Currently, no distinction is made beyond the InfoPnl data.
 - fix query collapse/expand arrow buttons: refactor code to simplify
-- fix ./public/favicon.svg colors: image appears dim on white backgrounds  
-- browser bug: zooming out causes random frets and strings to disappear (assume due to x/y location; test by adjusting)   
-- refactor Fretboard.state.strgFltrList to be array (rename to strgFilter)  
-- refactor FretPnl.render(): simplify, optimize  
 - selChord update, add Inversions:  
 -- when a chord is selected, display possible inversions in the infoPnl  
 -- clicking an inversion will highlight related notes (similar to fretSelect mode for chords and scales)  
 -- use same color as fretSelect/click InfoPnl items   
+- fix ./public/favicon.svg colors: image appears dim on white backgrounds  
+- browser bug: zooming out causes random frets and strings to disappear (assume due to x/y location; test by adjusting)   
+- refactor Fretboard.state.strgFltrList to be array (rename to strgFilter)  
+- refactor FretPnl.render(): simplify, optimize  
 - add backup feature:  
 -- allow multiple backups by user assigning backup name  
 -- default backup name = 'Auto', will restore on startup; others must be manually loaded by user   
