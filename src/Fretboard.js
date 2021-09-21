@@ -247,6 +247,7 @@ class Fretboard extends React.Component{
   }
   makeQuery(){
     let qry = {
+      fbid:this.state.fbid,
       rootType: this.state.rootType,
       root: null,
       note: (this.state.rootType === 'fretRoot' 
@@ -294,7 +295,7 @@ class Fretboard extends React.Component{
     let qry = this.makeQuery()
     console.log('Fretboard.render()', this.props, this.state, qry)
     return(
-      <div className='fretboard' id={'Fretboard'+this.props.fbid}>
+      <div className='fretboard' id={'Fretboard'+qry.fbid}>
         <FretPnl
           collapsed={this.state.collapsed}
           fretFirst={this.state.fretFirst}
@@ -310,7 +311,6 @@ class Fretboard extends React.Component{
           fretSelectFind={this.fretSelectFind}
         />
         <QueryPnl 
-          fbid={this.props.fbid}
           collapsed={this.state.collapsed}
           fretFirst={this.state.fretFirst}
           fretLast={this.state.fretLast}

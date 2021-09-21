@@ -118,12 +118,13 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo
+- allow the first created Fretboard control to be deleted.  Currently, only its children may be deleted.
+- when selecting a Scale from the QryPnl: allow selected chords and intervals to be overlayed by altering their button colors; change the respective select control's color to match the button color.  Currently, no distinction is made beyond the InfoPnl data.
 - fix query collapse/expand arrow buttons: refactor code to simplify
 - fix ./public/favicon.svg colors: image appears dim on white backgrounds  
 - browser bug: zooming out causes random frets and strings to disappear (assume due to x/y location; test by adjusting)   
 - refactor Fretboard.state.strgFltrList to be array (rename to strgFilter)  
 - refactor FretPnl.render(): simplify, optimize  
-- add a screenshot to Readme.md  
 - selChord update, add Inversions:  
 -- when a chord is selected, display possible inversions in the infoPnl  
 -- clicking an inversion will highlight related notes (similar to fretSelect mode for chords and scales)  
@@ -135,7 +136,6 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 -- functions: backup, restore, delete, save/load from file?  
 -- default save to Local Storage  
 - FretSelect mode update: create an interface allowing the chords and scales looked up to be filtered
-- when selecting a Scale from the QryPnl: allow selected chords and intervals to be overlayed by altering their button colors; change the respective select control's color to match the button color.  Currently, no distinction is made beyond the InfoPnl data.
 - allow for number and range of frets to changed by user 
 - add ability to play videos in background  
 - dig into source-map-explorer details  

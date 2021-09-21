@@ -96,7 +96,7 @@ class FretPnl extends React.Component{
 
     // console.log('fretPnl.fretClick:', strN, fret, cell.className)
     let note = q.notes.obj( strN, fret )
-    let btn = document.querySelector('.fretButton[data-tab=' +note.tab +']')
+    let btn = document.querySelector( '#Fretboard' +qry.fbid +' .fretButton[data-tab=' +note.tab +']')
     if(btn !== null){
       event.target = btn
       this.buttonClick( event )

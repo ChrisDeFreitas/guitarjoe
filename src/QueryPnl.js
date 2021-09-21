@@ -556,7 +556,7 @@ class QueryPnl extends React.Component {
     </td><td className='qryBtnsRight'>
         <div className='qryBtn qryBtnClear' onClick={this.btnClearClick} title='Reset query controls'>&#8635;</div>
         <div className='qryBtn qryBtnDupe' onClick={this.btnDupeClick} title='Duplicate fretboard' >&#10010;</div>
-        { this.props.fbid === 0 ?null
+        { qry.fbid === 0 ?null
           :<div className='qryBtn qryBtnDel' onClick={this.btnDelClick} title='Remove this fretboard' >&#10000;</div>
         }
     </td></tr></tbody></table>
