@@ -26,7 +26,7 @@
 }
 /*.dataPnl select option{}   not applicable because controlled by OS */
 .dataPnl select[data-state="interval"]{ background-color:#ffff9b; }
-.dataPnl select[data-state="chord"]{ background-color:#ffc14f;; }
+.dataPnl select[data-state="chord"]{ background-color:#eab555; }
 
 .qryCollapsed .qryBtnCollapse,
 .qryCollapsed .queryControls,
@@ -107,7 +107,7 @@
 .fretButton[data-state="fretSelectMatch"] { background:#b1e6ff; }  /* Anakiwa */
 .fretButton[data-state="noteFilter"] { background:#aaf; }  /* Melrose */
 .fretButton[data-state="interval"] { background:#ffff9b; }  /*  pale yellow */
-.fretButton[data-state="chord"] { background:#ffc14f;; }  /*  pale orange */
+.fretButton[data-state="chord"] { background:#ffc06f;; }  /*  pale orange */
 /* .fretButton[data-selected="0"] {} */
 .fretButton[data-selected="1"] { background:#3ac664; }  /* emerald */
 .fret0 .fretButton { left:39px; }
