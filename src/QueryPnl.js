@@ -251,14 +251,17 @@ class QueryPnl extends React.Component {
   drawSelChord(){
     let ii = 0,
       selected = this.props.chordName, 
+      datastate = '',
       list = [<option key='aaa'></option>]
     for(let chd of q.chords.list){
       list.push(<option key={++ii} >{chd.name}</option>)
     }
+    if(selected !== '') datastate = 'chord'
     return (
       <div className='dataPnl pnlChord'>
         <label data-selected={selected !== ''} data-type='chord' onClick={this.selLabelClick} >Chord</label>
-        <select value={selected} className='selChord' onChange={this.selChordChange} >
+        <select value={selected} className='selChord' onChange={this.selChordChange} 
+         data-state={datastate}>
           {list}
         </select>      
       </div>
@@ -267,7 +270,7 @@ class QueryPnl extends React.Component {
   drawSelInterval(){
     let qry = this.props.qry,
       list = [<option key='aaa' ></option>],
-      ii = 0, selected = '' //, last = ''
+      ii = 0, selected = '' , datastate = ''
     for(let ivl of q.intervals.list){
       if(ivl.semis === 0) continue
       if(ivl.semis === 12) continue
@@ -278,11 +281,13 @@ class QueryPnl extends React.Component {
         selected = html
       // last = ivl.abr
     }
+    if(selected !== '') datastate = 'interval'
     return (
-      <div className='dataPnl pnlInterval'>
-        <label data-selected={selected !== ''} data-type='ivlName' onClick={this.selLabelClick} >Interval</label>
+      <div className='dataPnl pnlInterval' >
+        <label data-selected={selected !== ''} onClick={this.selLabelClick} 
+          data-type='ivlName' >Interval</label>
         <select value={selected} className='selInterval' title='Intervals sorted by semis-tones'
-          onChange={this.selIntervalChange} 
+          data-state={datastate} onChange={this.selIntervalChange} 
         >
           {list}
         </select>      
@@ -495,7 +500,11 @@ class QueryPnl extends React.Component {
           html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
         html.push( <span key={++key} className='propName'
            data-selected='label' onClick={this.infoNoteClick}
-          >{qry.note +' +' +qry.ivl.name +':'}</span> )
+          >{qry.note 
+            +(qry.rootType === 'fretRoot' ?qry.root.octave :'')
+            +' + ' 
+            +qry.ivl.name +':'
+           }</span> )
         html.push( <span key={++key} className='ivl'
           onClick={this.infoNoteClick} data-note={qry.ivl.note} data-selected={selected}
         >&nbsp;{qry.ivl.note} <sub>{qry.ivl.abr}</sub> </span> )

@@ -138,6 +138,7 @@ class FretPnl extends React.Component{
     let qry = this.props.qry, ivl = nobj.ivl, capStyle = qry.fretBtnText
 
     let btnState = '', selected = 0
+    //tag root note button
     if(root === 'ALL'){   //user selected All Notes
       if(qry.octave !== 0 && qry.octave !== nobj.octave)
         return null      
@@ -166,10 +167,10 @@ class FretPnl extends React.Component{
     if(qry.noteFilter.indexOf( nobj.note ) >= 0){
       btnState = 'noteFilter'
     }
-    
-    //test against props.tabFilter
-    // if(selected === 0){}
-    
+    else
+    if(btnState === '' && nobj.state)    //allow color coding of selChords and selInterval notes
+      btnState = nobj.state
+
     //format button caption
     let btncaption = [], key=0
     if(capStyle === 'IvlFirst'){
@@ -306,6 +307,7 @@ class FretPnl extends React.Component{
           if(qry.octave === 0 || qry.octave === nobj.octave){
             nobj.ivl = ivl
             nobj.note = ivl.note
+            nobj.state = 'chord'   //new, allow for color coding of chords
             return qq.button( nobj, qry.root )
           }
         }
@@ -336,6 +338,7 @@ class FretPnl extends React.Component{
       if(btn === true && (qry.octave === 0 || qry.octave === nobj.octave)){
         nobj.ivl = qry.ivl
         nobj.note = qry.ivl.note
+        nobj.state = 'interval'   //new, allow for color coding of intervals
         btn =  qq.button( nobj, qry.root  )
       }
       return btn
@@ -409,11 +412,14 @@ class FretPnl extends React.Component{
                 btn = qq.button( nobj, 'ALL' )  //no root when showimg all notes
               }
               else {
-                btn = local_scaleFind( nobj )
-                if(btn === null) btn = local_fretSelectMatchFind( nobj )
+                // all modes respect selOctave filter
+                //fretSelect mode
+                btn = local_fretSelectMatchFind( nobj )
                 if(btn === null) btn = local_fretSelectFind( nobj )
-                if(btn === null) btn = local_chordFind( nobj )
+                // fretRoot and selNote mode
                 if(btn === null) btn = local_ivlFind( nobj )
+                if(btn === null) btn = local_chordFind( nobj )
+                if(btn === null) btn = local_scaleFind( nobj )
                 if(btn === null){
                   if(qry.rootType === 'fretRoot')
                     btn = local_rootFind( nobj )  //only select the fret clicked

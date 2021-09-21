@@ -5,9 +5,12 @@ The application is published to the web through <a href='https://pages.github.co
 
 The goal was to create a tool that would make guitar theory accessible while practicing.  I was going crazy taking notes and diagramming chords, scales and intervals: I needed a tool to facilitate my understanding so I could focus on the guitar instead of managing scraps of information.  This application has successfully reduced my hair loss--I hope it has the same effect on you!
 
-The name is based on the slang "Joe Workie," a synonym for construction worker. At the tender age of 12 it felt like one of those adults terms I had to learn--it wasn't. In this context, GuitarJoe does the heavy lifting of translating music theory to the guitar fretboard.  Here is a screenshot of my first use of the application.  I am working on playig with 5 fingers and use triplets to exercise my pinky.  It was a transformative moment, focusing on the notes in front of me instead of scribbled diagrams:  
+The name is based on the slang "Joe Workie," a synonym for construction worker. At the tender age of 12 it felt like one of those adults terms I had to learn--it wasn't. In this context, GuitarJoe does the heavy lifting of translating music theory to the guitar fretboard.  Here is a screenshot of my first use of the application.  I am working on playing with 5 fingers and use triplets to exercise my pinky.  It was a transformative moment, focusing on the notes in front of me instead of scribbled diagrams:  
   <img src="https://github.com/ChrisDeFreitas/guitarjoe/blob/main/public/guitarjoe-screen01.png" title="guitarjoe-screen01.png" />  
 
+## Application Usage
+- Everything is clickable.  This is a key principle of the application design: everything displayed  provides relevant data, and functionality is an implicit feature of data.
+- Another important principle is that user selections not be changed by the application.  So if you turn on a feature it will remain until you turn it off.  There are many ways to turn off features beyond using the Reset button.  These alternatives will be dictated by how the feature is turned on.
 
 ## Music Theory
 I am not a musician (I often say I'll be ready to play in a band around the age of 90).  So the data is taken from Wikipedia and verified against other online sources.  The Blues Heptatonic scale has different representations online, so it is debatable.  I love learning about cultures and history so I've included some exotic scales like the Japanes Akebono I and II for practice.  Please forward any discrepancies to me.  
@@ -57,6 +60,12 @@ I am not a musician (I often say I'll be ready to play in a band around the age 
 
 
 ## Updates
+
+202109__:  
+
+- added color coding of chords and intervals so they standout when displayed with scales
+- when a fretRoot and interval are selected, the InfoPnl now displays its the root with its octave, ie G3 instead of G.  This is not applicable to selNote mode as allow root notes are selected
+- fretSelectMatches are no longer cleared when the mode changes.  And adheres to the principle that the user selections are not altered by the application.
 
 20210921:  
 Finally added the ability to select multiple frets, then view scales and chords containing those notes (it's been a probelm vexing me for a while). The new mode is called "Fret Select" and appears automatically after you click the second fret.  The list of related scales and chords will appear below within the InfoPnl, click one to have it drawn on the fretboard.  I've limited the scales searched to the typical Western ones: Major, Minor, Pentatonic, and Blues--this is easily changed.  As usual everything is clickable, so please experiment to learn about the functionality.   
@@ -118,8 +127,8 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo
+- restore button.selected state:  Currently, when a user clicks a button it turns green, indicating that button.selected = 1.  However, if the fretboard is redrawn button.selected is reset to 0.  This violates the principle that the user selection not be changed by the application.
 - allow the first created Fretboard control to be deleted.  Currently, only its children may be deleted.
-- when selecting a Scale from the QryPnl: allow selected chords and intervals to be overlayed by altering their button colors; change the respective select control's color to match the button color.  Currently, no distinction is made beyond the InfoPnl data.
 - fix query collapse/expand arrow buttons: refactor code to simplify
 - selChord update, add Inversions:  
 -- when a chord is selected, display possible inversions in the infoPnl  

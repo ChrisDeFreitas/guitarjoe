@@ -25,6 +25,8 @@
   outline:0;  text-align-last:center;
 }
 /*.dataPnl select option{}   not applicable because controlled by OS */
+.dataPnl select[data-state="interval"]{ background-color:#ffff9b; }
+.dataPnl select[data-state="chord"]{ background-color:#ffc14f;; }
 
 .qryCollapsed .qryBtnCollapse,
 .qryCollapsed .queryControls,
@@ -104,6 +106,8 @@
 .fretButton[data-state="fretSelect"] { border: 1px #00afff solid;  }  /* azure radiance */
 .fretButton[data-state="fretSelectMatch"] { background:#b1e6ff; }  /* Anakiwa */
 .fretButton[data-state="noteFilter"] { background:#aaf; }  /* Melrose */
+.fretButton[data-state="interval"] { background:#ffff9b; }  /*  pale yellow */
+.fretButton[data-state="chord"] { background:#ffc14f;; }  /*  pale orange */
 /* .fretButton[data-selected="0"] {} */
 .fretButton[data-selected="1"] { background:#3ac664; }  /* emerald */
 .fret0 .fretButton { left:39px; }

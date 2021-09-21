@@ -140,7 +140,7 @@ class Fretboard extends React.Component{
         this.setState({ rootType:'fretRoot' })
       this.setState({ selNoteVal:'' })
       this.setState({ fretSelect:[] })
-      this.setState({ fretSelectMatch:null })
+      // this.setState({ fretSelectMatch:null })
     }else
     if(key === 'selNoteVal'){
       this.setState({ selNoteVal:val })
@@ -151,13 +151,13 @@ class Fretboard extends React.Component{
         this.setState({ rootType:'selNote' })
       this.setState({ fretRoot:null })
       this.setState({ fretSelect:[] })
-      this.setState({ fretSelectMatch:null })
+      // this.setState({ fretSelectMatch:null })
     }else
     if(key === 'fretSelect'){
 
       if(val === null){   //disable fretSelect mode
         this.setState({ fretSelect:[] })
-        this.setState({ fretSelectMatch:null })
+        // this.setState({ fretSelectMatch:null })
         this.setState({ rootType:'' })
         this.setState({ fretRoot:null })
         this.setState({ selNoteVal:'' })
