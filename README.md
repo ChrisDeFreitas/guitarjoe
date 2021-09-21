@@ -61,7 +61,7 @@ I am not a musician (I often say I'll be ready to play in a band around the age 
 
 ## Updates
 
-202109__:  
+20210922:  
 
 - added color coding of chords and intervals so they standout when displayed with scales
 - when a fretRoot and interval are selected, the InfoPnl now displays its the root with its octave, ie G3 instead of G.  This is not applicable to selNote mode as allow root notes are selected
