@@ -6,7 +6,7 @@ The application is published to the web through <a href='https://pages.github.co
 The goal was to create a tool that would make guitar theory accessible while practicing.  I was going crazy taking notes and diagramming chords, scales and intervals: I needed a tool to facilitate my understanding so I could focus on the guitar instead of managing scraps of information.  This application has successfully reduced my hair loss--I hope it has the same effect on you!
 
 The name is based on the slang "Joe Workie," a synonym for construction worker. At the tender age of 12 it felt like one of those adults terms I had to learn--it wasn't. In this context, GuitarJoe does the heavy lifting of translating music theory to the guitar fretboard.  Here is a screenshot of my first use of the application.  I am working on playig with 5 fingers and use triplets to exercise my pinky.  It was a transformative moment, focusing on the notes in front of me instead of scribbled diagrams:  
-  <img src='"https://github.com/ChrisDeFreitas/guitarjoe/blob/main/public/favicon.svg" title="guitarjoe-screen01.png"  style="width:60%" />  
+  <img src="https://github.com/ChrisDeFreitas/guitarjoe/blob/main/public/favicon.svg" title="guitarjoe-screen01.png"  style="width:60%" />  
 
 
 ## Music Theory
