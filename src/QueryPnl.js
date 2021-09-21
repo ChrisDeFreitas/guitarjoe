@@ -27,6 +27,8 @@ class QueryPnl extends React.Component {
     this.selNoteChange = this.selNoteChange.bind(this)
     this.selOctaveChange = this.selOctaveChange.bind(this)
     this.selScaleChange = this.selScaleChange.bind(this)
+    this.fsChordClick = this.fsChordClick.bind(this)
+    this.fsScaleClick = this.fsScaleClick.bind(this)
     this.infoNoteClick = this.infoNoteClick.bind(this)
   }
 
@@ -45,15 +47,57 @@ class QueryPnl extends React.Component {
     // this.props.dispatch({ type:"FretboardActions/fretFirstUpdate", payload:'' })
     this.props.reset()
   }
+  fsChordClick( event ){
+    let btn = event.target, qry = this.props.qry
+    // console.log('fsChordClick', btn.dataset.note, btn.dataset.abr)
+
+    if(btn.dataset.selected === 'label'){    //user clicked the label
+      this.props.stateChange( 'fretSelectMatch', null )
+      this.props.stateChange( 'noteFilter', 'clear' )
+    }
+    else{   //default operation
+      if(qry.fretSelectMatch != null
+      && qry.fretSelectMatch.note === btn.dataset.note && qry.fretSelectMatch.abr === btn.dataset.abr)    //turn off selected match
+        this.props.stateChange( 'fretSelectMatch', null )
+      else
+        this.props.stateChange( 'fretSelectMatch', {type:'chord', note:btn.dataset.note, abr:btn.dataset.abr} )
+    }
+  }
+  fsScaleClick( event ){
+    let btn = event.target, qry = this.props.qry
+    // console.log('fsScaleClick', btn.dataset.note, btn.dataset.abr)
+
+    if(btn.dataset.selected === 'label'){    //user clicked the label
+      this.props.stateChange( 'fretSelectMatch', null )   //turn off selected match
+      this.props.stateChange( 'noteFilter', 'clear' )
+    }
+    else{   //default operation
+      if(qry.fretSelectMatch != null 
+      && qry.fretSelectMatch.note === btn.dataset.note && qry.fretSelectMatch.abr === btn.dataset.abr)
+        this.props.stateChange( 'fretSelectMatch', null )   //turn off selected match
+      else
+        this.props.stateChange( 'fretSelectMatch', {type:'scale', note:btn.dataset.note, abr:btn.dataset.abr} )
+    }
+  }
+  
   infoNoteClick(event){
+    event.stopPropagation()
+
     let btn = event.target   
-    if(btn.className !== 'ivl')
-      btn = btn.parentNode
+    if(btn.dataset.selected === 'label'){    //user clicked the label
+      this.props.stateChange( 'fretSelectMatch', null )
+      this.props.stateChange( 'noteFilter', 'clear' )
+    }
+    else {   //default operation
+      if(btn.className !== 'ivl')
+        btn = btn.parentNode
       
-    let note = btn.dataset.note     
-    // console.log('infoNoteClick', btn, note)
-    if(typeof note === 'string')
-      this.props.stateChange( 'noteFilter', note, btn.className )
+      let note = btn.dataset.note     
+      // console.log('infoNoteClick', btn, note)
+      if(typeof note === 'string')
+        this.props.stateChange( 'noteFilter', note )
+        // this.props.stateChange( 'noteFilter', note, btn.className )
+    }
   }
   selLabelClick( event ){     //reset param to off value
     let qry = this.props.qry,
@@ -120,12 +164,6 @@ class QueryPnl extends React.Component {
       }
     }
   }
-  // selFretNoChange( event ){
-  //   let sel = event.target,
-  //    fret = sel.options[sel.selectedIndex].value
-  //  this.props.stateChange( 'fret', fret )
-  //  //   this.props.dispatch({ type:"FretboardActions/fretFirstUpdate", payload:fret })
-  // }
   selNoteChange( event ){
     let sel = event.target,
       val = sel.options[sel.selectedIndex].text
@@ -251,38 +289,200 @@ class QueryPnl extends React.Component {
       </div>
     )
   }  
-  drawInfo( collapsed ){
-    let qry = this.props.qry, arrow = null, selected = 0
-    // console.log('queryPnl.drawInfo', qry)
-    if(collapsed === 'qryCollapsed')
-      arrow = (<div className='qryBtn qryBtnExpand' onClick={this.btnCollapseClick} title="Show query panel" > <div>&#10148;</div> </div>)
+  drawFretSelectMatches( html, key ){    //push matching chords and scales onto html[]
+    let qry = this.props.qry, selected = 0
+    
+    if(qry.fretSelect.length < 2) return null  
 
-    let html = []
-    if(qry.rootType === 'selNote' && this.props.selNoteVal === 'All'){    //special case
-      html.push( <span key='allNotes' className='propName'>{'All Notes'}</span> )
-      if(qry.octave !== 0){
-        html.push( <span key={'qryOct'+qry.octave} className='ivl'>{': Octave '}{qry.octave} </span> )
+    let noblist = qry.fretSelect.slice()
+    let last = null
+    noblist = noblist.filter(function(a){   //filter duplicate notes
+      if(last != null && last.notes.indexOf( a.note ) >= 0) return null
+      last = a
+      return a
+    })
+
+    //test chords for matching notes
+    let list = []
+    let lastkey = key
+    let lastname = null
+    last = null
+    for(let chord of q.chords.list){    
+
+      for(let iobj of q.intervals.list){  //iterate notes
+        if(last != null && last.semis === iobj.semis) continue
+        if(iobj.semis === 12) continue    //skip octave
+        last = iobj
+
+        let ivls = q.chords.obj( iobj.note, chord.name).ivls    
+  		  let result = q.notes.match( ivls, noblist)
+
+       if(result === true)
+         list.push( {note:iobj.note, chord:chord} )
       }
     }
-    else{
+
+    for(let ob of list){    //write matching chords
+      let chord = ob.chord
+
+      if(lastkey === key){
+        html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
+        html.push( <span key={++key} className='propName'
+          data-selected='label' onClick={this.fsChordClick}
+        >Matching chords:&nbsp;</span> )
+      }
+
+      selected = 0
+      if(qry.fretSelectMatch != null
+      && qry.fretSelectMatch.note === ob.note
+      && qry.fretSelectMatch.abr === chord.abr) selected = 'fretSelectMatch'
+
+      if(lastname !== null && lastname !== chord.name)
+        html.push( <i key={++key} > &mdash; </i> )
+      lastname = chord.name
+
+      html.push( 
+        <span key={++key} className='ivl' onClick={this.fsChordClick} title={ob.note +' ' +chord.name}
+        data-note={ob.note} data-abr={chord.abr} data-selected={selected} 
+        >&#8200;{ob.note}&#8239;{chord.abr}&#8200;</span> 
+      )
+    }
+
+    //test scales for matching notes
+    list = []
+    lastkey = key
+    lastname = null
+    last = null
+    // for(let scale of q.scales.list){   ==> disabled because most scales are not necessary for this use
+    for(let scaleName of ['Major','Minor','Pen.Maj','Pen.min','Blues7','Blues6' /*,'Dbl.Hrm'*/]){
+      //can optimize by caching related minor scales when major found: 
+      // Major:Nat.min; Pent Maj:Pen.min,Blues7,Blues6; Dbl.Hrm:Gypsy
+      for(let iobj of q.intervals.list){  //iterate notes
+        if(last != null && last.semis === iobj.semis) continue
+        if(iobj.semis === 12) continue    //skip octave
+        last = iobj
+
+        // let ivls = q.scales.obj( iobj.note, scale.name).ivls    
+        let scale = q.scales.obj( iobj.note, scaleName )
+        let ivls = scale.ivls    
+  		  let result = q.notes.match( ivls, noblist)
+
+       if(result === true) 
+         list.push( {note:iobj.note, scale:scale} )
+      }
+    }
+
+    for(let ob of list){    //write matching scales
+      selected = 0
+      let scale = ob.scale
+
+      if(lastkey === key){
+        html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
+        html.push( <span key={++key} className='propName'
+          data-selected='label' onClick={this.fsScaleClick}
+        >Matching scales:&nbsp;</span> )
+      }
+
+      if(qry.fretSelectMatch != null
+      && qry.fretSelectMatch.note === ob.note
+      && qry.fretSelectMatch.abr === scale.abr) selected = 'fretSelectMatch'
+
+      if(lastname !== null && lastname !== scale.name)
+        html.push( <i key={++key} > &mdash; </i> )
+      lastname = scale.name
+
+      html.push( 
+        <span key={++key} className='ivl' onClick={this.fsScaleClick} title={ob.note +' ' +scale.name}
+        data-note={ob.note} data-abr={scale.abr} data-selected={selected} 
+        > &#8200;{ob.note}&#8239;{scale.short}&#8200;</span> 
+      )
+    }
+
+    return key
+  }
+  drawInfo( collapsed ){
+    let qry = this.props.qry,  selected = 0
+    // console.log('queryPnl.drawInfo', qry)
+    // arrow = null,
+    // if(collapsed === 'qryCollapsed')
+    //   arrow = (<div className='qryBtn qryBtnExpand' onClick={this.btnCollapseClick} title="Show query panel" > <div>&#10148;</div> </div>)
+
+    let html = [], key=0, lastkey=null
+    if(qry.rootType === 'fretSelect'){    
+
+        // console.log('qry.fretSelect', qry.fretSelect)
+
+        html.push( <span key={++key} className='propName'
+           data-selected='label' onClick={this.infoNoteClick}
+          >Fret select:&nbsp;</span> )
+        let last = null
+        qry.fretSelect.forEach( nobj => {
+          if(last && last.note === nobj.note) return
+
+          if(qry.noteFilter.indexOf( nobj.note ) >= 0) selected = 'noteFilter'
+          else selected = 0
+          
+          html.push( <span key={++key} className='ivl'
+            onClick={this.infoNoteClick} data-note={nobj.note} data-selected={selected}
+          >&nbsp;{nobj.note} <sub>{nobj.ivl.abr}</sub> </span> )
+          last = nobj
+        })
+
+        if(qry.fretSelectMatch != null){    //draw user select chord or scale match
+          html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
+           html.push( <span key={++key} className='propName'
+           data-selected='label' onClick={this.infoNoteClick}
+          >Selected, {qry.fretSelectMatch.obj.fullName}:&nbsp;</span> )
+
+          for(let ivl of qry.fretSelectMatch.obj.ivls){   
+            if(qry.noteFilter.indexOf( ivl.note ) >= 0) selected = 'noteFilter'
+            else selected = 0
+
+            html.push( <span key={++key} className='ivl' onClick={this.infoNoteClick}
+              data-note={ivl.note} data-selected={selected}
+            >&nbsp;{ivl.note} <sub>{ivl.abr}</sub> </span> )
+          }
+        }
+
+      if(collapsed !== 'qryCollapsed'){
+        key = this.drawFretSelectMatches( html, key )
+      }
+    } else
+    if(qry.rootType === 'selNote' && this.props.selNoteVal === 'All'){    //special case
+      html.push( <span key={++key} className='propName'
+         data-selected='label' onClick={this.infoNoteClick}
+        >{'All Notes'}</span> )
+      if(qry.octave !== 0){
+        html.push( <span key={++key} className='ivl'>{': Octave '}{qry.octave} </span> )
+      }
+    }
+    else{   //draw scale, chord and interval labels and notes
+      lastkey = key
       if(qry.scale !== null){
-        html.push( <span key='qryScale' className='propName'>{qry.root.note +' ' +qry.scale.name +':'}</span> )
+        // html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
+        html.push( <span key={++key} className='propName'
+           data-selected='label' onClick={this.infoNoteClick}
+          >{qry.root.note +' ' +qry.scale.name +':'}</span> )
         qry.scale.ivls.forEach( ivl => {
           if(qry.noteFilter.indexOf( ivl.note ) >= 0) selected = 'noteFilter'
           else selected = 0
           
-          html.push( <span key={'qryScale'+ivl.abr} className='ivl'
+          html.push( <span key={++key} className='ivl'
             onClick={this.infoNoteClick} data-note={ivl.note} data-selected={selected}
           >&nbsp;{ivl.note} <sub>{ivl.abr}</sub> </span> )
         })
       }
       if(qry.chord !== null){
-        html.push( <span key='qryChord' className='propName'>{qry.root.note +' ' +qry.chord.name +':'}</span> )
+        if(lastkey !== key)
+          html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
+        html.push( <span key={++key} className='propName'
+           data-selected='label' onClick={this.infoNoteClick}
+          >{qry.root.note +' ' +qry.chord.name +':'}</span> )
         qry.chord.ivls.forEach( ivl => {
           if(qry.noteFilter.indexOf( ivl.note ) >= 0) selected = 'noteFilter'
           else selected = 0
 
-          html.push( <span key={'qryChord'+ivl.abr} className='ivl'
+          html.push( <span key={++key} className='ivl'
             onClick={this.infoNoteClick} data-note={ivl.note} data-selected={selected}
            >&nbsp;{ivl.note} <sub>{ivl.abr}</sub> </span> )
         })
@@ -291,50 +491,75 @@ class QueryPnl extends React.Component {
         if(qry.noteFilter.indexOf( qry.ivl.note ) >= 0) selected = 'noteFilter'
         else selected = 0
         
-        html.push( <span key='qryIvl' className='propName'>{qry.note +' +' +qry.ivl.name +':'}</span> )
-        html.push( <span key={'qryIvl'+qry.ivl.abr} className='ivl'
+        if(lastkey !== key)
+          html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
+        html.push( <span key={++key} className='propName'
+           data-selected='label' onClick={this.infoNoteClick}
+          >{qry.note +' +' +qry.ivl.name +':'}</span> )
+        html.push( <span key={++key} className='ivl'
           onClick={this.infoNoteClick} data-note={qry.ivl.note} data-selected={selected}
         >&nbsp;{qry.ivl.note} <sub>{qry.ivl.abr}</sub> </span> )
       }
     }
+    
+    if(html.length === 0) return null
+        // {arrow}
     return (
       <div className='infoPnl'>
-        {arrow}
-         <div className='infoDiv'>{html}</div>
+         <div className='infoDiv'>
+           {html}
+         </div>
       </div>
     )      
   }
-
+ 
   render(){
     // console.log('queryPnl.render()', this.props)
+    let qry = this.props.qry
+    let collapsed = (qry.collapsed ?'qryCollapsed' :'qryExpanded')
 
-    let collapsed = (this.props.qry.collapsed ?'qryCollapsed' :'qryExpanded')
- 
-    let selNote = this.drawSelNote()
-    let selOct = this.drawSelOctave()
-    let selInt = this.drawSelInterval()
-    let selScale = this.drawSelScale()
-    let selChord = this.drawSelChord()
+    let selNote = null
+    let selOct = null
+    let selInt = null
+    let selScale = null
+    let selChord = null
+    if(qry.rootType !== 'fretSelect') { //optimization
+      selNote = this.drawSelNote()
+      selOct = this.drawSelOctave()
+      selInt = this.drawSelInterval()
+      selScale = this.drawSelScale()
+      selChord = this.drawSelChord()
+    }
     let infoPnl = this.drawInfo( collapsed )
+
+    let arrow = null
+    if(collapsed === 'qryCollapsed')
+      arrow = (<div className='qryBtn qryBtnExpand' onClick={this.btnCollapseClick} title="Show query panel" > <div>&#10148;</div> </div>)
+
     return (
       <div className={'queryPnl '+collapsed} >
+    <table className='tbQuery' ><tbody><tr><td className='qryBtnsLeft'>
+        {arrow}
         <div className='qryBtn qryBtnCollapse' onClick={this.btnCollapseClick}
             title="Hide query panel" >
           <div>&#10148;</div>
         </div>
-        <div className='queryControls '>
+    </td><td className='qryContent'>
+        <div className='queryControls' data-roottype={qry.rootType}>
           {selNote}
           {selOct}
           {selScale}
           {selChord}
           {selInt}
         </div>
+        {infoPnl}
+    </td><td className='qryBtnsRight'>
         <div className='qryBtn qryBtnClear' onClick={this.btnClearClick} title='Reset query controls'>&#8635;</div>
         <div className='qryBtn qryBtnDupe' onClick={this.btnDupeClick} title='Duplicate fretboard' >&#10010;</div>
         { this.props.fbid === 0 ?null
           :<div className='qryBtn qryBtnDel' onClick={this.btnDelClick} title='Remove this fretboard' >&#10000;</div>
         }
-        {infoPnl}
+    </td></tr></tbody></table>
       </div>
     )
   }

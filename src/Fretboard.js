@@ -26,11 +26,13 @@ class Fretboard extends React.Component{
       fretFirst:(props.fretFirst ?props.fretFirst :0),
       fretLast:(props.fretLast ?props.fretLast :q.fretboard.fretMax),
       fretBtnText:(props.fretBtnText ?props.fretBtnText :'NoteFirst'),    //one of: NoteFirst, IvlFirst
-      fretFilter:(props.fretFilter ?props.fretFilter :''),      //csv of fretN, if found then disable fret
+      fretFilter:(props.fretFilter ?props.fretFilter :[]),      //csv of fretN, if found then disable fret
       strgFltrList:(props.strgFltrList ?props.strgFltrList :''),    //csv of strN, if found then hide notes
-      noteFilter:(props.noteFilter ?props.noteFilter :[]),    //notes on fetboard where button.data-selected=2; set be clicking infoPnl note
+      noteFilter:(props.noteFilter ?props.noteFilter :[]),    //notes on fetboard where button.data-selected=2; set by clicking infoPnl note
+      fretSelect:(props.fretSelect ?props.fretSelect :[]),    //when rootType=fretSelect, list of frets and related data; set in fretPnl.fretClick()
+      fretSelectMatch:(props.fretSelectMatch ?props.fretSelectMatch :null),    //user selects a chord or scale to view: {type, name}
 
-      rootType:(props.rootType ?props.rootType :'s'),    //one of: [null, fretRoot, selNote]
+      rootType:(props.rootType ?props.rootType :''),    //one of: ['', fretRoot, fretSelect, selNote]
       fretRoot:(props.fretRoot ?props.fretRoot :null),          //note object, set when fret clicked
       selNoteVal:(props.selNoteVal ?props.selNoteVal :''),   //string, contains note selected in selNote
       octave:(props.octave ?props.octave :0), 
@@ -44,12 +46,15 @@ class Fretboard extends React.Component{
     this.stateChange = this.stateChange.bind(this)
     this.strgFltr = this.strgFltr.bind(this)
     this.makeQuery = this.makeQuery.bind(this)
+    this.fretSelectFind = this.fretSelectFind.bind(this)
   }  
   reset(){
     this.setState({ collapsed:false })
+    this.setState({ fretSelectMatch:null })
+    this.setState({ fretSelect:[] })
     this.setState({ noteFilter:[] })
     this.setState({ strgFltrList:'' })
-    this.setState({ fretFilter:'' })
+    this.setState({ fretFilter:[] })
     this.setState({ scaleName:'' })
     this.setState({ chordName:'' })
     this.setState({ rootType:'' })
@@ -70,6 +75,21 @@ class Fretboard extends React.Component{
   duplicate(){
     this.props.duplicate( this )
   }
+  fretSelectFind( objOrTab ){
+    let list = this.state.fretSelect,
+      fnd = -1
+
+    if(list.length === 0 || objOrTab === null) return fnd  //empty list
+
+    let  tab = (typeof objOrTab === 'string' ?objOrTab :objOrTab.tab)    //find in list
+    for(let ii = 0; ii < list.length; ii++){
+      if(tab === list[ii].tab){
+        fnd = ii
+        break
+      }
+    }
+    return fnd
+  }
   stateChange( key, val){
     // if(key === 'rootType')   //only manually set below; can be prop instead of state
     //   this.setState({ rootType:val })
@@ -78,41 +98,108 @@ class Fretboard extends React.Component{
       this.setState({ collapsed:val })
     }else
     if(key === 'noteFilter'){
-      let list = this.state.noteFilter.slice()
-      let idx = list.indexOf( val )
- 
-      if(idx < 0) list.push( val )
-      else list.splice( idx, 1 )
-      
-      this.setState({ noteFilter:list })
+
+      if(val === 'clear'){  //empty list
+        this.setState({ noteFilter:[] })
+      }
+      else {    //default operation
+        let list = this.state.noteFilter.slice()
+        let idx = list.indexOf( val )
+   
+        if(idx < 0) list.push( val )
+        else list.splice( idx, 1 )
+        
+        this.setState({ noteFilter:list })
+      }
     }else
     if(key === 'fretBtnText'){
       this.setState({ fretBtnText:val })
     }else
     if(key === 'fretFilter'){
-      let fval = `"${val}",`,
-        ii = this.state.fretFilter.indexOf( fval )
-      if(ii < 0)   //add to list
-        val = this.state.fretFilter +fval    
-      else         //remove from list
-        val = this.state.fretFilter.replace(fval, '')
-      this.setState({ fretFilter:val })
+      let list = this.state.fretFilter.slice()
+      let idx = list.indexOf( val )
+ 
+      if(idx < 0) list.push( val )
+      else list.splice( idx, 1 )
+
+      this.setState({ fretFilter:list })
+      // let fval = `"${val}",`,
+      //   ii = this.state.fretFilter.indexOf( fval )
+      // if(ii < 0)   //add to list
+      //   val = this.state.fretFilter +fval    
+      // else         //remove from list
+      //   val = this.state.fretFilter.replace(fval, '')
+      // this.setState({ fretFilter:val })
     }else
     if(key === 'fretRoot'){
       this.setState({ fretRoot:val })
-      if(val === null){
+
+      if(val === null)
          this.setState({ rootType:'' })
-         this.setState({ selNoteVal:'' })
-      }else
+      else
         this.setState({ rootType:'fretRoot' })
+      this.setState({ selNoteVal:'' })
+      this.setState({ fretSelect:[] })
+      this.setState({ fretSelectMatch:null })
     }else
     if(key === 'selNoteVal'){
       this.setState({ selNoteVal:val })
-      if(val === ''){
+
+      if(val === '')
+        this.setState({ rootType:'' })
+      else
+        this.setState({ rootType:'selNote' })
+      this.setState({ fretRoot:null })
+      this.setState({ fretSelect:[] })
+      this.setState({ fretSelectMatch:null })
+    }else
+    if(key === 'fretSelect'){
+
+      if(val === null){   //disable fretSelect mode
+        this.setState({ fretSelect:[] })
+        this.setState({ fretSelectMatch:null })
         this.setState({ rootType:'' })
         this.setState({ fretRoot:null })
-      }else
-        this.setState({ rootType:'selNote' })
+        this.setState({ selNoteVal:'' })
+        return
+      }
+
+      if(Array.isArray(val) === false)  //process as array due to React state handling
+        val = [val]
+
+      let list = this.state.fretSelect.slice(),
+        idx = null, root=null
+
+      for(let nobj of val){
+        idx = this.fretSelectFind( nobj )
+        if(idx < 0) {
+          if(list.length === 0){
+            nobj.ivl = q.intervals.byName( 'P1' )
+            list.push( nobj )
+          }
+          else{
+            if(root === null) root = list[0]
+            let semis = (nobj.semis -root.semis) % 12
+            if(semis < 12) semis = 12 +semis
+            nobj.ivl = q.intervals.bySemis( semis, true )
+            list.push( nobj )
+          }
+        }else 
+          list.splice( idx, 1 )
+      }
+      list.sort(function (a, b) {
+        return a.ivl.semis - b.ivl.semis
+      })
+
+      this.setState({ fretSelect:list })
+      if(this.state.rootType !== 'fretSelect'){   //set rootType to fretSelect
+        this.setState({ rootType:'fretSelect' })
+        this.setState({ fretRoot:null })
+        this.setState({ selNoteVal:'' })
+      }
+    }else
+    if(key === 'fretSelectMatch'){
+      this.setState({ fretSelectMatch:val })
     }else
     if(key.substr(0,8) === 'strgFltr'){
       let strN = Number(key.substr(8,1)),
@@ -173,13 +260,25 @@ class Fretboard extends React.Component{
       collapsed: this.state.collapsed,
       fretBtnText: this.state.fretBtnText,
       fretFilter: this.state.fretFilter,
-      noteFilter: this.state.noteFilter
+      noteFilter: this.state.noteFilter,
+      fretSelect: this.state.fretSelect,
+      fretSelectMatch: this.state.fretSelectMatch,
     }
     if(qry.rootType === 'fretRoot')
       qry.root = this.state.fretRoot    //note object, set in FretPnl.fretClick()
-    if(qry.rootType === 'selNote' && qry.note !== '' && qry.note !== 'All'){
+    if(qry.rootType === 'selNote' && qry.note !== '' && qry.note !== 'All')
       qry.root = q.notes.objByNote( qry.note )    //note object
+    if(qry.rootType === 'fretSelect')
+      qry.root = this.state.fretSelect[0]    //note object, set in FretPnl.fretClick()
+    
+    if(qry.fretSelectMatch != null){
+      if(qry.fretSelectMatch.type === 'chord')
+        qry.fretSelectMatch.obj = q.chords.obj( qry.fretSelectMatch.note, qry.fretSelectMatch.abr )
+      else
+      if(qry.fretSelectMatch.type === 'scale')
+        qry.fretSelectMatch.obj = q.scales.obj( qry.fretSelectMatch.note, qry.fretSelectMatch.abr )
     }
+
     if(this.state.scaleName !== '' && qry.root)
       qry.scale = q.scales.obj( qry.note, this.state.scaleName )
     if(this.state.chordName !== '' && qry.root)
@@ -208,6 +307,7 @@ class Fretboard extends React.Component{
           qry={qry}
           stateChange={this.stateChange}
           strgFltr={this.strgFltr}
+          fretSelectFind={this.fretSelectFind}
         />
         <QueryPnl 
           fbid={this.props.fbid}

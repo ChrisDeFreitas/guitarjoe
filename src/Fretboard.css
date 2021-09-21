@@ -8,13 +8,13 @@
 .fretboard{ display:inline-table;  margin:0 auto 0 auto; position:relative; }
 .fretboard[id="Fretboard0"]{ margin:1em auto 0 auto;}
 
-.queryPnl{ color:#ffffffd0; position:relative; margin:0 auto;   text-align:center; 
-  border:none; outline:none; padding:0; top:-0.5em;
+.queryPnl{ color:#ffffffd0; border:none; outline:none; padding:0;
+  position:relative; margin:0 auto; text-align:center; top:-0.25em;
 }
 .queryControls{ background-color:hsl(177deg 68% 31% / 92%); display:inline-table; position:relative; 
   border: 1px solid #333; border-radius:5px; box-shadow:5px 5px 15px 1px #0000007a;
   margin:0; padding:0 0.5em 0.5em 0.5em;
-  height:3em; width:fit-content; top:0px;
+  height:3em; width:100%; top:0px;
 }
 .dataPnl { border:none; display:inline-table; padding:0 0.5em; text-align:center;  }
 .dataPnl label{ color:#ffffffd0; font-weight:bold; font-size:1em; text-shadow:1px 1px 5px #00000090; }
@@ -28,26 +28,41 @@
 
 .qryCollapsed .qryBtnCollapse,
 .qryCollapsed .queryControls,
+.queryControls[data-roottype='fretSelect'],
 .qryCollapsed .qryBtnDupe,
 .qryCollapsed .qryBtnDel,
 .qryCollapsed .qryBtnClear{ display:none; }
 
 .qryBtn{ background-color:hsl(177deg 68% 31% / 92%); border:1px outset #0003; border-radius:5px; 
   box-shadow: 5px 5px 15px 1px #0000007a; cursor:pointer; 
-  display:inline-table; margin:0 0.25em; top:20px; height:1.5em; width:1.5em; position:relative; 
-  color:#000; font-size:1.25em; font-weight:normal; text-shadow:1px 1px 1px #fff6; }
+  display:inline-table; margin:0 0.25em; height:1.5em; width:1.5em;
+  color:#000; font-size:1.25em; font-weight:normal; text-shadow:1px 1px 1px #fff6; text-align:center;
+ }
 .qryBtnCollapse div{ transform:rotateZ(-90deg); text-shadow:-1px 1px 1px #fff6; 
   position:relative; top:0px; left:-2px; width:100%;  }
 
-/* .infoPnl{ } */
-.qryExpanded .infoPnl{ display:block; }
+.tbQuery{ 
+  border:0; border-collapse:separate; border-spacing:0px; table-layout:fixed;
+  padding:0; margin:0 auto; position:relative; width:auto; max-width:70%;
+}
+.tbQuery tr td{ vertical-align:middle; }
+.qryContent{ padding:0; width:70%; } 
+.qryBtnsLeft{ padding:0; text-align:right; width:8em; } 
+.qryBtnsRight{ padding:0 0 0 1.5em; text-align:left; width:12em; } 
+
+.infoPnl{ margin:0 auto; width:100%; } 
+.qryExpanded .infoPnl{ display:block; margin:0 auto; }
 .qryBtnCollapse .infoPnl{ display:inline-table; }
-.infoDiv{ display:inline-table; margin:5px 0 0 0.5em; text-shadow:1px 1px 3px #000;}
-.infoDiv .propName{ font-weight:bold; margin:0 0 0 0.5em;}
-.infoDiv .propName:first-child{ margin:0;}
-.infoDiv .ivl{ cursor:pointer; font-weight:normal; }
-.infoDiv .ivl[data-selected="noteFilter"] { background:#aaf; border-radius: 3px; }  /* note in props.noteFilter */
-.infoDiv .ivl sub{ font-size:0.6em; position:relative; left:-3px; }
+.infoDiv{ background:#00000045; border-radius:5px; display:inline-table;
+   padding:0; margin:0 auto; text-shadow:1px 1px 3px #000; width:100%; }
+.infoDiv .propName{ color:white; cursor:pointer; font-weight:bold; margin:0 0 0 0.5em; }
+.infoDiv .lineBreak{ line-height:5%; }
+.infoDiv .propName:first-child{ margin:0; }
+.infoDiv .ivl{ border-radius:3px; cursor:pointer; font-weight:normal; }
+.infoDiv .ivl:hover{ background:#7f77;  }
+.infoDiv .ivl[data-selected="noteFilter"] { background:#aaf; border-radius:3px; }  /* note in props.noteFilter */
+.infoDiv .ivl[data-selected="fretSelectMatch"] { background:#b1e6ff7a; border-radius:3px; }  /* user selected matching chord or scale */
+.infoDiv .ivl sub{ font-size:0.6em; position:relative; left:-3px; top:-3px; }
 .qryBtnExpand{ display:inline-table; position:sticky; height:1em; width:1em; }
 .qryBtnExpand div{ position:relative; transform:rotateZ(90deg); height:1em; left:3px; top:2px;
   font-size:0.8em; text-shadow:1px -1px 1px #fff6; }
@@ -84,11 +99,13 @@
   z-index:100;
 }
 .fretButton{ background:linear-gradient(180deg, #fff,#eec 50%,hsl(60deg 5% 36%) 100%); }
-.fretButton[data-state="fretRoot"] { border: 1px #04ff00 solid; }
-.fretButton[data-state="selNote"] { border: 1px #fffb00 solid;  }
-.fretButton[data-state="noteFilter"] { background:#aaf; }  /* note found in props.noteFilter */
+.fretButton[data-state="fretRoot"] { border: 1px #04ff00 solid; } /* green */
+.fretButton[data-state="selNote"] { border: 1px #fffb00 solid;  } /* yellow */
+.fretButton[data-state="fretSelect"] { border: 1px #00afff solid;  }  /* azure radiance */
+.fretButton[data-state="fretSelectMatch"] { background:#b1e6ff; }  /* Anakiwa */
+.fretButton[data-state="noteFilter"] { background:#aaf; }  /* Melrose */
 /* .fretButton[data-selected="0"] {} */
-.fretButton[data-selected="1"] { background:#3ac664; }
+.fretButton[data-selected="1"] { background:#3ac664; }  /* emerald */
 .fret0 .fretButton { left:39px; }
 .fretButton sup{ color:#0f000fa0; font-size:0.7em; position:absolute; top:0px; text-shadow:none;  }
 .fretButton sub{ color:#00000050; text-shadow:none; position:relative; }

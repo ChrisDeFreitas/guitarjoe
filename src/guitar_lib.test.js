@@ -7,30 +7,26 @@ import q from "./guitar_lib.js";
 
 q.fretboard.fretMaxSet( 8 )
 
-describe('test interval functions', () => {
-  it("expect q.semis('m3').semis === 3 ", () => {
-		let ivl = q.semis('m3')
+describe.skip('test interval functions', () => {
+  it("expect q.intervals.byName('m3').semis === 3 ", () => {
+		let ivl = q.intervals.byName('m3')
     expect( ivl ).toBeTruthy()
     expect( ivl.semis ).toBe( 3 )
   })
-  it("expect q.semis('C').abr === 'P1' ", () => {
-		let ivl = q.semis('C')
+  it("expect q.intervals.byNote('C').abr === 'P1' ", () => {
+		let ivl = q.intervals.byNote('C')
     expect( ivl ).toBeTruthy()
     expect( ivl.abr ).toBe( 'P1' )
   })
-})
-
-
-describe('test semisCalc()', () => {
-  it("expect q.semisCalc('E', 4) === 52 ", () => {
-		let semis = q.semisCalc('E', 4)
+  it("expect q.intervals.bySemis.calc('E', 4) === 52 ", () => {
+		let semis = q.semis.calc('E', 4)
     expect( semis ).toBeTruthy()
     expect( semis ).toBe( 52 )
   })
 })
 
 
-describe('test notes.calc()', () => {
+describe.skip('test notes.calc()', () => {
   it("expect q.notes.calc('C', 'A1') === C#", () => {
 		let letter = q.notes.calc('C', 'A1')
     expect( letter ).toBeTruthy()
@@ -109,7 +105,7 @@ describe('test notes.calc()', () => {
 })
 
 
-describe('test chord functions', () => {
+describe.skip('test chord functions', () => {
   it("expect q.chords.byName('Maj').abr === 'maj' ", () => {
 		let chord = q.chords.byName('maj')
     expect( chord ).toBeTruthy()
@@ -124,12 +120,12 @@ describe('test chord functions', () => {
 })
 
 
-describe('test fretboard.objBySemis()', () => {
+describe.skip('test fretboard.objBySemis()', () => {
   it("expect q.notes.bySemis('48', true).notes[0] = C", () => {
 		let result = q.fretboard.objBySemis('48')
     expect( result ).not.toBe( false )
     expect( result.notes[0] ).toBe( 'C' )
-    expect( result.strg.note ).toBe( 'B' )
+    expect( result.strgnum ).toBe( 2 )
     expect( result.fret ).toBe( 1 )
   })
   it("expect q.fretboard.objBySemis(35).notes[0] === B ", () => {
@@ -137,7 +133,107 @@ describe('test fretboard.objBySemis()', () => {
     expect( result ).not.toBe( false )
     expect( result.notes[0] ).toBe( 'B' )
     expect( result.notes[1] ).toBe( 'C♭' )
-    expect( result.strg.note ).toBe( 'A' )
+    expect( result.strgnum ).toBe( 5 )
     expect( result.fret ).toBe( 2 )
   })
+})
+
+describe('manual tests for notes.match() ', () => {
+  let nobjList8 = [  //should match EBlues7
+    {
+      "note": "G",
+      "notes": q.notes.bySemis( q.semis.calc('G', 3)),
+      "semis": q.semis.calc('G', 3),
+    // },{
+    //   "note": "A",
+    //   "notes": q.notes.bySemis( q.semis.calc('A', 3)),
+    //   "semis": q.semis.calc('A', 3),
+    },{
+      "note": "D",
+      "notes": q.notes.bySemis( q.semis.calc('D', 3)),
+      "semis": q.semis.calc('D', 3),
+    // },{
+    //   "note": "E",
+    //   "notes": q.notes.bySemis( q.semis.calc('E', 3)),
+    //   "semis": q.semis.calc('E', 3),
+    },
+  ]
+  it.skip("manual test, one chord against selected notes", () => {
+    let chordName = 'maj'
+    let note = 'G'
+    let chord = q.chords.obj(note, chordName)
+    let ivls = chord.ivls    
+    let nobs = nobjList8
+    console.log( 'original nobjList:', nobs)
+  	let result = q.notes.match( ivls,  nobs)
+    if(result === false)
+      console.log( note, chord.name, ' failed',
+        '\nscale.ivls:', chord.ivls,
+      )
+    else{
+      console.log( note, chord.name, ' found:', result,
+           '\nscale.ivls:', chord.ivls,
+      )
+    }
+  })
+  it("manual test, finding all chords that match selected notes", () => {
+    let nobs = nobjList8
+    console.log( 'original nobjList:', nobs)
+    let cnt = 0
+    let last = null
+    for(let chord of q.chords.list){    //test chord for a matching patter of notes
+      for(let iobj of q.intervals.list){
+        if(last != null && last.semis === iobj.semis) continue
+        last = iobj
+
+        let note = iobj.note
+        let sobj = q.chords.obj(note, chord.name)
+        let ivls = sobj.ivls    
+       	let result = q.notes.match( ivls,  nobs)
+        
+        if(result === true) 
+          console.log( ++cnt, note, chord.name+' match: ', ivls)
+      }
+      // break
+    }
+  })
+  it.skip("manual test, one scale against selected notes", () => {
+    let scaleShort = 'Blues6'
+    let scale = q.scales.obj('E', scaleShort)
+    let ivls = scale.ivls    
+    let nobs = nobjList8
+    console.log( 'original nobjList:', nobs)
+  	let result = q.notes.match( ivls,  nobs)
+    if(result === false)
+      console.log( scale.name+' failed',
+        '\nscale.ivls:', scale.ivls,
+      )
+    else{
+      console.log( scale.name+' found:', result,
+           '\nscale.ivls:', scale.ivls,
+      )
+    }
+  })
+  it.skip("manual test, finding all scales that match selected notes", () => {
+    let nobs = nobjList8
+    console.log( 'original nobjList:', nobs)
+    let cnt = 0
+    let last = null
+    for(let scale of q.scales.list){    //test scale for a matching patter of notes
+      for(let iobj of q.intervals.list){
+        if(last != null && last.semis === iobj.semis) continue
+        last = iobj
+
+        let note = iobj.note
+        let sobj = q.scales.obj(note, scale.name)
+        let ivls = sobj.ivls    
+       	let result = q.notes.match( ivls,  nobs)
+
+        if(result === true) 
+          console.log( ++cnt, note, scale.name+' match: ', ivls)
+      }
+      // break
+    }
+  })
+
 })

@@ -69,6 +69,8 @@ function App(){
 				fretFilter={state.fretFilter}
 				strgFltrList={state.strgFltrList}
         noteFilter={state.noteFilter}
+        fretSelect={state.fretSelect}
+        fretSelectMatch={state.fretSelectMatch}
 				rootType={state.rootType}
 				fretRoot={state.fretRoot}
 				selNoteVal={state.selNoteVal} 
@@ -89,7 +91,7 @@ function App(){
     <div className="App">
 			<header className="App-header header">
         <Logo className="Logo" alt="Logo" />
-        GuitarJoe v0.1.2 <About />
+        GuitarJoe v0.1.3 <About />
       </header>
 			{list}
     </div>
