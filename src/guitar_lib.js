@@ -14,8 +14,7 @@
     - assume: exception handling performed by caller
 
   Todo:
-    - refactor for code consistency
-    - fix q.chords.make() (when code needed)
+    - check for code consistency
     - (when needed) update notes.calc() for ##/bb -- see comments in function
   
  */
@@ -67,21 +66,6 @@ var q = {
       }
       return null
     },
-    // todo: fix
-    // make( letter, chordAbbrev, octaveNum ){
-    //   let chord = q.chords.byName( chordAbbrev )
-    //   let semis = []
-    //   for(let stepnum = 0; stepnum < chord.semis.length; stepnum++){
-    //     let step = chord.semis[stepnum]
-    //     semis.push( q.semis.calc( step, octaveNum) )
-    //   }
-    //   return {
-    //     letter: letter.toUpperCase(),
-    //     octaveNum: octaveNum,
-    //     name:chord.name, abr:chord.abr, 
-    //     semis: semis
-    //   }
-    //},
     obj( root, chordName ){  //return chord with notes based on root
       let ivls = [],
         chord = q.chords.byName( chordName )
@@ -110,7 +94,118 @@ var q = {
        })
 
       return obj
+    },
+    inversions( note, octave = 0, maxinversions = 3 ){   // return an inversion object for given note in major scale
+      //assume: inversions are for Major triad or Maj7
+      note = note.toUpperCase()
+      let result = { root:note, octave:octave, max:maxinversions, positions:{} }
+      let rootobj = null
+      for( let cnt = 1; cnt <= maxinversions; cnt++){
+        let letter = ['Root','First','Second','Third'][cnt -1]    //use letter notation: root position = a, first inversion = b
+        result.positions[ letter ] = {}
+        let obj = result.positions[ letter ]
+        if( rootobj === null){
+          for(let ii = 0; ii < maxinversions; ii++){
+            let inv = String( ii +1)
+            let ivl = q.intervals.byNote( q.notes.alpha[ ((ii *3) -ii) %7 ] )
+            obj[inv] = ivl
+            obj[inv].note =  q.notes.calc( note, ivl )
+            obj[inv].octave = octave
+            obj[inv].semis = ivl.semis +(octave *12)
+          }
+          rootobj = obj
+        }
+        else { //rootob !=== null
+          for(let ii = 0; ii < maxinversions; ii++){
+            let inv = String( ii +1 )
+            let offset = (ii +2  +(cnt-2) <= maxinversions ?ii +2 +(cnt-2) : ii +2 +(cnt-2) -maxinversions)
+            let rinv = String( offset )
+            offset = ii +2 +(cnt-2) -maxinversions  //clunky but works
+            obj[inv] = {}
+            obj[inv].name =  rootobj[rinv].name
+            obj[inv].abr =  rootobj[rinv].abr
+            obj[inv].note =  rootobj[rinv].note
+            obj[inv].octave = (offset < 1 ?rootobj[rinv].octave :rootobj[rinv].octave +1)
+            obj[inv].semis = q.semis.calc(obj[inv].note, obj[inv].octave )
+            // console.log(cnt, ii, rinv, offset, '\nobj:', obj, '\nrobj:', rootobj[rinv] )
+          }
+        }
+      }
+      //
+      return result
+    },
+    inversionNotes( invrObj, invrPos ){ //return note objects for all fretboard locations of given inversion
+
+      function local_invrToNobj( invr, strgn, parent = null, rootfret = null ){
+        let nobj = null
+        let strg = q.fretboard.strg( strgn )
+        let note = invr.note
+        let fret = ( q.intervals.byNote( note ).semis  -q.intervals.byNote( strg.note ).semis )
+        if(fret < 0) fret += 12
+        
+        if(rootfret != null) fret = rootfret +12  //for root position: find multiple notes on string
+        
+        while( fret <= q.fretboard.fretMax ){
+          //  console.log('fret'+fret+':', {strg:strg.note, invr:note, fret:fret} )
+          if(fret <= q.fretboard.fretMax){
+            nobj = q.notes.obj( strg.num, fret, note )
+            // console.log('  search:', {iOctave:invr.octave, nOctave:nobj.octave, nobjFret:nobj.fret, parentFret:parentFret })
+            if( parent === null || (nobj.fret >= parent.fret-3 && nobj.fret <= parent.fret+3 ))  //verify proximity of frets
+            //don't verify octaves, leave it for the user to inspect
+            // && ( [0,1].indexOf(invr.octave) >= 0 || nobj.octave === invr.octave ))  //octave == 0||1 means note selected from QueryPnl.selNote
+              break;
+            else{   //keep searching string
+              fret += 12
+              nobj = null
+            }
+          }
+        }
+        return nobj
+      }
+
+      let chord = invrObj.root +'Maj'
+      let maxInversions = invrObj.max 
+      let inversions = invrObj.positions[invrPos]
+
+      let tmp = []  //temporary store for notes found
+      let list = []     //returned with all notes found
+      for(let strgn = 6; strgn >= maxInversions; strgn--){   //because of inversion logic, rootnote can never be on upper strings
+
+        let rootfret = null
+        while( rootfret === null || rootfret < q.fretboard.fretMax){  //allow searching for root note multiple times
+          //calc fret position of root note
+          let invr = inversions[1]
+          let nobj = local_invrToNobj( invr, strgn, null, rootfret )
+          if(nobj === null) break
+          tmp[0] = nobj
+          tmp[0].invr = {chord:chord, inversion:invrPos, abr:invr.abr, num:1}
+          rootfret = nobj.fret    //
+
+          //calc note 2
+          let parent = nobj
+          invr = inversions[2]
+          nobj = local_invrToNobj( invr, strgn -1, parent, null )
+          if(nobj === null) continue
+          tmp[1] = nobj
+          tmp[1].invr = {chord:chord, inversion:invrPos, abr:invr.abr, num:2}
+
+          //calc note 3
+          parent = nobj
+          invr = inversions[3]
+          nobj = local_invrToNobj( invr, strgn -2, parent, null)
+          if(nobj === null) continue
+          tmp[2] = nobj
+          tmp[2].invr = {chord:chord, inversion:invrPos, abr:invr.abr, num:3}
+
+          tmp.forEach( nobj => list.push( nobj ) )
+          //add code to allow each string to be searched again
+          // if(tmp[0].fret < q.fretboard.fretMax )
+        }
+      }
+      if(list.length === 0) return null
+      return list
     }
+
   },
 
   fretboard: {
@@ -143,10 +238,12 @@ var q = {
     strg( strgN ){  
       return Object.assign({}, q.fretboard.strings[ strgN -1 ])
     },
-    fretInRange(note, root, num = 3){
+    fretInRange(nobj, root, num = 3){
+      //assume: root is a notes.obj()
       let max = (num <= 5 ?5 :num)
-      if((root.fret <= 1 && note.fret <= max)
-      || (root.fret > 1 && note.fret >= (root.fret -num)  &&  note.fret <= (root.fret +num) ))
+      if((root.fret <= 1 && nobj.fret <= max)
+      || (root.fret > 1 && nobj.fret >= (root.fret -num)
+         && nobj.fret <= (root.fret +num)) )
         return true
       return null
     },
@@ -348,11 +445,34 @@ var q = {
       return newlet+newsfx
     },
 
+    find( strgN, note ){ //return null or list of note objects on string
+      let result = []
+      let strg = q.fretboard.strg( strgN )
+      let max = strg.semis +q.fretboard.fretMax
+      let semis = strg.semis
+      while(semis <= max){
+        let notes = q.notes.bySemis( semis )
+        if(notes.indexOf( note) >= 0){
+          let nobj = q.notes.obj(strg, semis -strg.semis, note)
+          result.push( nobj )
+          semis += 12
+        }
+        else
+          ++semis
+      }
+
+      if(result.length === 0) return null
+      return result
+    },
     obj( strg, fret, note = null  ){
+      // console.log(111, fret, strg.num)
       if(typeof strg === 'number')
         strg = q.fretboard.strg( strg )
-      let semis = strg.semis +fret,
-          octave = q.octave(semis),
+      if(fret < 0) return null
+      let semis = strg.semis +fret
+      if(semis > (strg.semis +q.fretboard.fretMax)) return null
+
+      let octave = q.octave(semis),
           list = q.notes.bySemis( semis )
       return {
         fret: fret,
@@ -365,10 +485,9 @@ var q = {
         tab: strg.tabLetter +fret
       }
     },
-    objByNote( note ){
+    objByNote( note /*, octave = 0 */ ){
       let ivl = q.intervals.byNote( note ),
-          semis = ivl.semis,
-          // octave = q.octave( semis ),
+          semis = ivl.semis /* +(octave * 12) */,
           list = q.notes.bySemis( semis )
           //, fobj = q.fretboard.objBySemis( semis )
       return {
@@ -387,22 +506,21 @@ var q = {
       return q.notes.obj( fobj.strg, fobj.fret )
     },
 
-
     match( ivls, nobjList ){    //return true/false if notes in nobjList contained within ivls
       //used to match scales and chords to user selected frets
       //assume: ivls is a list of intervals.list[n]
       //assume: nobjList is a list of notes.obj()
-      //assume: no duplicate items
+      //assume: no duplicate items allowed
       //assume: ivls.length > nobjList.length 
       //assume: there may be ivls[n] between matched items: c,e matches c,d,e
       //assume: matches may occur across head/tail boundaries: e,c matches c,d,e
       //generally this is a pattern matching algorithm between two lists
-      //assume: break on first match of all items in nobjList
       if(nobjList.length > ivls.length) return false
 
       let list = nobjList.slice()   //to support rotating list
       let fnd, nidx
 
+      //break on first match of all items in nobjList
       for(let comparisons = 1; comparisons <= list.length; comparisons++){ //max comparisons = original pattern +(list.length -1) rotations 
 
         fnd = false; nidx = 0    //reset search params
@@ -421,6 +539,37 @@ var q = {
 
       return fnd
     },
+
+    toAbc( nobj, noteLength = 8 ){
+      let result = ''
+      
+      let acc = nobj.note.substr(1)
+      if(acc === '#') result = '^'
+      else
+      if(acc === '♭') result = '_'
+      else
+      if(acc === '##') result = '^^'
+      else
+      if(acc === '♭♭') result = '__'
+
+      result += nobj.note.substr(0,1)
+       
+      if(nobj.octave === 1) result += ',,'
+      else
+      if(nobj.octave === 2) result += ','
+      else
+      //if(nobj.octave === 3) result = result
+      //else
+      if(nobj.octave === 4) result += "'"
+      else
+      if(nobj.octave === 5) result += "''"
+      else
+      if(nobj.octave === 6) result += "''"
+      else
+      if(nobj.octave === 7) result += "'''"
+
+      return result +noteLength
+    }
   },
 
   octave( semis ){

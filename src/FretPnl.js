@@ -7,7 +7,9 @@
 
 import React from 'react'
 import './FretPnl.css';
+import './FretButton.css';
 import q from "./guitar_lib.js";
+import Abcjs from "./react-abcjs"
 
 class FretPnl extends React.Component{
 
@@ -28,7 +30,7 @@ class FretPnl extends React.Component{
         btn = btn.parentNode    //span span
     }
     if(btn.nodeName !== 'BUTTON') return
-    
+    event.stopPropagation()
 
     if(['fretRoot','selNote'].indexOf( qry.rootType ) >= 0  
     && ['fretRoot','selNote'].indexOf( btn.dataset.state ) >= 0
@@ -55,13 +57,27 @@ class FretPnl extends React.Component{
       if(selected === 1)
         btn.dataset.selected = 0
     }
-    event.stopPropagation()
   }
   fretBtnTextChange( event ){   //toggle formatting of fret button captions
     // console.log('fretBtnTextChange', event)
+    let qry = this.props.qry
     event.stopPropagation()
+    
+   if(qry.note === 'All'){
+      if(qry.fretBtnText === 'NoteTab')
+   	  	this.props.stateChange( 'fretBtnText', 'NoteAbc' )
+      else
+        this.props.stateChange( 'fretBtnText', 'NoteTab' )
+    }
+    else
     if(this.props.qry.fretBtnText === 'NoteFirst')
    		this.props.stateChange( 'fretBtnText', 'IvlFirst' )
+    else
+    if(this.props.qry.fretBtnText === 'IvlFirst')
+   		this.props.stateChange( 'fretBtnText', 'IvlAbc' )
+    else
+    if(this.props.qry.fretBtnText === 'IvlAbc')
+   		this.props.stateChange( 'fretBtnText', 'IvlTab' )
     else
    		this.props.stateChange( 'fretBtnText', 'NoteFirst' )
   }
@@ -91,7 +107,7 @@ class FretPnl extends React.Component{
       if(cy < mid) strN--
     }
 
-    if(this.props.strgFltr( strN ) === true)
+    if(this.props.strgFiltered( strN ) === true)
       return
 
     // console.log('fretPnl.fretClick:', strN, fret, cell.className)
@@ -113,7 +129,7 @@ class FretPnl extends React.Component{
     }
   }
   fretFltrClick( event ){ //toggle state for frets
-    let // qry = this.props.qry,
+    let //qry = this.props.qry,
       btn = event.currentTarget,
       fret = Number( btn.dataset.fret )
 
@@ -123,9 +139,8 @@ class FretPnl extends React.Component{
   }
   strgFltrClick( event ){
     let btn = event.currentTarget,
-      strN = btn.dataset.strn,
-      newstate = !this.props.strgFltr( strN )
-    this.props.stateChange( 'strgFltr'+strN, newstate )
+      strN = btn.dataset.strn
+    this.props.stateChange( 'strgFilter', strN )
     event.stopPropagation()
   }  
 
@@ -142,7 +157,11 @@ class FretPnl extends React.Component{
     if(root === 'ALL'){   //user selected All Notes
       if(qry.octave !== 0 && qry.octave !== nobj.octave)
         return null      
-      capStyle = 'NoteFirst' //force for this selection
+      // capStyle = 'NoteTab' //force for this selection
+      console.log(111, qry.fretBtnText)
+      // capStyle = qry.fretBtnText
+      if( ['NoteAbc','NoteTab'].indexOf( qry.fretBtnText ) < 0 )
+        capStyle = 'NoteAbc'
     }else
     if(qry.rootType === 'fretRoot'){
       if(nobj.notes.indexOf( root.note ) >= 0  &&  nobj.semis === root.semis){
@@ -163,16 +182,37 @@ class FretPnl extends React.Component{
         btnState = 'fretSelectMatch'
     }
  
-    //test against props.noteFilter -- allow overriding roottype because user selected
-    if(qry.noteFilter.indexOf( nobj.note ) >= 0){
-      btnState = 'noteFilter'
-    }
-    else
+    
     if(btnState === '' && nobj.state)    //allow color coding of selChords and selInterval notes
       btnState = nobj.state
+    if(nobj.state === 'invr' || nobj.state === 'invr1' )  //displaying an inversion
+      btnState = nobj.state
+    if(qry.noteFilter.indexOf( nobj.note ) >= 0){ //test against props.noteFilter -- allow overriding roottype because user selected
+      btnState = 'noteFilter'
+    }
 
     //format button caption
     let btncaption = [], key=0
+    let renderParams = {    //for AbcJs
+      minPadding:5,   //doesn't work
+      paddingtop:0,
+      paddingbottom:0,
+      paddingleft:0,
+      paddingright:0,
+      //responsive: "resize",
+      scale:(nobj.octave <= 2 || nobj.octave >= 5 ?0.3 :0.4),
+      staffwidth:18,
+      textboxpadding:0,
+    }
+
+    let note = nobj.note
+    let nii = note.indexOf('♭')
+    if(nii >= 1)    //safari does not render ♭ properly
+      note = <span className='btnFlatNote'>{note.substr(0, nii)}&#9837;</span>
+    else
+      note = <span>{note}</span>
+
+    
     if(capStyle === 'IvlFirst'){
       if(nobj.ivl){
         btncaption.push(
@@ -187,10 +227,63 @@ class FretPnl extends React.Component{
             <sub key={++key} className='subOctave' >{nobj.octave}</sub>
         </sub>
       )
-    } else {
+    }else
+    if(capStyle === 'IvlAbc'){
+      btncaption.push(
+        <span key={++key} className='spanIvl' onClick={this.buttonClick} >
+          <span key={++key} onClick={this.buttonClick} >{ivl.abr.substr(0,1)}</span>
+          {ivl.abr.substr(1)}
+        </span>
+      )
+      btncaption.push(
+        <sub key={++key} className='ivlabc abc' onClick={this.fretBtnTextChange}
+           ><Abcjs key={++key} 
+          abcNotation={'K:clef=none\n y' +q.notes.toAbc( nobj )}
+          renderParams={renderParams} parserParams={{}} engraverParams={{}}
+        /></sub>
+      )
+    } else
+    if(capStyle === 'IvlTab'){
+      btncaption.push(
+        <span key={++key} className='spanIvl' onClick={this.buttonClick} >
+          <span key={++key} onClick={this.buttonClick} >{ivl.abr.substr(0,1)}</span>
+          {ivl.abr.substr(1)}
+        </span>
+      )
+      btncaption.push(
+        <sub key={++key} className='ivltab tab' onClick={this.fretBtnTextChange}
+          >{nobj.tab}</sub>
+      )
+    }else
+    if(capStyle === 'NoteTab'){      
+      btncaption.push(
+        <span key={++key} className='spanNote'  onClick={this.buttonClick} >{note}
+            <sub key={++key} className='subOctave' onClick={this.buttonClick} >{nobj.octave}</sub>
+        </span>
+      )
+      btncaption.push(
+        <sub key={++key} className='notetab tab' onClick={this.fretBtnTextChange}
+          >{nobj.tab}</sub>
+      )
+    }else
+    if(capStyle === 'NoteAbc'){
+      btncaption.push(
+        <span key={++key} className='spanNote'  onClick={this.buttonClick} >{note}
+            <sub key={++key} className='subOctave' onClick={this.buttonClick} >{nobj.octave}</sub>
+        </span>
+      )
+      btncaption.push(
+        <sub key={++key} className='abc' onClick={this.fretBtnTextChange}
+           ><Abcjs key={++key} 
+          abcNotation={'K:clef=none\n y' +q.notes.toAbc( nobj )}
+          renderParams={renderParams} parserParams={{}} engraverParams={{}}
+        /></sub>
+      )
+    } 
+    else {
     // if(capStyle === 'NoteFirst'){
       btncaption.push(
-        <span key={++key} className='spanNote'  onClick={this.buttonClick} >{nobj.note}
+        <span key={++key} className='spanNote'  onClick={this.buttonClick} >{note}
             <sub key={++key} className='subOctave' onClick={this.buttonClick} >{nobj.octave}</sub>
         </span>
       )
@@ -203,7 +296,7 @@ class FretPnl extends React.Component{
  
     return(
       <button key={++key} className='fretButton'  onClick={this.buttonClick}
-        data-strn={nobj.strgnum} data-fret={nobj.fret} data-tab={nobj.tab} 
+        data-strn={nobj.strgnum} data-fret={nobj.fret} data-semis={nobj.semis}  data-tab={nobj.tab} 
         data-state={btnState} data-selected={selected}
       >
         {btncaption}
@@ -298,6 +391,18 @@ class FretPnl extends React.Component{
     }
     function local_chordFind( nobj ){
       if(qry.chord === null) return null
+      if(qry.inversionNotes !== null){
+        let inv = qq.props.inversionNoteByTab( nobj.tab )
+        if(inv !== null){
+          if(qry.octave === 0 || qry.octave === nobj.octave){
+            // nobj.ivl = ivl
+            nobj.note = inv.note
+            nobj.ivl = inv.invr
+            nobj.state = 'invr' +(inv.invr.num === 1 ?1 :'')
+            return qq.button( nobj, qry.root )
+          }
+        }
+      }
       if(qry.rootType === 'fretRoot'){    //exclude frets
         if(q.fretboard.fretInRange(nobj, qry.root) !== true)
           return null
@@ -353,7 +458,7 @@ class FretPnl extends React.Component{
     for (let row = 1; row <= 9; row++) {
       let frets = []
       let strN = row -1
-      let strgFltr = this.props.strgFltr( strN )
+      let strgFltr = this.props.strgFiltered( strN )
 
       for (let col = 0; col <= fretMax +1; col++) {
         let tab = '',
@@ -364,7 +469,7 @@ class FretPnl extends React.Component{
           btnStrFltr=(<div onClick={this.strgFltrClick} data-strn={strN}
             className={'btnFilter btnStrgFltr btnStrgFltr'+strN}
            ><div>&diams;</div></div>
-           )
+          )
         }
 
         if(row === 1){  //top border, fret filter disabled because may not be needed
@@ -395,17 +500,18 @@ class FretPnl extends React.Component{
             frets.push( <td key={col} data-strn={strN} data-col={col} className={'borderRight col'+col}></td> )
           } 
           else{ //fretboard cells
-            let btn = null, stringdiv = null
+            let btn = null, stringdiv = null, nobj = null
 
             if(strN >= 1 && strN <= 6)
               stringdiv = <div className='stringdiv' onClick={this.fretClick} data-strn={strN} data-fret={col} ></div>
 
             //process fret button
-            if( fretFltr === false    //no filter applied to fret
+            if( strN <= 6
+             && fretFltr === false    //no filter applied to fret
              && strgFltr === false    //no filter applied to string
              && col >= first 
              && col <= last){         //filter by fretboard range
-              let nobj = q.notes.obj( strN, col )
+              nobj = q.notes.obj( strN, col )
               tab = nobj.tab
 
               if(qry.rootType === 'selNote' && this.props.selNoteVal === 'All'){
@@ -430,7 +536,6 @@ class FretPnl extends React.Component{
                 if(btn === null) btn = local_octaveFind( nobj )
               }
             }  
-
             frets.push(<td key={col} className={'fret fret'+col} onClick={this.fretClick} 
               data-strn={strN} data-fret={col} data-tab={tab} data-fretfilter={fretFltr} >
               {btnStrFltr}

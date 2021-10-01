@@ -5,7 +5,7 @@
 */
 import q from "./guitar_lib.js";
 
-q.fretboard.fretMaxSet( 8 )
+q.fretboard.fretMaxSet( 14 )
 
 describe.skip('test interval functions', () => {
   it("expect q.intervals.byName('m3').semis === 3 ", () => {
@@ -105,20 +105,32 @@ describe.skip('test notes.calc()', () => {
 })
 
 
-describe.skip('test chord functions', () => {
-  it("expect q.chords.byName('Maj').abr === 'maj' ", () => {
+describe('test chord functions', () => {
+  it.skip("expect q.chords.byName('Maj').abr === 'maj' ", () => {
 		let chord = q.chords.byName('maj')
     expect( chord ).toBeTruthy()
     expect( chord.abr ).toBe( 'maj' )
   })
-//  need to fix q.chords.make() (when code needed)
-//   it("expect q.chords.make('c', 'min', 4).abr === 'min' ", () => {
-// 		let chord = q.chords.make('c', 'min', 4)
-//     expect( chord ).toBeTruthy()
-//     expect( chord.abr ).toBe( 'min' )
-//   })
-})
+  it.skip("visually test q.chords.inversions('c')", () => {
+		let result = q.chords.inversions('c', 4)
+		// let result = q.chords.inversions('c', 4, 4)
+		// let result = q.chords.inversions('F', 4)
+    // console.log('inversion object:', result )
+    expect( result ).toBeTruthy()
+    expect( result.max ).toBe( 3 )
 
+    // console.log('result.positions.Second:', result.positions.Second )
+    expect( typeof( result.positions.Second[3] )).toBe( 'object' )
+  })
+  it("visually test q.chords.inversionNotes()", () => {
+		let result = q.chords.inversions('c')
+    expect( result ).toBeTruthy()
+    //extract notes for inversions
+    let list = q.chords.inversionNotes( result, 'First' )
+    console.log( 'q.chords.inversionNotes()', list)
+
+  })
+})
 
 describe.skip('test fretboard.objBySemis()', () => {
   it("expect q.notes.bySemis('48', true).notes[0] = C", () => {
@@ -138,7 +150,7 @@ describe.skip('test fretboard.objBySemis()', () => {
   })
 })
 
-describe('manual tests for notes.match() ', () => {
+describe.skip('manual tests for notes.match() ', () => {
   let nobjList8 = [  //should match EBlues7
     {
       "note": "G",
@@ -237,3 +249,4 @@ describe('manual tests for notes.match() ', () => {
   })
 
 })
+

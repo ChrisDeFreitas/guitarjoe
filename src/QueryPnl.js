@@ -30,6 +30,8 @@ class QueryPnl extends React.Component {
     this.fsChordClick = this.fsChordClick.bind(this)
     this.fsScaleClick = this.fsScaleClick.bind(this)
     this.infoNoteClick = this.infoNoteClick.bind(this)
+
+    this.invrLabelClick = this.invrLabelClick.bind(this)
   }
 
   //event handlers
@@ -98,6 +100,11 @@ class QueryPnl extends React.Component {
         this.props.stateChange( 'noteFilter', note )
         // this.props.stateChange( 'noteFilter', note, btn.className )
     }
+  }
+  invrLabelClick(event){
+    event.stopPropagation()
+    let btn = event.target   
+    this.props.stateChange( 'inversionPos', btn.dataset.invr )
   }
   selLabelClick( event ){     //reset param to off value
     let qry = this.props.qry,
@@ -407,12 +414,8 @@ class QueryPnl extends React.Component {
   }
   drawInfo( collapsed ){
     let qry = this.props.qry,  selected = 0
-    // console.log('queryPnl.drawInfo', qry)
-    // arrow = null,
-    // if(collapsed === 'qryCollapsed')
-    //   arrow = (<div className='qryBtn qryBtnExpand' onClick={this.btnCollapseClick} title="Show query panel" > <div>&#10148;</div> </div>)
-
     let html = [], key=0, lastkey=null
+
     if(qry.rootType === 'fretSelect'){    
 
         // console.log('qry.fretSelect', qry.fretSelect)
@@ -433,7 +436,13 @@ class QueryPnl extends React.Component {
           last = nobj
         })
 
-        if(qry.fretSelectMatch != null){    //draw user select chord or scale match
+        if(qry.fretSelectMatch === null){    //no selected chord or scale to draw
+          html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
+          html.push( <span key={++key} className='propName'
+           data-selected='label' onClick={this.infoNoteClick}
+          > &nbsp;</span> )
+        }
+        else{    //draw user select chord or scale match
           html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
            html.push( <span key={++key} className='propName'
            data-selected='label' onClick={this.infoNoteClick}
@@ -480,9 +489,13 @@ class QueryPnl extends React.Component {
       if(qry.chord !== null){
         if(lastkey !== key)
           html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
+
         html.push( <span key={++key} className='propName'
            data-selected='label' onClick={this.infoNoteClick}
-          >{qry.root.note +' ' +qry.chord.name +':'}</span> )
+          >{qry.root.note 
+          +(qry.rootType === 'fretRoot' ?qry.root.octave :'')
+          +' ' +qry.chord.name +':'}</span> )
+
         qry.chord.ivls.forEach( ivl => {
           if(qry.noteFilter.indexOf( ivl.note ) >= 0) selected = 'noteFilter'
           else selected = 0
@@ -491,6 +504,38 @@ class QueryPnl extends React.Component {
             onClick={this.infoNoteClick} data-note={ivl.note} data-selected={selected}
            >&nbsp;{ivl.note} <sub>{ivl.abr}</sub> </span> )
         })
+
+        if(qry.inversions !== null){    //draw inversions for major chords
+          let invrs = qry.inversions
+          html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
+
+          html.push( <span key={++key} className='propName'
+           data-selected='label' onClick={this.infoNoteClick}
+          >{invrs.root 
+           +(qry.rootType === 'fretRoot' ?qry.root.octave :'')
+           +' ' +qry.chord.name +' Inversions:'}</span> )
+
+          for(let pos in invrs.positions){
+            let obj = invrs.positions[ pos ]
+            selected = (qry.inversionPos === pos ?'invr' :'')
+            html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
+            html.push( <span key={++key} className='ivl' onClick={this.invrLabelClick}
+              data-selected={selected} data-invr={pos}
+              > {pos +' Position: '}</span> )
+            for(let num in obj){
+              let ivl = obj[num]
+              // let octave = ivl.octave
+              let octave = ([0,1].indexOf(ivl.octave) >= 0 ?'' :ivl.octave)
+              if(qry.noteFilter.indexOf( ivl.note ) >= 0) selected = 'noteFilter'
+              else selected = 0
+
+              html.push( <span key={++key} className='ivl'
+                onClick={this.infoNoteClick} data-note={ivl.note} data-selected={selected}
+               >&nbsp;{ivl.note +octave} <sub>{ivl.abr}</sub> </span> )
+            }
+          }
+        }
+
       }
       if(qry.ivl !== null){
         if(qry.noteFilter.indexOf( qry.ivl.note ) >= 0) selected = 'noteFilter'

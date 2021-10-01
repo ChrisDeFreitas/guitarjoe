@@ -18,6 +18,7 @@ class Fretboard extends React.Component{
   constructor (props) {
     console.log('Fretboard.constructor()', props)
     super(props)
+    this.qry = null
     //keep state private to control children
     this.state = {
 			fbid:(props.fbid ?props.fbid :0),
@@ -25,9 +26,9 @@ class Fretboard extends React.Component{
       collapsed:(props.collapsed ?props.collapsed :false),
       fretFirst:(props.fretFirst ?props.fretFirst :0),
       fretLast:(props.fretLast ?props.fretLast :q.fretboard.fretMax),
-      fretBtnText:(props.fretBtnText ?props.fretBtnText :'NoteFirst'),    //one of: NoteFirst, IvlFirst
+      fretBtnText:(props.fretBtnText ?props.fretBtnText :'NoteFirst'),    //one of: NoteFirst, IvlFirst, NoteTab, NoteAbc
       fretFilter:(props.fretFilter ?props.fretFilter :[]),      //csv of fretN, if found then disable fret
-      strgFltrList:(props.strgFltrList ?props.strgFltrList :''),    //csv of strN, if found then hide notes
+      strgFilter:(props.strgFilter ?props.strgFilter :[]),    //csv of strN, if found then hide notes
       noteFilter:(props.noteFilter ?props.noteFilter :[]),    //notes on fetboard where button.data-selected=2; set by clicking infoPnl note
       fretSelect:(props.fretSelect ?props.fretSelect :[]),    //when rootType=fretSelect, list of frets and related data; set in fretPnl.fretClick()
       fretSelectMatch:(props.fretSelectMatch ?props.fretSelectMatch :null),    //user selects a chord or scale to view: {type, name}
@@ -39,24 +40,28 @@ class Fretboard extends React.Component{
       scaleName:(props.scaleName ?props.scaleName :''),
       chordName:(props.chordName ?props.chordName :''),
       ivlName:(props.ivlName ?props.ivlName :''), 
+      
+      inversionPos:(props.inversionPos ?props.inversionPos :null),    //user selected inversion position to display (maj or maj7 selected)
     }
     this.duplicate = this.duplicate.bind(this)
     this.remove = this.remove.bind(this)
     this.reset = this.reset.bind(this)
     this.stateChange = this.stateChange.bind(this)
-    this.strgFltr = this.strgFltr.bind(this)
+    this.strgFiltered = this.strgFiltered.bind(this)
     this.makeQuery = this.makeQuery.bind(this)
     this.fretSelectFind = this.fretSelectFind.bind(this)
+    this.inversionNoteByTab = this.inversionNoteByTab.bind(this)
   }  
   reset(){
     this.setState({ collapsed:false })
     this.setState({ fretSelectMatch:null })
     this.setState({ fretSelect:[] })
     this.setState({ noteFilter:[] })
-    this.setState({ strgFltrList:'' })
+    this.setState({ strgFilter:[] })
     this.setState({ fretFilter:[] })
     this.setState({ scaleName:'' })
     this.setState({ chordName:'' })
+    this.setState({ inversionPos:null })
     this.setState({ rootType:'' })
     this.setState({ ivlName:'' })
     this.setState({ fretRoot:null })
@@ -64,16 +69,23 @@ class Fretboard extends React.Component{
     this.setState({ octave:0 })
     this.setState({ fretBtnText:'NoteFirst' })
   }
-  strgFltr( strN ){   //return strgFltrList[n -1] (true/false) or null
+  strgFiltered( strN ){
     strN = Number(strN)
-    if(strN < 1 || strN > 6) return null
-    return ( this.state.strgFltrList.indexOf( strN+',' ) >= 0 )
+    return ( this.state.strgFilter.indexOf( strN ) >= 0 )
   }
   remove(){
     this.props.remove( this )
   }
   duplicate(){
     this.props.duplicate( this )
+  }
+
+  inversionNoteByTab( tab ){
+    if(this.state.inversionPos === null) return null
+    for(let nobj of this.qry.inversionNotes){
+      if(nobj.tab === tab) return nobj 
+    } 
+    return null
   }
   fretSelectFind( objOrTab ){
     let list = this.state.fretSelect,
@@ -123,13 +135,6 @@ class Fretboard extends React.Component{
       else list.splice( idx, 1 )
 
       this.setState({ fretFilter:list })
-      // let fval = `"${val}",`,
-      //   ii = this.state.fretFilter.indexOf( fval )
-      // if(ii < 0)   //add to list
-      //   val = this.state.fretFilter +fval    
-      // else         //remove from list
-      //   val = this.state.fretFilter.replace(fval, '')
-      // this.setState({ fretFilter:val })
     }else
     if(key === 'fretRoot'){
       this.setState({ fretRoot:val })
@@ -201,28 +206,15 @@ class Fretboard extends React.Component{
     if(key === 'fretSelectMatch'){
       this.setState({ fretSelectMatch:val })
     }else
-    if(key.substr(0,8) === 'strgFltr'){
-      let strN = Number(key.substr(8,1)),
-        flt = this.state.strgFltrList.slice()
+    if(key === 'strgFilter'){
+      val = Number( val )
+      let list = this.state.strgFilter.slice()
+      let idx = list.indexOf( val )
+ 
+      if(idx < 0) list.push( val )
+      else list.splice( idx, 1 )
 
-      // console.log('stateChange:', key, val, flt)
-      if(strN < 1 || strN > 6) throw Error (`Fretboard.stateChange() error, strN is wrong:[${key}].`)
-
-      let ii = flt.indexOf(strN+',')
-      if(val === true){ //add to list
-        if(ii < 0){
-          flt += strN+','
-          // console.log('stateChange Add:', key, val, flt)
-           this.setState({ strgFltrList:flt })
-        }
-      }
-      else{ //remove from list
-        if(ii >= 0){
-          flt = flt.replace(strN+',')
-          // console.log('stateChange Del:', key, val, flt)
-           this.setState({ strgFltrList:flt })
-        }
-      }
+      this.setState({ strgFilter:list })
     }else
     if(key === 'fretFirst')
       this.setState({ fretFirst:val })
@@ -238,6 +230,11 @@ class Fretboard extends React.Component{
     }else
     if(key === 'chordName'){
       this.setState({ chordName:val })
+    }else
+    if(key === 'inversionPos'){
+     if(this.state.inversionPos === val)
+       val = null
+     this.setState({ inversionPos:val })
     }else
     if(key === 'ivlName'){
       this.setState({ ivlName:val })
@@ -256,6 +253,9 @@ class Fretboard extends React.Component{
       octave: this.state.octave,
       scale: null,
       chord:null,
+      inversions:null,
+      inversionPos:this.state.inversionPos,
+      inversionNotes:null,
       ivl: null,
 
       collapsed: this.state.collapsed,
@@ -271,7 +271,11 @@ class Fretboard extends React.Component{
       qry.root = q.notes.objByNote( qry.note )    //note object
     if(qry.rootType === 'fretSelect')
       qry.root = this.state.fretSelect[0]    //note object, set in FretPnl.fretClick()
-    
+  
+   // if(qry.note === 'All'){
+      //qry.fretBtnText = 'NoteAbc'
+   // }
+  
     if(qry.fretSelectMatch != null){
       if(qry.fretSelectMatch.type === 'chord')
         qry.fretSelectMatch.obj = q.chords.obj( qry.fretSelectMatch.note, qry.fretSelectMatch.abr )
@@ -282,13 +286,26 @@ class Fretboard extends React.Component{
 
     if(this.state.scaleName !== '' && qry.root)
       qry.scale = q.scales.obj( qry.note, this.state.scaleName )
-    if(this.state.chordName !== '' && qry.root)
+    if(this.state.chordName !== '' && qry.root){
       qry.chord = q.chords.obj( qry.note, this.state.chordName )
+      
+      // if(qry.chord.abr === 'maj' || qry.chord.abr === 'maj7'){    //create inversions for major chords
+      if(qry.chord.abr === 'maj'){    //create inversions for major chords
+        qry.inversions = q.chords.inversions(qry.root.note
+          , (qry.root.octave === null ?0 :qry.root.octave)
+          , (qry.chord.abr === 'maj' ?3 :4)
+        )
+      }
+      if(qry.inversionPos !== null){
+        qry.inversionNotes = q.chords.inversionNotes(  qry.inversions, qry.inversionPos )
+      }
+    }
     if(this.state.ivlName !== '' && qry.root){
       qry.ivl = q.intervals.byName( this.state.ivlName )    //this.props.ivlName == abr
       qry.ivl.note = q.notes.calc( qry.note, qry.ivl )
       // qry.ivl.notes = q.notes.bySemis( qry.root.semis +qry.ivl.semis )
     }
+    this.qry = qry
     return qry
   }
   render(){
@@ -307,8 +324,9 @@ class Fretboard extends React.Component{
 
           qry={qry}
           stateChange={this.stateChange}
-          strgFltr={this.strgFltr}
+          strgFiltered={this.strgFiltered}
           fretSelectFind={this.fretSelectFind}
+          inversionNoteByTab={this.inversionNoteByTab}
         />
         <QueryPnl 
           collapsed={this.state.collapsed}
@@ -325,7 +343,7 @@ class Fretboard extends React.Component{
           remove={this.remove}
           reset={this.reset} 
           stateChange={this.stateChange}
-          strgFltr={this.strgFltr} 
+          strgFiltered={this.strgFiltered} 
          />
       </div>
     )

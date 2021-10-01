@@ -18,13 +18,14 @@ I am not a musician (I often say I'll be ready to play in a band around the age 
 ## Technical Notes
 - The entire application is contained within the single web page; it does not require a remote server.  The only external link is to the <a href='https://fonts.google.com/?query=Robert+Leuschke/' target='_new'>Fuggles Google Font</a> used in the header. So one could use the ./docs folder on any webserver.
 - The logic of the application resides in <a href='https://github.com/ChrisDeFreitas/guitarjoe/blob/main/src/guitar_lib.js'>guitar_lib.js</a>--the code should be readable by non-techies so  feel free to review/use/suggest changes.  I created the library's test suite as I initially built the library, so it will not test all functionality. The test suite is used primarily to develop complex funcitonality, such as guitar_lib.notes.match() that matches a list of notes to a list of intervals.
-- In terms of security, the application currently does not store or access browser data.  The future plans include saving/restoring application state using <a href='https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage'>HTML5 Local Storage</a>--but that is way in the future.
+- In terms of security, the application currently does not store or access browser data.  The future plans include saving/restoring application state using <a href='https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage'>HTML5 Local Storage</a>--but that is way in the future.  As the code is hosted on GitHub it is scanned on a regularly for security vulnerabilities and open for review by the public.
 - The application is a standard <a href='https://create-react-app.dev/'>Create React App</a>, except the ./build folder is renamed to ./docs to work with <a href='https://pages.github.com/'>GitHub Pages</a>.  See <a href='https://create-react-app.dev/docs/advanced-configuration'>BUILD_PATH environment variable</a> for details on that redirection.
 
 
 ## Helpful References
   - Article: [Chord Progressions for Pentatonic Melodies](https://www.secretsofsongwriting.com/2018/07/09/chord-progressions-for-pentatonic-melodies/)
   - Article: [How Chords and Scales are Related](https://www.thejazzpianosite.com/jazz-piano-lessons/jazz-scales/chord-scale-system/)
+  - [The abc standard](https://abcnotation.com/wiki/abc:standard:v2.1)
   - [Chord shape calculator](https://jguitar.com/chord)
   - [Chord note calculator](https://www.omnicalculator.com/other/chord)
   - [Chord shape identifier](https://jguitar.com/chordname) 
@@ -47,6 +48,7 @@ I am not a musician (I often say I'll be ready to play in a band around the age 
 
 
 ## Thanks to
+ - <a href='https://github.com/paulrosen/abcjs'>abcjs</a> Javascript library for rendering abc music notation 
  - Application hosted on <a href='https://github.com/ChrisDeFreitas/guitarjoe' target='_new'>GitHub</a>   
  - Background image from <a href='https://www.flickr.com/photos/webtreatsetc/with/4514047664/' target='_new'>WebTreats ETC</a>  
  - Built with the <a href='https://reactjs.org/' target='_new'>React</a> Javascript library  
@@ -56,19 +58,34 @@ I am not a musician (I often say I'll be ready to play in a band around the age 
  - Music theory from <a href='https://www.wikipedia.org/' target='_new'>Wikipedia</a><br />
  - <a href='https://chir.ag/projects/name-that-color/'>Name that Color</a> by Chirag Meta
  - Popup control from <a href='https://react-popup.elazizi.com/' target='_new'>reactjs-popup</a>  
+ - <a href='https://github.com/rigobauer/react-abcjs'>react-abcjs</a>, a React component that uses abcjs 
  - <a href='https://code.visualstudio.com/'>Visual Studio Code</a> development environment
 
 
 ## Updates
 
-20210922:  
+20211001:  
+Added inversions for Major chords. Guitar inversions work differently than in regular music theory.  For guitars, the important part is the bass note, the other notes may appear in any order.  In general music theory all inversions require the shifted note to be exactly one octave higher.  
 
+FretButtons can now display their related note on a staff or as guitar tab. This required adding special CSS for the latest Safari browsers:  Safari uses too much space when laying out notes containing a ♭ symbol, and the spacing of the controls is substantially different from FireFox and Chrome (on Ipad and Iphone FireFox and Chrome use Safari to layout web pages).
+
+- upgraded to v.0.1.4
+- added ability to display Inversions for the Major triad chord
+- added new fretButton caption mode that displays Tabs
+- added new fretButton caption mode that displays notes on the staff using react_abcjs
+-- tested against:  https://appliedguitartheory.com/lessons/learning-guitar-chord-inversions/   
+-- reference: https://online.berklee.edu/takenote/guitar-chords-101-triad-inversions-up-the-fretboard/  
+- moved fretButton styles to new file, FretButton.css
+- converted Fretboard.state.strFilter to an array
+- tweaks and updates
+
+20210922:  
 - added color coding of chords and intervals so they standout when displayed with scales
-- when a fretRoot and interval are selected, the InfoPnl now displays its the root with its octave, ie G3 instead of G.  This is not applicable to selNote mode as allow root notes are selected
-- fretSelectMatches are no longer cleared when the mode changes.  And adheres to the principle that the user selections are not altered by the application.
+- when a fretRoot and interval are selected, the InfoPnl now displays the root with its octave, ie G3 instead of G.  This is not applicable to selNote mode as all root notes are selected.
+- fretSelectMatches are no longer cleared when the mode changes, to adhere to the principle that the user selections are not altered by the application.
 
 20210921:  
-Finally added the ability to select multiple frets, then view scales and chords containing those notes (it's been a probelm vexing me for a while). The new mode is called "Fret Select" and appears automatically after you click the second fret.  The list of related scales and chords will appear below within the InfoPnl, click one to have it drawn on the fretboard.  I've limited the scales searched to the typical Western ones: Major, Minor, Pentatonic, and Blues--this is easily changed.  As usual everything is clickable, so please experiment to learn about the functionality.   
+Finally added the ability to select multiple frets, then view scales and chords containing those notes (it's been a probelm vexing me for a while). The new mode is called "Fret Select" and appears automatically after you click the second fret.  The list of related scales and chords will appear  within the InfoPnl, click one to have it drawn on the fretboard.  I've limited the scales searched to the typical Western ones: Major, Minor, Pentatonic, and Blues--this is easily changed.  As usual everything is clickable, so please experiment to learn about the functionality.   
 
 Research into unusual scales found that pentatonic scales are [ancient, and common](https://en.wikipedia.org/wiki/Pentatonic_scale) throughout the world. I thought it would be interesting to experiment with those intervals while practising so I added the Japanese Akebono I and II, and the Pygmy scales.  They appear to be consistently referenced across the web, and used in many cultures. In this context its important to note that the Western Pentatonic Major and Minor scales are native to many cultures from the past and the present. Also note, I couldn't find any theoretical references to the Pygmy scale but it is consistently used in modern Handpans and Tongue drums.   
 
@@ -127,16 +144,14 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo
-- restore button.selected state:  Currently, when a user clicks a button it turns green, indicating that button.selected = 1.  However, if the fretboard is redrawn button.selected is reset to 0.  This violates the principle that the user selection not be changed by the application.
+- change layout of FretButton's controls to be position:absolute to prevent them from jumping up and down
+- create FretButton.js component from FretPnl.js button functions
+- create InfoPnl.js component from QueryPnl.js info functions
+- add inversions for all chords beyond Major the triad
 - allow the first created Fretboard control to be deleted.  Currently, only its children may be deleted.
 - fix query collapse/expand arrow buttons: refactor code to simplify
-- selChord update, add Inversions:  
--- when a chord is selected, display possible inversions in the infoPnl  
--- clicking an inversion will highlight related notes (similar to fretSelect mode for chords and scales)  
--- use same color as fretSelect/click InfoPnl items   
 - fix ./public/favicon.svg colors: image appears dim on white backgrounds  
 - browser bug: zooming out causes random frets and strings to disappear (assume due to x/y location; test by adjusting)   
-- refactor Fretboard.state.strgFltrList to be array (rename to strgFilter)  
 - refactor FretPnl.render(): simplify, optimize  
 - add backup feature:  
 -- allow multiple backups by user assigning backup name  
