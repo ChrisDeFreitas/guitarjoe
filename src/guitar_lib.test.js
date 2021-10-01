@@ -111,24 +111,67 @@ describe('test chord functions', () => {
     expect( chord ).toBeTruthy()
     expect( chord.abr ).toBe( 'maj' )
   })
-  it.skip("visually test q.chords.inversions('c')", () => {
-		let result = q.chords.inversions('c', 4)
-		// let result = q.chords.inversions('c', 4, 4)
-		// let result = q.chords.inversions('F', 4)
-    // console.log('inversion object:', result )
+  it("test q.chords.inversions('c', 'maj', 4)", () => {
+		let result = q.chords.inversions('c', 'maj', 4 )
     expect( result ).toBeTruthy()
-    expect( result.max ).toBe( 3 )
-
+    expect( Object.keys(result.positions).length ).toBe( 3 )
     // console.log('result.positions.Second:', result.positions.Second )
-    expect( typeof( result.positions.Second[3] )).toBe( 'object' )
+    expect( result.positions.Second[1].note ).toBe( 'G' )
+    expect( result.positions.Second[2].note ).toBe( 'C' )
+    expect( result.positions.Second[3].note ).toBe( 'E' )
+    expect( result.positions.Second[3].semis ).toBe( 64 )
   })
-  it("visually test q.chords.inversionNotes()", () => {
-		let result = q.chords.inversions('c')
+  it("test q.chords.inversions('c', 'min', 4)", () => {
+		let result = q.chords.inversions('c', 'min', 4 )
+    expect( result ).toBeTruthy()
+    expect( Object.keys(result.positions).length ).toBe( 3 )
+    // console.log('result.positions:', result.positions )
+    expect( result.positions.Second[1].note ).toBe( 'G' )
+    expect( result.positions.Second[2].note ).toBe( 'C' )
+    expect( result.positions.Second[3].note ).toBe( 'E♭' )
+    expect( result.positions.Second[3].semis ).toBe( 63 )
+  })
+  it("test q.chords.inversions('c', 'maj7', 4)", () => {
+		let result = q.chords.inversions('c', 'maj7', 4 )
+    expect( result ).toBeTruthy()
+    expect( Object.keys(result.positions).length ).toBe( 4 )
+    // console.log('result.positions:', result.positions )
+    expect( result.positions.Second[1].note ).toBe( 'G' )
+    expect( result.positions.Second[2].note ).toBe( 'B' )
+    expect( result.positions.Second[3].note ).toBe( 'C' )
+    expect( result.positions.Second[4].note ).toBe( 'E' )
+    expect( result.positions.Second[4].semis ).toBe( 64 )
+  })
+  it("test q.chords.inversions('c', 'aug' )", () => {
+		let result = q.chords.inversions('c', 'aug' )
+    expect( result ).toBeTruthy()
+    expect( Object.keys(result.positions).length ).toBe( 3 )
+    // console.log('result.positions:', result.positions )
+    expect( result.positions.Second[1].note ).toBe( 'G#' )
+    expect( result.positions.Second[2].note ).toBe( 'C' )
+    expect( result.positions.Second[3].note ).toBe( 'E' )
+    expect( result.positions.Second[3].semis ).toBe( 16 )
+  })
+  it.skip("visually test q.chords.inversionNotes('C','maj')", () => {
+		let result = q.chords.inversions('C','maj')
+    expect( result ).toBeTruthy()
+    //extract notes for inversions
+    let list = q.chords.inversionNotes( result, 'Second' )
+    console.log( 'q.chords.inversionNotes()', list)
+  })
+  it.skip("visually test q.chords.inversionNotes('C','7')", () => {
+		let result = q.chords.inversions('C','7')
     expect( result ).toBeTruthy()
     //extract notes for inversions
     let list = q.chords.inversionNotes( result, 'First' )
     console.log( 'q.chords.inversionNotes()', list)
-
+  })
+  it("visually test q.chords.inversionNotes('C','sus2')", () => {
+		let result = q.chords.inversions('C','sus2')
+    expect( result ).toBeTruthy()
+    //extract notes for inversions
+    let list = q.chords.inversionNotes( result, 'Third' )
+    console.log( 'q.chords.inversionNotes()', list)
   })
 })
 

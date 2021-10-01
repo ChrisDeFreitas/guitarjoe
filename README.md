@@ -65,9 +65,9 @@ I am not a musician (I often say I'll be ready to play in a band around the age 
 ## Updates
 
 20211001:  
-Added inversions for Major chords. Guitar inversions work differently than in regular music theory.  For guitars, the important part is the bass note, the other notes may appear in any order.  In general music theory all inversions require the shifted note to be exactly one octave higher.  
+Added inversions for all chords. Guitar inversions work differently than in regular music theory.  For guitars, the important part is the bass note, the other notes may appear in any order.  In general music theory all inversions require the shifted note to be exactly one octave higher.  The app straddle these uses by highlighting inversion notes in their correct sequence, ignoring octaves.
 
-FretButtons can now display their related note on a staff or as guitar tab. This required adding special CSS for the latest Safari browsers:  Safari uses too much space when laying out notes containing a ♭ symbol, and the spacing of the controls is substantially different from FireFox and Chrome (on Ipad and Iphone FireFox and Chrome use Safari to layout web pages).
+FretButtons can now display their note on a staff or as guitar tab. This required adding special CSS for the latest Safari browsers:  Safari uses too much space when laying out notes containing a ♭ symbol, and the spacing of the controls is substantially different from FireFox and Chrome (on Ipad and Iphone FireFox and Chrome use Safari to layout web pages).
 
 - upgraded to v.0.1.4
 - added ability to display Inversions for the Major triad chord

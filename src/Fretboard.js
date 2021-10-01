@@ -288,14 +288,7 @@ class Fretboard extends React.Component{
       qry.scale = q.scales.obj( qry.note, this.state.scaleName )
     if(this.state.chordName !== '' && qry.root){
       qry.chord = q.chords.obj( qry.note, this.state.chordName )
-      
-      // if(qry.chord.abr === 'maj' || qry.chord.abr === 'maj7'){    //create inversions for major chords
-      if(qry.chord.abr === 'maj'){    //create inversions for major chords
-        qry.inversions = q.chords.inversions(qry.root.note
-          , (qry.root.octave === null ?0 :qry.root.octave)
-          , (qry.chord.abr === 'maj' ?3 :4)
-        )
-      }
+      qry.inversions = q.chords.inversions(qry.root.note, qry.chord.abr, qry.root.octave )
       if(qry.inversionPos !== null){
         qry.inversionNotes = q.chords.inversionNotes(  qry.inversions, qry.inversionPos )
       }

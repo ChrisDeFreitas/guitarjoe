@@ -513,7 +513,7 @@ class QueryPnl extends React.Component {
            data-selected='label' onClick={this.infoNoteClick}
           >{invrs.root 
            +(qry.rootType === 'fretRoot' ?qry.root.octave :'')
-           +' ' +qry.chord.name +' Inversions:'}</span> )
+           +qry.chord.abr +' Inversions:'}</span> )
 
           for(let pos in invrs.positions){
             let obj = invrs.positions[ pos ]

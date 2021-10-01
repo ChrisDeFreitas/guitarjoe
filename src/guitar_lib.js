@@ -95,46 +95,56 @@ var q = {
 
       return obj
     },
-    inversions( note, octave = 0, maxinversions = 3 ){   // return an inversion object for given note in major scale
-      //assume: inversions are for Major triad or Maj7
-      note = note.toUpperCase()
-      let result = { root:note, octave:octave, max:maxinversions, positions:{} }
-      let rootobj = null
+    inversions( note, chord, octave = 0 ){   // return an inversion object for given note and scale
+      let robj = null
+      if( typeof note === 'object' ){
+        robj = note
+        note = robj.note
+      }else{
+        note = note.toUpperCase()
+        robj = q.notes.objByNote( note )
+      }
+      if(octave === null) octave = 0
+      robj.octave = Number(octave)
+      let cobj = null
+      if( typeof chord === 'object' ){
+        cobj = chord
+        chord = cobj.abr
+      }else
+        cobj = q.chords.obj(note, chord)
+
+      let maxinversions = cobj.ivls.length
+      let result = { root:robj.note, chord:chord, octave:octave, max:maxinversions, positions:{} }
+      let rivls = cobj.ivls
+      let positions = ['Root','First','Second','Third','Fourth','Fifth']
+
+
       for( let cnt = 1; cnt <= maxinversions; cnt++){
-        let letter = ['Root','First','Second','Third'][cnt -1]    //use letter notation: root position = a, first inversion = b
-        result.positions[ letter ] = {}
-        let obj = result.positions[ letter ]
-        if( rootobj === null){
-          for(let ii = 0; ii < maxinversions; ii++){
-            let inv = String( ii +1)
-            let ivl = q.intervals.byNote( q.notes.alpha[ ((ii *3) -ii) %7 ] )
-            obj[inv] = ivl
-            obj[inv].note =  q.notes.calc( note, ivl )
-            obj[inv].octave = octave
-            obj[inv].semis = ivl.semis +(octave *12)
+        let pos = positions[ cnt -1 ]
+        result.positions[ pos ] = {}
+        let obj = result.positions[ pos ]
+
+        for( let idx = 1; idx <= maxinversions; idx++ ){
+          let ioctave = robj.octave
+          let ridx = idx +(cnt -2) 
+          if(ridx >= maxinversions) {
+            ridx -= maxinversions
+            ioctave++
           }
-          rootobj = obj
-        }
-        else { //rootob !=== null
-          for(let ii = 0; ii < maxinversions; ii++){
-            let inv = String( ii +1 )
-            let offset = (ii +2  +(cnt-2) <= maxinversions ?ii +2 +(cnt-2) : ii +2 +(cnt-2) -maxinversions)
-            let rinv = String( offset )
-            offset = ii +2 +(cnt-2) -maxinversions  //clunky but works
-            obj[inv] = {}
-            obj[inv].name =  rootobj[rinv].name
-            obj[inv].abr =  rootobj[rinv].abr
-            obj[inv].note =  rootobj[rinv].note
-            obj[inv].octave = (offset < 1 ?rootobj[rinv].octave :rootobj[rinv].octave +1)
-            obj[inv].semis = q.semis.calc(obj[inv].note, obj[inv].octave )
-            // console.log(cnt, ii, rinv, offset, '\nobj:', obj, '\nrobj:', rootobj[rinv] )
-          }
+          // console.log({idx:idx, ridx:ridx})
+          obj[idx] = Object.assign({}, rivls[ ridx ], { 
+            octave:ioctave,
+            semis:q.semis.calc( rivls[ ridx ].note, ioctave )
+          })
         }
       }
-      //
+      // console.log( result.positions )
       return result
     },
     inversionNotes( invrObj, invrPos ){ //return note objects for all fretboard locations of given inversion
+
+      if( invrObj.positions[invrPos] === undefined )
+        return null
 
       function local_invrToNobj( invr, strgn, parent = null, rootfret = null ){
         let nobj = null
@@ -163,8 +173,8 @@ var q = {
         return nobj
       }
 
-      let chord = invrObj.root +'Maj'
-      let maxInversions = invrObj.max 
+      let chord = invrObj.root +invrObj.chord
+      let maxInversions = invrObj.max
       let inversions = invrObj.positions[invrPos]
 
       let tmp = []  //temporary store for notes found
@@ -181,6 +191,21 @@ var q = {
           tmp[0].invr = {chord:chord, inversion:invrPos, abr:invr.abr, num:1}
           rootfret = nobj.fret    //
 
+          //calc note n
+          let fnd = true
+          for(let num = 2; num <= maxInversions; num++){
+            let parent = nobj
+            invr = inversions[ num ]
+            nobj = local_invrToNobj( invr, strgn -(num -1), parent, null )
+            if(nobj === null) {
+              fnd = false
+              break
+            }
+            tmp[ num -1 ] = nobj
+            tmp[ num -1 ].invr = {chord:chord, inversion:invrPos, abr:invr.abr, num:num}
+          }
+          if(fnd === false) continue
+/*
           //calc note 2
           let parent = nobj
           invr = inversions[2]
@@ -196,7 +221,7 @@ var q = {
           if(nobj === null) continue
           tmp[2] = nobj
           tmp[2].invr = {chord:chord, inversion:invrPos, abr:invr.abr, num:3}
-
+*/
           tmp.forEach( nobj => list.push( nobj ) )
           //add code to allow each string to be searched again
           // if(tmp[0].fret < q.fretboard.fretMax )
