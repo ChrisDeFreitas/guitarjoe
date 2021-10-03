@@ -36,21 +36,29 @@
 .fretButton[data-state="selNote"] { border: 1px #fffb00 solid;  } /* yellow */
 .fretButton[data-state="fretSelect"] { border: 1px #00afff solid;  }  /* azure radiance */
 .fretButton[data-state="fretSelectMatch"] { background:#b1e6ff; }  /* Anakiwa */
+.fretButton[data-state="fretSelectMatch1"] { background:#5cbedf; }  /* root note */
 .fretButton[data-state="noteFilter"] { background:#aaf; }  /* Melrose */
 .fretButton[data-state="interval"] { background:#ffff9b; }  /*  pale yellow */
-.fretButton[data-state="chord"] { background:#ffc06f;; }  /*  pale orange */
+.fretButton[data-state="chord"] { background:#ffc06f; }  /*  pale orange */
+.fretButton[data-state="chord1"] { background:#f90; }  /*  pale orange */
 .fretButton[data-state="invr"] { background:#e7e; }
 .fretButton[data-state="invr1"] { background:#e2e; }
 
 /* format button text/caption */
 .fretButton sup{ color:#0f000fa0; font-size:0.7em; position:absolute; top:0px; text-shadow:none;  }
 .fretButton sub{ color:#00000050; text-shadow:none; position:relative; }
-.fretButton .subInterval{ cursor:alias; top:0px; right:-10px; }
+.fretButton .subInterval{ cursor:alias; top:0px; right:-12px; }
 .fretButton .abc{ cursor:alias; top:-15px; right:-25px; display:block; max-width:20px; }
-.fretButton .tab{ cursor:alias; top:0px; right:-10px; }
+.fretButton .ivlabc{ cursor:alias; top:-12px; right:-25px; display:block; max-width:20px; }
+.fretButton .tab{ cursor:alias; top:-1px; right:-12px; }
 .fretButton .spanNote .subOctave{ color:#0008; font-size:0.6em; }
 .fretButton .spanIvl span{ color:#0007; font-size:0.7em; }
-.fretButton .subNote{ cursor:alias; top:0px; right:-10px; }
+.fretButton .subNote{ cursor:alias; top:0px; right:-12px; }
+
+/* all safari browsers
+@media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0)
+{ @media {
+*/
 
 /* Safari 11+ */
 @media not all and (min-resolution:.001dpcm)

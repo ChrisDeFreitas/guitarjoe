@@ -8,16 +8,23 @@ The goal was to create a tool that would make guitar theory accessible while pra
 The name is based on the slang "Joe Workie," a synonym for construction worker. At the tender age of 12 it felt like one of those adults terms I had to learn--it wasn't. In this context, GuitarJoe does the heavy lifting of translating music theory to the guitar fretboard.  Here is a screenshot of my first use of the application.  I am working on playing with 5 fingers and use triplets to exercise my pinky.  It was a transformative moment, focusing on the notes in front of me instead of scribbled diagrams:  
   <img src="https://github.com/ChrisDeFreitas/guitarjoe/blob/main/public/guitarjoe-screen01.png" title="guitarjoe-screen01.png" />  
 
-## Application Usage
-- Everything is clickable.  This is a key principle of the application design: everything displayed  provides relevant data, and functionality is an implicit feature of data.
-- Another important principle is that user selections not be changed by the application.  So if you turn on a feature it will remain until you turn it off.  There are many ways to turn off features beyond using the Reset button.  These alternatives will be dictated by how the feature is turned on.
+## Application Notes
+- Everything is clickable.  This is a key principle of the application design: everything displayed provides relevant data, and functionality is an implicit feature of data. 
+- Another important principle is that user selections not be changed by the app.  So if you turn on a feature it will remain until you turn it off.  
+- The app is in the early phase of development so if something seems wonky please let me know.  It may be something I had not considered.
 
-## Music Theory
-I am not a musician (I often say I'll be ready to play in a band around the age of 90).  So the data is taken from Wikipedia and verified against other online sources.  The Blues Heptatonic scale has different representations online, so it is debatable.  I love learning about cultures and history so I've included some exotic scales like the Japanes Akebono I and II for practice.  Please forward any discrepancies to me.  
+## Music Notes
+I am not a musician (I often say I'll be ready to play in a band around the age of 90).  So the data is taken from Wikipedia and verified against other online sources.  The Blues Heptatonic scale has different representations online, so it is debatable.  I love learning about cultures and history so I've included some exotic scales like the Japanese Akebono I and II for practice.  Please forward any discrepancies to me.  
+
+### Chords
+Typically guitar chords are represented as fixed pattern of notes, leading to approaches like the CAGED system.  This app takes a different approach.  When a chord is selected all chord notes are displayed.  The user can superimpose patterns onto the selection.  The short term goal is to simplify coding at this early stage.  But, I like this approach because it allows me to see the anatomy of the chord, and find alternative chord voicings, triads, and power chords.
+
+### Chord Inversions
+On a guitar, chord inversions work differently than general music theory.  For guitar, the important part is the bass note, other notes may appear in any order.  In music theory all inversions require the shifted note to be exactly one octave higher.  Because the guitar provides so many possible combinations for inversions, the app straddles these uses by trying to display the ideal inversion:  The bass note is highlighted, then the remaining notes are selected in their correct sequence on higher strings, ignoring octaves, and filtering by distance frets are from the bass note.  Unfortunately, this results in certain inversion having no selections on the fretboard, such as CMaj7 third position.  
 
 ## Technical Notes
 - The entire application is contained within the single web page; it does not require a remote server.  The only external link is to the <a href='https://fonts.google.com/?query=Robert+Leuschke/' target='_new'>Fuggles Google Font</a> used in the header. So one could use the ./docs folder on any webserver.
-- The logic of the application resides in <a href='https://github.com/ChrisDeFreitas/guitarjoe/blob/main/src/guitar_lib.js'>guitar_lib.js</a>--the code should be readable by non-techies so  feel free to review/use/suggest changes.  I created the library's test suite as I initially built the library, so it will not test all functionality. The test suite is used primarily to develop complex funcitonality, such as guitar_lib.notes.match() that matches a list of notes to a list of intervals.
+- The logic of the application resides in <a href='https://github.com/ChrisDeFreitas/guitarjoe/blob/main/src/guitar_lib.js'>guitar_lib.js</a>--the code should be readable by non-techies so  feel free to review/use/suggest changes.  I created the library's test suite as I initially built the library, so it will not test all functionality. The test suite is used primarily to develop complex functionality, such as guitar_lib.notes.match() that matches a list of notes to a list of intervals.
 - In terms of security, the application currently does not store or access browser data.  The future plans include saving/restoring application state using <a href='https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage'>HTML5 Local Storage</a>--but that is way in the future.  As the code is hosted on GitHub it is scanned on a regularly for security vulnerabilities and open for review by the public.
 - The application is a standard <a href='https://create-react-app.dev/'>Create React App</a>, except the ./build folder is renamed to ./docs to work with <a href='https://pages.github.com/'>GitHub Pages</a>.  See <a href='https://create-react-app.dev/docs/advanced-configuration'>BUILD_PATH environment variable</a> for details on that redirection.
 
@@ -64,13 +71,20 @@ I am not a musician (I often say I'll be ready to play in a band around the age 
 
 ## Updates
 
+20211003:  
+- upgraded to v.0.1.5
+- created FretButton.jsx
+- created InfoPnl.jsx
+- the root of chords and inversions are made to standout with a darker shade
+- tweaks and updates
+
 20211001:  
 Added inversions for all chords. Guitar inversions work differently than in regular music theory.  For guitars, the important part is the bass note, the other notes may appear in any order.  In general music theory all inversions require the shifted note to be exactly one octave higher.  The app straddle these uses by highlighting inversion notes in their correct sequence, ignoring octaves.
 
-FretButtons can now display their note on a staff or as guitar tab. This required adding special CSS for the latest Safari browsers:  Safari uses too much space when laying out notes containing a ♭ symbol, and the spacing of the controls is substantially different from FireFox and Chrome (on Ipad and Iphone FireFox and Chrome use Safari to layout web pages).
+FretButtons can now display their note on a staff or as guitar tab. This required adding special CSS for the latest Safari browsers:  Safari uses too much space when laying out notes containing a ♭ symbol, and the spacing of the controls is substantially different from FireFox and Chrome (on iPad and iPhone FireFox and Chrome use Safari to layout web pages).
 
 - upgraded to v.0.1.4
-- added ability to display Inversions for the Major triad chord
+- added ability to display Inversions for chords
 - added new fretButton caption mode that displays Tabs
 - added new fretButton caption mode that displays notes on the staff using react_abcjs
 -- tested against:  https://appliedguitartheory.com/lessons/learning-guitar-chord-inversions/   
@@ -85,9 +99,9 @@ FretButtons can now display their note on a staff or as guitar tab. This require
 - fretSelectMatches are no longer cleared when the mode changes, to adhere to the principle that the user selections are not altered by the application.
 
 20210921:  
-Finally added the ability to select multiple frets, then view scales and chords containing those notes (it's been a probelm vexing me for a while). The new mode is called "Fret Select" and appears automatically after you click the second fret.  The list of related scales and chords will appear  within the InfoPnl, click one to have it drawn on the fretboard.  I've limited the scales searched to the typical Western ones: Major, Minor, Pentatonic, and Blues--this is easily changed.  As usual everything is clickable, so please experiment to learn about the functionality.   
+Finally added the ability to select multiple frets, then view scales and chords containing those notes (it's been a problem vexing me for a while). The new mode is called "Fret Select" and appears automatically after you click the second fret.  The list of related scales and chords will appear  within the InfoPnl, click one to have it drawn on the fretboard.  I've limited the scales searched to the typical Western ones: Major, Minor, Pentatonic, and Blues--this is easily changed.  As usual everything is clickable, so please experiment to learn about the functionality.   
 
-Research into unusual scales found that pentatonic scales are [ancient, and common](https://en.wikipedia.org/wiki/Pentatonic_scale) throughout the world. I thought it would be interesting to experiment with those intervals while practising so I added the Japanese Akebono I and II, and the Pygmy scales.  They appear to be consistently referenced across the web, and used in many cultures. In this context its important to note that the Western Pentatonic Major and Minor scales are native to many cultures from the past and the present. Also note, I couldn't find any theoretical references to the Pygmy scale but it is consistently used in modern Handpans and Tongue drums.   
+Research into unusual scales found that pentatonic scales are [ancient, and common](https://en.wikipedia.org/wiki/Pentatonic_scale) throughout the world. I thought it would be interesting to experiment with those intervals while practicing so I added the Japanese Akebono I and II, and the Pygmy scales.  They appear to be consistently referenced across the web, and used in many cultures. In this context its important to note that the Western Pentatonic Major and Minor scales are native to many cultures from the past and the present. Also note, I couldn't find any theoretical references to the Pygmy scale but it is consistently used in modern Handpans and Tongue drums.   
 
 - upgraded to v.0.1.3
 - refactored Fretboard.state.fretFilter into array  
@@ -107,7 +121,7 @@ Research into unusual scales found that pentatonic scales are [ancient, and comm
 - changed the Selected fret button background color to green  
 - clicking a fret button now Selects the button (green background color) despite the previous button state (fretRoot, selRoot, or noteFilter)
 - fixed bug: when an Interval is selected, the root fret button now displays the P1 interval caption
-- when a fret is clicked (a fret root selected), and an Interval is selected, mathching notes within 4 frets will appear. Previously, the range was 3 notes.
+- when a fret is clicked (a fret root selected), and an Interval is selected, matching notes within 4 frets will appear. Previously, the range was 3 notes.
 
 20210909:  
 - Email address update.
@@ -124,7 +138,7 @@ active when collapsed.
 - renamed ./public/logo.svg to favicon.svg
 - refactored: guitar_lib.fretboard, included string and fret functions  
 - refactored fretPnl.button()
-- refactored to create button.dataset.selected and associated css
+- refactored to create button.dataset.selected and associated CSS
 - installed source-map-explorer, found no glaring errors
 
 
@@ -144,12 +158,17 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo
+- use spread syntax instead of object.assign (spread faster)
+- when scale selected, add chords built on scale degree
+-- initially, scale === major  
+-- InfoPnl: Scale Degree Chrods for C Scale   
+-- InfoPnl: ii: C minor = e g b
+-- q.chords.degree( root, chord.abr, int degree  ) ==> { chordName, chordType, root, degree, notes:[nobj1, ...] }  
+-- degree chords built as chord triads for all scales; highlight root note  
+-- how to algorithmically determine chord type (maj/min/dim) for scales not major or minor  
+-- reference: https://appliedguitartheory.com/lessons/building-chords-major-scale/. 
 - change layout of FretButton's controls to be position:absolute to prevent them from jumping up and down
-- create FretButton.js component from FretPnl.js button functions
-- create InfoPnl.js component from QueryPnl.js info functions
-- add inversions for all chords beyond Major the triad
 - allow the first created Fretboard control to be deleted.  Currently, only its children may be deleted.
-- fix query collapse/expand arrow buttons: refactor code to simplify
 - fix ./public/favicon.svg colors: image appears dim on white backgrounds  
 - browser bug: zooming out causes random frets and strings to disappear (assume due to x/y location; test by adjusting)   
 - refactor FretPnl.render(): simplify, optimize  

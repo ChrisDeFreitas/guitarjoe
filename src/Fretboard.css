@@ -56,7 +56,8 @@
 .qryExpanded .infoPnl{ display:block; margin:0 auto; }
 .qryBtnCollapse .infoPnl{ display:inline-table; }
 .infoDiv{ background:#00000045; border-radius:5px; display:inline-table;
-   padding:0; margin:0 auto; text-shadow:1px 1px 3px #000; width:100%; }
+   padding:0; margin:0 auto; text-shadow:1px 1px 3px #000; width:100%; 
+   position:relative; left:12px; }
 .infoDiv .propName{ color:white; cursor:pointer; font-weight:bold; margin:0 0 0 0.5em; }
 .infoDiv .lineBreak{ line-height:5%; }
 .infoDiv .propName:first-child{ margin:0; }

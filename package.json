@@ -1,6 +1,6 @@
 {
   "name": "guitarjoe",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": false,
   "homepage": ".",
   "description": "GuitarJoe is a web based tool that allows you to visually explore the guitar fretboard, scales, chords, intervals and notes. The current version is a proof of concept.",

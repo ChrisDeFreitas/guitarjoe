@@ -1,10 +1,11 @@
 /*
-  QueryPnl.js
+  QueryPnl.jsx
   - by Chris DeFreitas, ChrisDeFreitas777@gmail.com
   - manage query controls for GuitarJoe app
 
 */
 import React from 'react'
+import InfoPnl from "./InfoPnl"
 import q from "./guitar_lib.js"
 
 
@@ -18,20 +19,13 @@ class QueryPnl extends React.Component {
 
     this.last = {}    //store last query params before reset via label.click
     this.selLabelClick = this.selLabelClick.bind(this)
-
     this.selChordChange = this.selChordChange.bind(this)
     this.btnClearClick = this.btnClearClick.bind(this)
     this.btnCollapseClick = this.btnCollapseClick.bind(this)
-    // this.selFretNoChange = this.selFretNoChange.bind(this)
     this.selIntervalChange = this.selIntervalChange.bind(this)
     this.selNoteChange = this.selNoteChange.bind(this)
     this.selOctaveChange = this.selOctaveChange.bind(this)
     this.selScaleChange = this.selScaleChange.bind(this)
-    this.fsChordClick = this.fsChordClick.bind(this)
-    this.fsScaleClick = this.fsScaleClick.bind(this)
-    this.infoNoteClick = this.infoNoteClick.bind(this)
-
-    this.invrLabelClick = this.invrLabelClick.bind(this)
   }
 
   //event handlers
@@ -48,63 +42,6 @@ class QueryPnl extends React.Component {
   btnClearClick(){
     // this.props.dispatch({ type:"FretboardActions/fretFirstUpdate", payload:'' })
     this.props.reset()
-  }
-  fsChordClick( event ){
-    let btn = event.target, qry = this.props.qry
-    // console.log('fsChordClick', btn.dataset.note, btn.dataset.abr)
-
-    if(btn.dataset.selected === 'label'){    //user clicked the label
-      this.props.stateChange( 'fretSelectMatch', null )
-      this.props.stateChange( 'noteFilter', 'clear' )
-    }
-    else{   //default operation
-      if(qry.fretSelectMatch != null
-      && qry.fretSelectMatch.note === btn.dataset.note && qry.fretSelectMatch.abr === btn.dataset.abr)    //turn off selected match
-        this.props.stateChange( 'fretSelectMatch', null )
-      else
-        this.props.stateChange( 'fretSelectMatch', {type:'chord', note:btn.dataset.note, abr:btn.dataset.abr} )
-    }
-  }
-  fsScaleClick( event ){
-    let btn = event.target, qry = this.props.qry
-    // console.log('fsScaleClick', btn.dataset.note, btn.dataset.abr)
-
-    if(btn.dataset.selected === 'label'){    //user clicked the label
-      this.props.stateChange( 'fretSelectMatch', null )   //turn off selected match
-      this.props.stateChange( 'noteFilter', 'clear' )
-    }
-    else{   //default operation
-      if(qry.fretSelectMatch != null 
-      && qry.fretSelectMatch.note === btn.dataset.note && qry.fretSelectMatch.abr === btn.dataset.abr)
-        this.props.stateChange( 'fretSelectMatch', null )   //turn off selected match
-      else
-        this.props.stateChange( 'fretSelectMatch', {type:'scale', note:btn.dataset.note, abr:btn.dataset.abr} )
-    }
-  }
-  
-  infoNoteClick(event){
-    event.stopPropagation()
-
-    let btn = event.target   
-    if(btn.dataset.selected === 'label'){    //user clicked the label
-      this.props.stateChange( 'fretSelectMatch', null )
-      this.props.stateChange( 'noteFilter', 'clear' )
-    }
-    else {   //default operation
-      if(btn.className !== 'ivl')
-        btn = btn.parentNode
-      
-      let note = btn.dataset.note     
-      // console.log('infoNoteClick', btn, note)
-      if(typeof note === 'string')
-        this.props.stateChange( 'noteFilter', note )
-        // this.props.stateChange( 'noteFilter', note, btn.className )
-    }
-  }
-  invrLabelClick(event){
-    event.stopPropagation()
-    let btn = event.target   
-    this.props.stateChange( 'inversionPos', btn.dataset.invr )
   }
   selLabelClick( event ){     //reset param to off value
     let qry = this.props.qry,
@@ -301,6 +238,7 @@ class QueryPnl extends React.Component {
       </div>
     )
   }  
+  /*
   drawFretSelectMatches( html, key ){    //push matching chords and scales onto html[]
     let qry = this.props.qry, selected = 0
     
@@ -366,7 +304,7 @@ class QueryPnl extends React.Component {
     lastname = null
     last = null
     // for(let scale of q.scales.list){   ==> disabled because most scales are not necessary for this use
-    for(let scaleName of ['Major','Minor','Pen.Maj','Pen.min','Blues7','Blues6' /*,'Dbl.Hrm'*/]){
+    for(let scaleName of ['Major','Minor','Pen.Maj','Pen.min','Blues7','Blues6' ]){
       //can optimize by caching related minor scales when major found: 
       // Major:Nat.min; Pent Maj:Pen.min,Blues7,Blues6; Dbl.Hrm:Gypsy
       for(let iobj of q.intervals.list){  //iterate notes
@@ -412,6 +350,7 @@ class QueryPnl extends React.Component {
 
     return key
   }
+*
   drawInfo( collapsed ){
     let qry = this.props.qry,  selected = 0
     let html = [], key=0, lastkey=null
@@ -566,7 +505,7 @@ class QueryPnl extends React.Component {
       </div>
     )      
   }
- 
+ */
   render(){
     // console.log('queryPnl.render()', this.props)
     let qry = this.props.qry
@@ -584,20 +523,34 @@ class QueryPnl extends React.Component {
       selScale = this.drawSelScale()
       selChord = this.drawSelChord()
     }
-    let infoPnl = this.drawInfo( collapsed )
+    // let infoPnl = this.drawInfo( collapsed )
+    let infoPnl = <InfoPnl 
+                    qry={qry} 
+                    selNoteVal={this.props.selNoteVal}
+                    fretSelectFind={this.props.fretSelectFind}
+                    stateChange={this.props.stateChange}
+                   />
 
     let arrow = null
-    if(collapsed === 'qryCollapsed')
-      arrow = (<div className='qryBtn qryBtnExpand' onClick={this.btnCollapseClick} title="Show query panel" > <div>&#10148;</div> </div>)
-
-    return (
-      <div className={'queryPnl '+collapsed} >
-    <table className='tbQuery' ><tbody><tr><td className='qryBtnsLeft'>
-        {arrow}
+    if(qry.collapsed === true)
+      arrow = (
+        <div className='qryBtn qryBtnExpand' onClick={this.btnCollapseClick} title="Show query panel" > 
+          <div>&#10148;</div>
+        </div>
+      )
+    else
+      arrow = (
         <div className='qryBtn qryBtnCollapse' onClick={this.btnCollapseClick}
             title="Hide query panel" >
           <div>&#10148;</div>
         </div>
+      )
+
+    return (
+      <div className={'queryPnl '+collapsed} >
+    <table className='tbQuery' ><tbody><tr>
+    <td className='qryBtnsLeft'>
+        {arrow}
     </td><td className='qryContent'>
         <div className='queryControls' data-roottype={qry.rootType}>
           {selNote}

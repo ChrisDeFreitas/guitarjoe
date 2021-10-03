@@ -7,11 +7,11 @@ Fretboard.js
 */
 
 import React from 'react';
-import './Fretboard.css';
 
-import FretPnl from "./FretPnl.js";
-import QueryPnl from "./QueryPnl.js";
+import FretPnl from "./FretPnl";
+import QueryPnl from "./QueryPnl";
 import q from "./guitar_lib.js";
+import './Fretboard.css';
 
 class Fretboard extends React.Component{
 
@@ -26,7 +26,7 @@ class Fretboard extends React.Component{
       collapsed:(props.collapsed ?props.collapsed :false),
       fretFirst:(props.fretFirst ?props.fretFirst :0),
       fretLast:(props.fretLast ?props.fretLast :q.fretboard.fretMax),
-      fretBtnText:(props.fretBtnText ?props.fretBtnText :'NoteFirst'),    //one of: NoteFirst, IvlFirst, NoteTab, NoteAbc
+      fretBtnStyle:(props.fretBtnStyle ?props.fretBtnStyle :'NoteFirst'),    //one of: NoteFirst, IvlFirst, NoteTab, NoteAbc
       fretFilter:(props.fretFilter ?props.fretFilter :[]),      //csv of fretN, if found then disable fret
       strgFilter:(props.strgFilter ?props.strgFilter :[]),    //csv of strN, if found then hide notes
       noteFilter:(props.noteFilter ?props.noteFilter :[]),    //notes on fetboard where button.data-selected=2; set by clicking infoPnl note
@@ -67,7 +67,7 @@ class Fretboard extends React.Component{
     this.setState({ fretRoot:null })
     this.setState({ selNoteVal:'' })
     this.setState({ octave:0 })
-    this.setState({ fretBtnText:'NoteFirst' })
+    this.setState({ fretBtnStyle:'NoteFirst' })
   }
   strgFiltered( strN ){
     strN = Number(strN)
@@ -124,8 +124,8 @@ class Fretboard extends React.Component{
         this.setState({ noteFilter:list })
       }
     }else
-    if(key === 'fretBtnText'){
-      this.setState({ fretBtnText:val })
+    if(key === 'fretBtnStyle'){
+      this.setState({ fretBtnStyle:val })
     }else
     if(key === 'fretFilter'){
       let list = this.state.fretFilter.slice()
@@ -259,7 +259,7 @@ class Fretboard extends React.Component{
       ivl: null,
 
       collapsed: this.state.collapsed,
-      fretBtnText: this.state.fretBtnText,
+      fretBtnStyle: this.state.fretBtnStyle,
       fretFilter: this.state.fretFilter,
       noteFilter: this.state.noteFilter,
       fretSelect: this.state.fretSelect,
@@ -273,7 +273,7 @@ class Fretboard extends React.Component{
       qry.root = this.state.fretSelect[0]    //note object, set in FretPnl.fretClick()
   
    // if(qry.note === 'All'){
-      //qry.fretBtnText = 'NoteAbc'
+      //qry.fretBtnStyle = 'NoteAbc'
    // }
   
     if(qry.fretSelectMatch != null){
