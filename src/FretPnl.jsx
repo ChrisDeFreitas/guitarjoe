@@ -89,6 +89,7 @@ class FretPnl extends React.Component{
     if(nobj.tab === qry.root.tab){
       return <FretButton 
                 root={qry.root} nobj={nobj}  qry={qry} 
+                fretSelectFind={this.props.fretSelectFind} 
                 stateChange={this.props.stateChange} 
               />
     }
@@ -106,6 +107,7 @@ class FretPnl extends React.Component{
         // return qq.button( nobj, qry.root  )
         return <FretButton 
                 root={qry.root} nobj={nobj}  qry={qry} 
+                fretSelectFind={this.props.fretSelectFind} 
                 stateChange={this.props.stateChange} 
               />
   }  }
@@ -125,6 +127,7 @@ class FretPnl extends React.Component{
           // return qq.button( nobj, qry.root )
           return <FretButton 
                     root={qry.root} nobj={nobj}  qry={qry} 
+                    fretSelectFind={this.props.fretSelectFind} 
                     stateChange={this.props.stateChange} 
                   />
         }
@@ -148,6 +151,7 @@ class FretPnl extends React.Component{
           // return qq.button( nobj, qry.root )
           return <FretButton 
                     root={qry.root} nobj={nobj}  qry={qry} 
+                    fretSelectFind={this.props.fretSelectFind} 
                     stateChange={this.props.stateChange} 
                   />
         }
@@ -163,6 +167,7 @@ class FretPnl extends React.Component{
       nobj.ivl = qry.ivl
       return <FretButton 
                 root={qry.root} nobj={nobj}  qry={qry} 
+                fretSelectFind={this.props.fretSelectFind} 
                 stateChange={this.props.stateChange} 
               />
     }
@@ -184,6 +189,7 @@ class FretPnl extends React.Component{
           // return qq.button( nobj, qry.root )
           return <FretButton 
                     root={qry.root} nobj={nobj}  qry={qry} 
+                    fretSelectFind={this.props.fretSelectFind} 
                     stateChange={this.props.stateChange} 
                   />
         }
@@ -204,6 +210,7 @@ class FretPnl extends React.Component{
           nobj.state = 'invr' +(inv.invr.num === 1 ?1 :'')
           return <FretButton 
                     root={qry.root} nobj={nobj}  qry={qry} 
+                    fretSelectFind={this.props.fretSelectFind} 
                     stateChange={this.props.stateChange} 
                   />
         }
@@ -221,6 +228,7 @@ class FretPnl extends React.Component{
           nobj.state = 'chord' +(ivl.abr === 'P1' ?'1' :'')
           return <FretButton 
                     root={qry.root} nobj={nobj}  qry={qry} 
+                    fretSelectFind={this.props.fretSelectFind} 
                     stateChange={this.props.stateChange} 
                   />
         }
@@ -263,6 +271,7 @@ class FretPnl extends React.Component{
     if(btn != null)
       return <FretButton 
                 root={qry.root} nobj={nobj}  qry={qry} 
+                fretSelectFind={this.props.fretSelectFind} 
                 stateChange={this.props.stateChange} 
               />
     return null
@@ -277,6 +286,7 @@ class FretPnl extends React.Component{
     if(qry.rootType === 'selNote' && this.props.selNoteVal === 'All')
       btn = <FretButton 
               root={'ALL'} nobj={nobj}  qry={qry} 
+              fretSelectFind={this.props.fretSelectFind} 
               stateChange={this.props.stateChange} 
             />
 

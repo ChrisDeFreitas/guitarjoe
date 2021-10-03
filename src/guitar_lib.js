@@ -205,26 +205,8 @@ var q = {
             tmp[ num -1 ].invr = {chord:chord, inversion:invrPos, abr:invr.abr, num:num}
           }
           if(fnd === false) continue
-/*
-          //calc note 2
-          let parent = nobj
-          invr = inversions[2]
-          nobj = local_invrToNobj( invr, strgn -1, parent, null )
-          if(nobj === null) continue
-          tmp[1] = nobj
-          tmp[1].invr = {chord:chord, inversion:invrPos, abr:invr.abr, num:2}
 
-          //calc note 3
-          parent = nobj
-          invr = inversions[3]
-          nobj = local_invrToNobj( invr, strgn -2, parent, null)
-          if(nobj === null) continue
-          tmp[2] = nobj
-          tmp[2].invr = {chord:chord, inversion:invrPos, abr:invr.abr, num:3}
-*/
           tmp.forEach( nobj => list.push( nobj ) )
-          //add code to allow each string to be searched again
-          // if(tmp[0].fret < q.fretboard.fretMax )
         }
       }
       if(list.length === 0) return null

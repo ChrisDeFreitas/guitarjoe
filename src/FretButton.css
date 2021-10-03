@@ -29,9 +29,6 @@
 .fretButton[data-ivl="m7"] .supInterval,
 .fretButton[data-ivl="M7"] .supInterval{ color: #fff; text-shadow:1px 1px 1px #000;  }
 
-/* .fretButton[data-selected="0"] {} */
-.fretButton[data-selected="1"] { background:#3ac664; }  /* emerald */
-
 .fretButton[data-state="fretRoot"] { border: 1px #04ff00 solid; } /* green */
 .fretButton[data-state="selNote"] { border: 1px #fffb00 solid;  } /* yellow */
 .fretButton[data-state="fretSelect"] { border: 1px #00afff solid;  }  /* azure radiance */
@@ -43,6 +40,9 @@
 .fretButton[data-state="chord1"] { background:#f90; }  /*  pale orange */
 .fretButton[data-state="invr"] { background:#e7e; }
 .fretButton[data-state="invr1"] { background:#e2e; }
+
+/* .fretButton[data-selected="0"] {} */
+.fretButton[data-selected="1"] { background:#3ac664; }  /* emerald */
 
 /* format button text/caption */
 .fretButton sup{ color:#0f000fa0; font-size:0.7em; position:absolute; top:0px; text-shadow:none;  }

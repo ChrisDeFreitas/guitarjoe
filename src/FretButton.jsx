@@ -121,12 +121,12 @@ function FretButton( props ){
   }
 
   //button.dataset.state used to apply CSS
+  if(btnState === '' && nobj.state)
+    btnState = nobj.state
   if(nobj.state === 'invr' || nobj.state === 'invr1' )  //displaying an inversion; override root state
     btnState = nobj.state
   if(qry.noteFilter.indexOf( nobj.note ) >= 0)   // allow overriding roottype because user selected
     btnState = 'noteFilter'
-  if(btnState === '' && nobj.state)
-    btnState = nobj.state
 
   //format button caption
   let btncaption = [], key=0
@@ -245,6 +245,7 @@ FretButton.propTypes = {
   ]),
   nobj: PropTypes.object,
   qry:  PropTypes.object,
+  fretSelectFind: PropTypes.func,
   stateChange: PropTypes.func,
 }
 

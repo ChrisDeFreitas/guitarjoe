@@ -304,14 +304,13 @@ class Fretboard extends React.Component{
   render(){
     let qry = this.makeQuery()
     console.log('Fretboard.render()', this.props, this.state, qry)
+    // ivlName={this.state.ivlName}
     return(
       <div className='fretboard' id={'Fretboard'+qry.fbid}>
         <FretPnl
           collapsed={this.state.collapsed}
           fretFirst={this.state.fretFirst}
           fretLast={this.state.fretLast}
-
-          ivlName={this.state.ivlName}
 
           selNoteVal={this.state.selNoteVal} 
 
