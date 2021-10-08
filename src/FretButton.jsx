@@ -1,5 +1,5 @@
 /*
-  FretButton.js
+  FretButton.jsx
   - by Chris DeFreitas, ChrisDeFreitas777@gmail.com
   - used by FrePnl.jsx of GuitrJoe app
 
@@ -123,7 +123,9 @@ function FretButton( props ){
   //button.dataset.state used to apply CSS
   if(btnState === '' && nobj.state)
     btnState = nobj.state
-  if(nobj.state === 'invr' || nobj.state === 'invr1' )  //displaying an inversion; override root state
+  // overrides calculated state
+  if(nobj.state === 'degree' || nobj.state === 'degree1'
+  || nobj.state === 'invr'   || nobj.state === 'invr1' )  
     btnState = nobj.state
   if(qry.noteFilter.indexOf( nobj.note ) >= 0)   // allow overriding roottype because user selected
     btnState = 'noteFilter'
@@ -148,6 +150,7 @@ function FretButton( props ){
   else
     note = <span>{note}</span>
   
+  //apply button caption style
   if(btnStyle === 'IvlFirst'){
     if(nobj.ivl){
       btncaption.push(

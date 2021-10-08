@@ -32,16 +32,20 @@ class Fretboard extends React.Component{
       noteFilter:(props.noteFilter ?props.noteFilter :[]),    //notes on fetboard where button.data-selected=2; set by clicking infoPnl note
       fretSelect:(props.fretSelect ?props.fretSelect :[]),    //when rootType=fretSelect, list of frets and related data; set in fretPnl.fretClick()
       fretSelectMatch:(props.fretSelectMatch ?props.fretSelectMatch :null),    //user selects a chord or scale to view: {type, name}
+      fretSelectMatchDisplay:(props.fretSelectMatchDisplay ?props.fretSelectMatchDisplay :'Show'),    //Show or Hide
 
-      rootType:(props.rootType ?props.rootType :''),    //one of: ['', fretRoot, fretSelect, selNote]
+      rootType:(props.rootType ?props.rootType :'selNote'),    //one of: ['', fretRoot, fretSelect, selNote]
       fretRoot:(props.fretRoot ?props.fretRoot :null),          //note object, set when fret clicked
-      selNoteVal:(props.selNoteVal ?props.selNoteVal :''),   //string, contains note selected in selNote
+      selNoteVal:(props.selNoteVal ?props.selNoteVal :'C'),   //string, contains note selected in selNote
       octave:(props.octave ?props.octave :0), 
       scaleName:(props.scaleName ?props.scaleName :''),
-      chordName:(props.chordName ?props.chordName :''),
+      scaleDegree:(props.scaleDegree ?props.scaleDegree :null),
+      scaleDegreeDisplay:(props.scaleDegreeDisplay ?props.scaleDegreeDisplay :'Show'),    // Show or Hide
+      chordName:(props.chordName ?props.chordName :'Major triad'),
       ivlName:(props.ivlName ?props.ivlName :''), 
       
       inversionPos:(props.inversionPos ?props.inversionPos :null),    //user selected inversion position to display (maj or maj7 selected)
+      inversionDisplay:(props.inversionDisplay ?props.inversionDisplay :'Show'),    //Show or Hide
     }
     this.duplicate = this.duplicate.bind(this)
     this.remove = this.remove.bind(this)
@@ -55,13 +59,17 @@ class Fretboard extends React.Component{
   reset(){
     this.setState({ collapsed:false })
     this.setState({ fretSelectMatch:null })
+    this.setState({ fretSelectMatchDisplay:null })
     this.setState({ fretSelect:[] })
     this.setState({ noteFilter:[] })
     this.setState({ strgFilter:[] })
     this.setState({ fretFilter:[] })
     this.setState({ scaleName:'' })
+    this.setState({ scaleDegree:null })
+    this.setState({ scaleDegreeDisplay:'Show' })
     this.setState({ chordName:'' })
     this.setState({ inversionPos:null })
+    this.setState({ inversionDisplay:'show' })
     this.setState({ rootType:'' })
     this.setState({ ivlName:'' })
     this.setState({ fretRoot:null })
@@ -107,6 +115,16 @@ class Fretboard extends React.Component{
     //   this.setState({ rootType:val })
     // else
     if(key === 'collapsed'){
+      if(val === true){
+        this.setState({ fretSelectMatchDisplay: 'Hide' })
+        this.setState({ scaleDegreeDisplay: 'Hide' })
+        this.setState({ inversionDisplay: 'Hide' })
+      }
+      else{
+        this.setState({ fretSelectMatchDisplay: 'Show' })
+        this.setState({ scaleDegreeDisplay: 'Show' })
+        this.setState({ inversionDisplay: 'Show' })
+      }
       this.setState({ collapsed:val })
     }else
     if(key === 'noteFilter'){
@@ -206,6 +224,14 @@ class Fretboard extends React.Component{
     if(key === 'fretSelectMatch'){
       this.setState({ fretSelectMatch:val })
     }else
+    if(key === 'fretSelectMatchDisplay'){
+      // for now. no other items displayed with fretSelectMatch
+      //this.setState({ fretSelectMatchDisplay:val })
+      if(val === 'Show')
+        this.stateChange( 'collapsed', false)
+      else
+        this.stateChange( 'collapsed', true)
+    }else
     if(key === 'strgFilter'){
       val = Number( val )
       let list = this.state.strgFilter.slice()
@@ -228,6 +254,16 @@ class Fretboard extends React.Component{
     if(key === 'scaleName'){
       this.setState({ scaleName:val })
     }else
+    if(key === 'scaleDegree'){
+      val = Number(val)
+      if(this.state.scaleDegree === val)
+        this.setState({ scaleDegree: null })
+      else
+        this.setState({ scaleDegree: val })
+    }else
+    if(key === 'scaleDegreeDisplay'){
+      this.setState({ scaleDegreeDisplay:val })
+    }else
     if(key === 'chordName'){
       this.setState({ chordName:val })
     }else
@@ -235,6 +271,9 @@ class Fretboard extends React.Component{
      if(this.state.inversionPos === val)
        val = null
      this.setState({ inversionPos:val })
+    }else
+    if(key === 'inversionDisplay'){
+     this.setState({ inversionDisplay:val })
     }else
     if(key === 'ivlName'){
       this.setState({ ivlName:val })
@@ -252,9 +291,14 @@ class Fretboard extends React.Component{
               : this.state.selNoteVal ), 
       octave: this.state.octave,
       scale: null,
+      scaleTriads:null,
+      scaleDegree:this.state.scaleDegree,
+      scaleDegreeDisplay:this.state.scaleDegreeDisplay,
+      scaleDegreeIvls:null,
       chord:null,
       inversions:null,
       inversionPos:this.state.inversionPos,
+      inversionDisplay:this.state.inversionDisplay,
       inversionNotes:null,
       ivl: null,
 
@@ -264,39 +308,44 @@ class Fretboard extends React.Component{
       noteFilter: this.state.noteFilter,
       fretSelect: this.state.fretSelect,
       fretSelectMatch: this.state.fretSelectMatch,
+      fretSelectMatchDisplay: this.state.fretSelectMatchDisplay,
     }
-    if(qry.rootType === 'fretRoot')
-      qry.root = this.state.fretRoot    //note object, set in FretPnl.fretClick()
-    if(qry.rootType === 'selNote' && qry.note !== '' && qry.note !== 'All')
-      qry.root = q.notes.objByNote( qry.note )    //note object
-    if(qry.rootType === 'fretSelect')
+    if(qry.rootType === 'fretSelect'){
       qry.root = this.state.fretSelect[0]    //note object, set in FretPnl.fretClick()
   
-   // if(qry.note === 'All'){
-      //qry.fretBtnStyle = 'NoteAbc'
-   // }
-  
-    if(qry.fretSelectMatch != null){
-      if(qry.fretSelectMatch.type === 'chord')
-        qry.fretSelectMatch.obj = q.chords.obj( qry.fretSelectMatch.note, qry.fretSelectMatch.abr )
-      else
-      if(qry.fretSelectMatch.type === 'scale')
-        qry.fretSelectMatch.obj = q.scales.obj( qry.fretSelectMatch.note, qry.fretSelectMatch.abr )
-    }
-
-    if(this.state.scaleName !== '' && qry.root)
-      qry.scale = q.scales.obj( qry.note, this.state.scaleName )
-    if(this.state.chordName !== '' && qry.root){
-      qry.chord = q.chords.obj( qry.note, this.state.chordName )
-      qry.inversions = q.chords.inversions(qry.root.note, qry.chord.abr, qry.root.octave )
-      if(qry.inversionPos !== null){
-        qry.inversionNotes = q.chords.inversionNotes(  qry.inversions, qry.inversionPos )
+      if(qry.fretSelectMatch != null){
+        if(qry.fretSelectMatch.type === 'chord')
+          qry.fretSelectMatch.obj = q.chords.obj( qry.fretSelectMatch.note, qry.fretSelectMatch.abr )
+        else
+        if(qry.fretSelectMatch.type === 'scale')
+          qry.fretSelectMatch.obj = q.scales.obj( qry.fretSelectMatch.note, qry.fretSelectMatch.abr )
       }
-    }
-    if(this.state.ivlName !== '' && qry.root){
-      qry.ivl = q.intervals.byName( this.state.ivlName )    //this.props.ivlName == abr
-      qry.ivl.note = q.notes.calc( qry.note, qry.ivl )
-      // qry.ivl.notes = q.notes.bySemis( qry.root.semis +qry.ivl.semis )
+    } 
+    else{
+      if(qry.rootType === 'fretRoot')
+        qry.root = this.state.fretRoot    //note object, set in FretPnl.fretClick()
+      if(qry.rootType === 'selNote' && qry.note !== '' && qry.note !== 'All')
+        qry.root = q.notes.objByNote( qry.note )    //note object
+
+
+      if(this.state.scaleName !== '' && qry.root){
+        qry.scale = q.scales.obj( qry.note, this.state.scaleName )
+        qry.scaleTriads = q.scales.degreeTriads( qry.note, this.state.scaleName )
+        if(qry.scaleDegree != null)
+          qry.scaleDegreeIvls = qry.scaleTriads.list[ qry.scaleDegree -1 ].ivls
+      }
+      if(this.state.chordName !== '' && qry.root){
+        qry.chord = q.chords.obj( qry.note, this.state.chordName )
+        qry.inversions = q.chords.inversions(qry.root.note, qry.chord.abr, qry.root.octave )
+        if(qry.inversionPos !== null){
+          qry.inversionNotes = q.chords.inversionNotes(  qry.inversions, qry.inversionPos )
+        }
+      }
+      if(this.state.ivlName !== '' && qry.root){
+        qry.ivl = q.intervals.byName( this.state.ivlName )    //this.state.ivlName == abr
+        qry.ivl.note = q.notes.calc( qry.note, qry.ivl )
+        // qry.ivl.notes = q.notes.bySemis( qry.root.semis +qry.ivl.semis )
+      }
     }
     this.qry = qry
     return qry

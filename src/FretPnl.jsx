@@ -159,6 +159,23 @@ class FretPnl extends React.Component{
     }
     return null
   }
+  scaleDegreeFind( nobj ){
+    let qry = this.props.qry
+    if(qry.scale === null) return null
+    if(qry.scaleDegreeIvls === null) return null
+
+    let ivl = q.intervals.findNote( qry.scaleDegreeIvls, nobj )
+    if( ivl === null ) return null
+
+    nobj.note = ivl.note
+    nobj.ivl = ivl
+    nobj.state = 'degree' +(ivl.num === 1 ?1 :'')
+    return <FretButton 
+              root={qry.root} nobj={nobj}  qry={qry} 
+              fretSelectFind={this.props.fretSelectFind} 
+              stateChange={this.props.stateChange} 
+           />
+  }
   octaveFind( nobj ){  //find notes for selected octave
     let qry = this.props.qry
     if(qry.note !== '') return
@@ -199,8 +216,8 @@ class FretPnl extends React.Component{
   }
   chordFind( nobj ){
     let qry = this.props.qry
-
     if(qry.chord === null) return null
+
     if(qry.inversionNotes !== null){    //inversion format take precedence
       let inv = this.props.inversionNoteByTab( nobj.tab )
       if(inv !== null){
@@ -280,6 +297,8 @@ class FretPnl extends React.Component{
   buttonFind( nobj ){
     let qry = this.props.qry
     let btn = null
+
+    // ordering is critical because it determines which buttons are on top
     // all modes respect selOctave filter
 
     //All notes mode
@@ -289,14 +308,14 @@ class FretPnl extends React.Component{
               fretSelectFind={this.props.fretSelectFind} 
               stateChange={this.props.stateChange} 
             />
-
     //fretSelect mode
     if(btn === null) btn = this.fretSelectMatchFind( nobj )
     if(btn === null) btn = this.fretSelectFind( nobj )
 
-    // fretRoot and selNote mode
+    //selNote mode
     if(btn === null) btn = this.ivlFind( nobj )
     if(btn === null) btn = this.chordFind( nobj )
+    if(btn === null) btn = this.scaleDegreeFind( nobj )
     if(btn === null) btn = this.scaleFind( nobj )
     if(btn === null){
       if(qry.rootType === 'fretRoot')

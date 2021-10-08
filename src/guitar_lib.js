@@ -62,7 +62,7 @@ var q = {
     byName( str ){
       for(let chord of q.chords.list){
         if(chord.abr === str || chord.name === str)
-          return Object.assign({}, chord )
+          return { ...chord }
       }
       return null
     },
@@ -82,16 +82,17 @@ var q = {
       for(let iname of chord.intervals){
         let ivl = q.intervals.byName( iname )
         let note = q.notes.calc( root, ivl, preferFlats )
-        ivls.push( Object.assign({}, ivl, { note:note } ))
+        ivls.push({ ...ivl, note:note })
       }
 
-      let obj = Object.assign({}, chord, {
+      let obj = { 
+        ...chord, 
         type:'chord',
         fullName: root.note +' '+chord.name,
         fullAbbrev: root.note +chord.abr,
-        root: Object.assign({}, root),
+        root: root,
         ivls:ivls
-       })
+      }
 
       return obj
     },
@@ -132,10 +133,11 @@ var q = {
             ioctave++
           }
           // console.log({idx:idx, ridx:ridx})
-          obj[idx] = Object.assign({}, rivls[ ridx ], { 
+          obj[idx] ={ 
+            ...rivls[ ridx ], 
             octave:ioctave,
             semis:q.semis.calc( rivls[ ridx ].note, ioctave )
-          })
+          }
         }
       }
       // console.log( result.positions )
@@ -211,7 +213,25 @@ var q = {
       }
       if(list.length === 0) return null
       return list
-    }
+    },
+    findByIvls( ivls ){    //find a chord by matching interval.abr
+      // return null or one of q.chords.list[]
+      for( let chord of q.chords.list ){
+        if(chord.intervals.length !== ivls.length) 
+          continue
+
+        let fnd = true
+        for( let ii = 0; ii < chord.intervals.length; ii++ ){
+           if(ivls[ii].abr !== chord.intervals[ii]){
+             fnd = false
+             break
+           }
+        }
+        if( fnd === true )    // all ivls match
+          return { ...chord }
+      }
+      return null
+    },
 
   },
 
@@ -243,7 +263,7 @@ var q = {
       }
     },
     strg( strgN ){  
-      return Object.assign({}, q.fretboard.strings[ strgN -1 ])
+      return { ...q.fretboard.strings[ strgN -1 ] }
     },
     fretInRange(nobj, root, num = 3){
       //assume: root is a notes.obj()
@@ -308,52 +328,52 @@ var q = {
       // 4. prefer augmented last
       // 5. removed (♭♭, TT) because added complexity not relevant to most uses
       // 
-      {name:'Perfect unison', abr:'P1',  semis:0, note:'C' },
+      {name:'Perfect unison', abr:'P1',  semis:0, degName:'Tonic', note:'C' },
       //{name:'Diminished second', abr:'d2', semis:0, note:'D♭♭' },
       
-      {name:'Minor second', abr:'m2', semis:1, note:'D♭' },
-      {name:'Augmented unison', abr:'A1', semis:1, note:'C#' },
+      {name:'Minor second', abr:'m2', semis:1, degName:'', note:'D♭' },
+      {name:'Augmented unison', abr:'A1', semis:1, degName:'', note:'C#' },
       
-      {name:'Major second', abr:'M2', semis:2, note:'D' },
+      {name:'Major second', abr:'M2', semis:2, degName:'Supertonic', note:'D' },
       // {name:'Diminished third', abr:'d3', semis:2, note:'E♭♭' },
       
-      {name:'Minor third', abr:'m3', semis:3, note:'E♭' },
-      {name:'Augmented second', abr:'A2', semis:3, note:'D#' },
+      {name:'Minor third', abr:'m3', semis:3, degName:'Mediant', note:'E♭' },
+      {name:'Augmented second', abr:'A2', semis:3, degName:'Mediant', note:'D#' },
       
-      {name:'Major third', abr:'M3', semis:4, note:'E' },
-      {name:'Diminished fourth', abr:'d4', semis:4, note:'F♭' },
+      {name:'Major third', abr:'M3', semis:4, degName:'Mediant', note:'E' },
+      {name:'Diminished fourth', abr:'d4', semis:4, degName:'Mediant', note:'F♭' },
 
-      {name:'Perfect fourth', abr:'P4', semis:5, note:'F'},
-      {name:'Augmented third', abr:'A3', semis:5, note:'E#'},
+      {name:'Perfect fourth', abr:'P4', semis:5, degName:'Subdominant', note:'F'},
+      {name:'Augmented third', abr:'A3', semis:5, degName:'Subdominant', note:'E#'},
       
-      {name:'Diminished fifth', abr:'d5', semis:6, note:'G♭' },
-      {name:'Augmented fourth', abr:'A4', semis:6, note:'F#' },
+      {name:'Diminished fifth', abr:'d5', semis:6, degName:'', note:'G♭' },
+      {name:'Augmented fourth', abr:'A4', semis:6, degName:'', note:'F#' },
       // {name:'Tritone', abr:'TT', semis:6, note:'TT' },
       
-      {name:'Perfect fifth', abr:'P5', semis:7, note:'G' },
+      {name:'Perfect fifth', abr:'P5', semis:7, degName:'Dominant', note:'G' },
       // {name:'Diminished sixth', abr:'d6', semis:7, note:'A♭♭' },
       
-      {name:'Minor sixth', abr:'m6', semis:8, note:'A♭' },
-      {name:'Augmented fifth', abr:'A5', semis:8, note:'G#' },
+      {name:'Minor sixth', abr:'m6', semis:8, degName:'Submediant', note:'A♭' },
+      {name:'Augmented fifth', abr:'A5', semis:8, degName:'Submediant', note:'G#' },
       
-      {name:'Major sixth', abr:'M6', semis:9, note:'A' },
+      {name:'Major sixth', abr:'M6', semis:9, degName:'Submediant', note:'A' },
       // {name:'Diminished seventh', abr:'d7', semis:9, note:'B♭♭' },
       
-      {name:'Minor seventh', abr:'m7', semis:10, note:'B♭' },
-      {name:'Augmented sixth', abr:'A6', semis:10, note:'A#' },
+      {name:'Minor seventh', abr:'m7', semis:10, degName:'Subtonic', note:'B♭' },
+      {name:'Augmented sixth', abr:'A6', semis:10, degName:'Subtonic', note:'A#' },
       
-      {name:'Major seventh', abr:'M7', semis:11, note:'B' },
-      {name:'Diminished octave', abr:'d8', semis:11, note:'C♭' },
+      {name:'Major seventh', abr:'M7', semis:11, degName:'Leading tone', note:'B' },
+      {name:'Diminished octave', abr:'d8', semis:11, degName:'Leading tone', note:'C♭' },
       
-      {name:'Perfect octave', abr:'P8', semis:12, note:'C' },
-      {name:'Augmented seventh', abr:'A7', semis:12, note:'B#' },
+      {name:'Perfect octave', abr:'P8', semis:12, degName:'Octave', note:'C' },
+      {name:'Augmented seventh', abr:'A7', semis:12, degName:'Octave', note:'B#' },
     ],
   
     byNote( note ){
       note = note.toUpperCase()
       for(let ivl of q.intervals.list){
         if(ivl.note === note)
-          return Object.assign({}, ivl)
+          return { ...ivl }
       }
       return null
     },
@@ -361,7 +381,7 @@ var q = {
       let note = nm.toUpperCase()
       for(let ivl of q.intervals.list){
         if(ivl.abr === nm || ivl.note === note || ivl.name === nm)
-          return Object.assign({}, ivl)
+          return { ...ivl }
       }
       return null
     },
@@ -371,12 +391,23 @@ var q = {
       for(let ivl of q.intervals.list){
         if(ivl.semis > semis) break    //shortcircuit, intervals ordered by semis
         if(ivl.semis === semis){
-          let obj = Object.assign({}, ivl)
+          let obj = { ...ivl }
           if(returnFirst === true) return obj
           list.push( obj )
         }
       }
       return list
+    },
+    findNote( ivls, nobj ){   //return null or ivl containing note
+      if(typeof nobj === 'string')
+        nobj = q.notes.objByNote( nobj )
+      
+      let result = ivls.find( ivl => {
+        return ( nobj.notes.indexOf( ivl.note ) >= 0 )
+      })
+
+      if( typeof result !== 'object') return null
+      return result
     }
   },
 
@@ -646,10 +677,71 @@ var q = {
         // also: https://alchetron.com/Pygmy-music#Pygmy-scale
       }
     ],
+    degreeTriads( root, scale ){    //build triads on all scale degrees
+      // return: {type:'Scale Degree Triads', root:root, scale:scale, abr:sobj.abr, list:[]}
+      let sobj = null
+      if(typeof root === 'object') root = root.note
+      if(typeof scale === 'object') sobj = scale
+      else sobj = q.scales.obj(root, scale)
+      if(sobj === null) return null
+
+      let result = {type:'Scale Degree Triads', root:root, scale:scale, abr:sobj.abr, list:[]}
+      const degrees = ['i','ii','iii','iv','v','vi','vii']
+
+      for(let ii = 0; ii < sobj.ivls.length; ii++){    //iterate each scale degree
+        let ivls = []
+        let rootivl = null    //to calc correct semitones for interval
+
+        for(let num = 0; num <= 2; num++ ){   //build triad
+          let iidx = ii +((+2 * num) )
+          if( iidx >= sobj.ivls.length ) iidx -= sobj.ivls.length
+          
+          let ivl = sobj.ivls[ iidx ]
+          ivl = {
+            num:    (num +1),
+            abr:    null,
+            note:   ivl.note, 
+            semis0: ivl.semis, 
+            semis:  ivl.semis
+          } 
+          if(rootivl === null){
+            rootivl = ivl
+            rootivl.semis = 0
+          }
+          else{
+            ivl.semis -= rootivl.semis0
+            if( ivl.semis < 0 ) ivl.semis += 12
+          }
+          ivl.abr = q.intervals.bySemis( ivl.semis, true ).abr
+          ivls.push( ivl )
+        }
+      
+        let deg = degrees[ii]
+        let match = q.chords.findByIvls( ivls )
+        if(match !== null){
+          if( match.name.indexOf('Major') >= 0) deg = deg.toUpperCase()
+          if( match.name.indexOf('Diminished') >= 0) deg += '°'
+          if( match.name.indexOf('Augmented') >= 0) deg += '+'
+        }
+
+        let triad = {
+          root:   sobj.ivls[ii].note,
+          num:    (ii +1),
+          degree: deg,
+          degreeName: sobj.ivls[ii].degName,
+          name:   (match !== null ?match.name :null),
+          abr:    (match !== null ?match.abr :null),
+          ivls:   ivls
+        }
+        result.list.push( triad )
+        // console.log( triad )
+      }
+      return result
+    },
     byName( scaleName ){
       for(let scale of q.scales.list){
         if(scale.name === scaleName || scale.short === scaleName || scale.abr === scaleName)
-          return Object.assign({}, scale)
+          return { ...scale }
       }
       return null
     },
@@ -668,21 +760,23 @@ var q = {
       for(let ivlAbr of scale.intervals){   //generate intervals for scale built on root
         let ivl = q.intervals.byName( ivlAbr )
         let note = q.notes.calc( root, ivl, preferFlats )
-        ivl = Object.assign( {}, ivl, {
+        ivl = {
+          ...ivl,
           abr: ivlAbr,    //abbreviation may differ from one assigned to scale
           note:note,
-        })
+        }
         ivls.push( ivl )
       }
 
-      let obj = Object.assign( {}, scale, {
+      let obj = { 
+        ...scale, 
         type:'scale',
         fullName: root.note +' '+scale.name,
         shortName: root.note +' '+scale.short,
         abbrevName: root.note +scale.abr,
-        root: Object.assign({}, root),
+        root: root,
         ivls: ivls 
-      })
+      }
       return obj
     }
   },

@@ -28,33 +28,40 @@
 .dataPnl select[data-state="interval"]{ background-color:#ffff9b; }
 .dataPnl select[data-state="chord"]{ background-color:#eab555; }
 
-.qryCollapsed .qryBtnCollapse,
-.qryCollapsed .queryControls,
-.queryControls[data-roottype='fretSelect'],
-.qryCollapsed .qryBtnDupe,
-.qryCollapsed .qryBtnDel,
-.qryCollapsed .qryBtnClear{ display:none; }
 
-.qryBtn{ background-color:hsl(177deg 68% 31% / 92%); border:1px outset #0003; border-radius:5px; 
-  box-shadow: 5px 5px 15px 1px #0000007a; cursor:pointer; 
-  display:inline-table; margin:0 0.25em; height:1.5em; width:1.5em;
-  color:#000; font-size:1.25em; font-weight:normal; text-shadow:1px 1px 1px #fff6; text-align:center;
+
+.qryBtn{ background-color:hsl(177deg 68% 31% / 92%); border-radius:5px; 
+  box-shadow: 5px 5px 15px 1px #0000007a; color:#000; cursor:pointer; 
+  display:inline-table; margin:0 0.25em;
+  font-weight:normal; text-shadow:1px 1px 1px #fff6; text-align:center;
+  font-size:1.25em; padding:2px 5px;
  }
-.qryBtnCollapse div{ transform:rotateZ(-90deg); text-shadow:-1px 1px 1px #fff6; 
-  position:relative; top:0px; left:-2px; width:100%;  }
+.qryBtnSmall{
+  background-color:hsl(177deg 68% 31% / 92%); border-radius:5px; 
+  box-shadow: 5px 5px 15px 1px #0000007a; color:#000; cursor:pointer; 
+  display:inline-table; margin:0 0.25em; 
+  font-weight:normal; text-shadow:1px 1px 1px #fff6; text-align:center;
+  font-size:1em; padding:3px 3px;
+}
+
+.queryPnlHide .queryControls,
+.queryControls[data-roottype='fretSelect']{ display:none; }
 
 .tbQuery{ 
   border:0; border-collapse:separate; border-spacing:0px; table-layout:fixed;
   padding:0; margin:0 auto; position:relative; width:auto; max-width:70%;
 }
-.tbQuery tr td{ vertical-align:middle; }
+.tbQuery tr td{ vertical-align:top; }
 .qryContent{ padding:0; width:70%; } 
-.qryBtnsLeft{ padding:0; text-align:right; width:8em; } 
-.qryBtnsRight{ padding:0 0 0 1.5em; text-align:left; width:12em; } 
+.qryBtnsLeft{ padding:0.5em 0.25em 0 0; text-align:right; width:8em; } 
+.qryBtnsRight{ padding:0.5em 0 0 1.5em; text-align:left; width:12em; } 
+.queryPnlHide .qryBtnsLeft,
+.queryPnlHide .qryBtnsRight{ padding-top:0; }
+
 
 .infoPnl{ margin:0 auto; width:100%; } 
-.qryExpanded .infoPnl{ display:block; margin:0 auto; }
-.qryBtnCollapse .infoPnl{ display:inline-table; }
+.queryPnlShow .infoPnl{ display:block; margin:0 auto; }
+.queryPnlHide .infoPnl{ display:inline-table; }
 .infoDiv{ background:#00000045; border-radius:5px; display:inline-table;
    padding:0; margin:0 auto; text-shadow:1px 1px 3px #000; width:100%; 
    position:relative; left:12px; }
@@ -66,10 +73,8 @@
 .infoDiv .ivl[data-selected="noteFilter"] { background:#aaf; border-radius:3px; }  /* note in props.noteFilter */
 .infoDiv .ivl[data-selected="fretSelectMatch"] { background:#b1e6ff7a; border-radius:3px; }  /* user selected matching chord or scale */
 .infoDiv .ivl[data-selected="invr"]{ background-color:#e7e; }  
+.infoDiv .ivl[data-selected="degree"]{ background-color:#0cc; }  
 .infoDiv .ivl sub{ font-size:0.6em; position:relative; left:-3px; top:-3px; }
-.qryBtnExpand{ display:inline-table; position:sticky; height:1em; width:1em; }
-.qryBtnExpand div{ position:relative; transform:rotateZ(90deg); height:1em; left:3px; top:2px;
-  font-size:0.8em; text-shadow:1px -1px 1px #fff6; }
 
 .btnFilter{ position:absolute; width:20px;
   cursor:pointer; 

@@ -9,8 +9,8 @@ import React, { useState } from 'react';
 import './App.css';
 // import './Bgnd.css';
 // import Bgnd from "./Bgnd.js";
-import Fretboard from "./Fretboard.js"
-import About from "./AboutDlg.js"
+import Fretboard from "./Fretboard"
+import About from "./AboutDlg"
 import { ReactComponent as Logo } from './resources/logo.svg'
 
 
@@ -91,7 +91,7 @@ function App(){
     <div className="App">
 			<header className="App-header header">
         <Logo className="Logo" alt="Logo" />
-        GuitarJoe v0.1.5 <About />
+        GuitarJoe v0.1.6 <About />
       </header>
 			{list}
     </div>

@@ -1,0 +1,16 @@
+
+.ArrowBtn{
+  background-color:hsl(177deg 68% 31% / 92%); 
+  border-radius:5px; box-shadow: 5px 5px 15px 1px #007; 
+  color:#000; cursor:pointer; 
+  display:inline-block; margin:0 0.25em; outline:0; padding:0; 
+  text-shadow:1px 1px 1px #fff6; text-align:center;
+}
+.ArrowBtn div{ border:none; padding:0; position:relative; outline:0; }
+.ArrowBtnUp div{ transform:rotateZ(-90deg); text-shadow:-1px 1px 1px #fff6; 
+  left:-1px;
+}
+.ArrowBtnDn div{ transform:rotateZ(90deg);  text-shadow:1px -1px 1px #fff6; 
+  left:1px;
+}
+
