@@ -85,7 +85,7 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 -- reference: https://appliedguitartheory.com/lessons/building-chords-major-scale/  
 -- reference: https://en.wikipedia.org/wiki/Triad_(music)  
 -- verified with: https://jguitar.com/chordname  
-- create ArrowButton.jsx to control collapse/expand user intereaction
+- create ArrowButton.jsx to control collapse/expand user interaction
 - added collapse/expand functionality to the display of chord inversions, scale degree triads, and selected fret matches
 - added ArrowButton to QueryPnl; clicking will apply setting to chord inversions, scale degree triads, and selected fret matches
 - for speed, implemented spread syntax for object creation in guitar_lib.js  
