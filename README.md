@@ -65,7 +65,6 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
   - YouTube: [La Muchacha - Pal´ Monte](https://www.youtube.com/watch?v=gMtCmxy5Umc)
 
 ## Thanks to
- - <a href='https://github.com/paulrosen/abcjs'>abcjs</a> Javascript library for rendering abc music notation 
  - Application hosted on <a href='https://github.com/ChrisDeFreitas/guitarjoe' target='_new'>GitHub</a>   
  - Background image from <a href='https://www.flickr.com/photos/webtreatsetc/with/4514047664/' target='_new'>WebTreats ETC</a>  
  - Built with the <a href='https://reactjs.org/' target='_new'>React</a> Javascript library  
@@ -85,10 +84,11 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 - the InfoPnl now displays triads built on degrees of the selected scale  
 -- reference: https://appliedguitartheory.com/lessons/building-chords-major-scale/  
 -- reference: https://en.wikipedia.org/wiki/Triad_(music)  
-- create ArrowButons.jsx to control collapse/expand user intereaction
+-- verified with: https://jguitar.com/chordname  
+- create ArrowButton.jsx to control collapse/expand user intereaction
 - added collapse/expand functionality to the display of chord inversions, scale degree triads, and selected fret matches
 - added ArrowButton to QueryPnl; clicking will apply setting to chord inversions, scale degree triads, and selected fret matches
-- for speed, implemented spread syntax for object creation 
+- for speed, implemented spread syntax for object creation in guitar_lib.js  
 - AboutDlg: fixed display on small screens by scrolling content; updated content  
 - removed package.json reference to react-redux because redux is not used
 - various tweaks and updates
