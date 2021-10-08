@@ -186,17 +186,17 @@ function InfoPnl( props ){
   }
 
 
-  function toggleFretSelectMatch( upordn ){
-    let ss = (upordn === 'up' ?'Show' :'Hide')
+  function toggleFretSelectMatch(){
+    let ss = (qry.fretSelectMatchDisplay === 'Show' ?'Hide' :'Show')
     props.stateChange( 'fretSelectMatchDisplay', ss)
   }
-  function toggleScaleDegree( upordn ){
-    let ss = (upordn === 'up' ?'Show' :'Hide')
+  function toggleScaleDegree(){
+    let ss = (qry.scaleDegreeDisplay === 'Show' ?'Hide' :'Show')
     props.stateChange( 'scaleDegreeDisplay', ss)
   }
-  function toggleChordInvr( upordn ){
+  function toggleChordInvr(){
     console.log( 'toggleChordInvr()' )
-    let ss = (props.inversionDisplay === 'Show' ?'Hide' :'Show')
+    let ss = (qry.inversionDisplay === 'Show' ?'Hide' :'Show')
     props.stateChange( 'inversionDisplay', ss)
   }
 
