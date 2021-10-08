@@ -34,7 +34,7 @@ About Chord Inversions<br />
 The guitar provides many combinations for inversions.  The app tryies to display the ideal inversion:  
 The bass note is highlighted, then the remaining notes are selected in order, on higher strings.  
 Unfortunately, this 
-results in certain inversion having no selections on the fretboard, such as CMaj7 third position.  
+results in certain inversions having no selections on the fretboard, such as CMaj7 third position.  
 <br /><br />
 &nbsp;- Tested to work in Chrome(Windows), Firefox(Windows, Linux), and Safari(iPad, iPhone)<br />
 &nbsp;- Review documentation, updates and references in the <a href='https://github.com/ChrisDeFreitas/guitarjoe/' target='_new'>GitHub Repository</a> <br />

@@ -179,6 +179,11 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo
+- bug: clicking an InfoPnl label, when displaying inversions, does not remove selected inversion
+- bug: when fretButtonStyle == NoteAbc, an exception sometimes occurs: ivl.abr missing
+- change names of fretButtonStyles so they are accurate
+- when fretButtonStyle displays an abc staff, try to make staff larger for octave = 2
+- rename rootType.selNote to noteSelect (for documentation)
 - implement transitions to smooth out user interactions  
 - implement regression testing with Selenium  
 - change layout of FretButton's controls to be position:absolute to prevent them from jumping up and down
