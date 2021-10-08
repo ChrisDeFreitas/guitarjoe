@@ -179,14 +179,8 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo
-- when scale selected, add chords built on scale degree
--- initially, scale === major  
--- InfoPnl: Scale Degree Chrods for C Scale   
--- InfoPnl: ii: C minor = e g b
--- q.chords.degree( root, chord.abr, int degree  ) ==> { chordName, chordType, root, degree, notes:[nobj1, ...] }  
--- degree chords built as chord triads for all scales; highlight root note  
--- how to algorithmically determine chord type (maj/min/dim) for scales not major or minor  
--- reference: https://appliedguitartheory.com/lessons/building-chords-major-scale/. 
+- implement transitions to smooth out user interactions  
+- implement regression testing with Selenium  
 - change layout of FretButton's controls to be position:absolute to prevent them from jumping up and down
 - allow the first created Fretboard control to be deleted.  Currently, only its children may be deleted.
 - fix ./public/favicon.svg colors: image appears dim on white backgrounds  
