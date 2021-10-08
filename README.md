@@ -12,7 +12,7 @@ The name is based on the slang "Joe Workie," a synonym for construction worker. 
 - The purpose of the application is to visually explore basic music theory applied to the guitar fretboard.  It is not meant to teach or explain, but to explore. For example, I am always using it to answer these questions:  
   &nbsp; &nbsp; Am I fretting this chord/scale correctly?  
   &nbsp; &nbsp; How can I divide this chord/scale into interesting triads or power chords?  
-  &nbsp; &nbsp; What scale is this cool rif in?   
+  &nbsp; &nbsp; What scale is this cool riff in?   
   &nbsp; &nbsp; Where does this note/chord/inversion/scale exist on the fretboard?  
 
 - Everything is clickable.  This is a key principle of the application design: everything displayed provides relevant data, and functionality is an implicit feature of data. 
@@ -20,8 +20,10 @@ The name is based on the slang "Joe Workie," a synonym for construction worker. 
 - The app is in the early phase of development so if something seems wonky please let me know.  It may be something I had not considered.
 
 ## Music Notes
-- I am not a musician (I often say I'll be ready to play in a band around the age of 90).  So the data is the result of a lot of online research and verified against many other online sources.  I've documented the major online references in the sections titled Helpful References, and Thanks to.
-- The Blues Heptatonic scale has different representations online, so it is debatable.  I love learning about cultures and history so I've included some exotic scales like the Japanese Akebono I and II for practice.
+I am not a musician (I often say I'll be ready to play in a band around the age of 90).  So the data is the result of a lot of online research and verified against many other online sources.  I've documented the major online references in the sections titled Helpful References, and Thanks to.
+
+#### Scales
+The Blues Heptatonic scale has different representations online, so it is debatable.  I love learning about cultures and history so I've included some exotic scales like the Japanese Akebono I and II for practice.
 
 #### Chords
 Typically guitar chords are represented as fixed pattern of notes, leading to approaches like the CAGED system.  This app takes a different approach.  When a chord is selected all chord notes are displayed.  The user can superimpose patterns onto the selection.  The short term goal is to simplify coding at this early stage.  But, I like this approach because it allows me to see the anatomy of the chord, and find alternative chord voicings, triads, and power chords.
@@ -80,7 +82,7 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 #### 20211006:  
 
 - upgraded to v0.1.6  
-- the InfoPnl now displays triads built on degrees of the selected scale
+- the InfoPnl now displays triads built on degrees of the selected scale  
 -- reference: https://appliedguitartheory.com/lessons/building-chords-major-scale/  
 -- reference: https://en.wikipedia.org/wiki/Triad_(music)  
 - create ArrowButons.jsx to control collapse/expand user intereaction
