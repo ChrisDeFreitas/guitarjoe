@@ -34,14 +34,14 @@ class Fretboard extends React.Component{
       fretSelectMatch:(props.fretSelectMatch ?props.fretSelectMatch :null),    //user selects a chord or scale to view: {type, name}
       fretSelectMatchDisplay:(props.fretSelectMatchDisplay ?props.fretSelectMatchDisplay :'Show'),    //Show or Hide
 
-      rootType:(props.rootType ?props.rootType :'selNote'),    //one of: ['', fretRoot, fretSelect, selNote]
+      rootType:(props.rootType ?props.rootType :''),    //one of: ['', fretRoot, fretSelect, selNote]
       fretRoot:(props.fretRoot ?props.fretRoot :null),          //note object, set when fret clicked
-      selNoteVal:(props.selNoteVal ?props.selNoteVal :'C'),   //string, contains note selected in selNote
+      selNoteVal:(props.selNoteVal ?props.selNoteVal :''),   //string, contains note selected in selNote
       octave:(props.octave ?props.octave :0), 
       scaleName:(props.scaleName ?props.scaleName :''),
       scaleDegree:(props.scaleDegree ?props.scaleDegree :null),
       scaleDegreeDisplay:(props.scaleDegreeDisplay ?props.scaleDegreeDisplay :'Show'),    // Show or Hide
-      chordName:(props.chordName ?props.chordName :'Major triad'),
+      chordName:(props.chordName ?props.chordName :''),
       ivlName:(props.ivlName ?props.ivlName :''), 
       
       inversionPos:(props.inversionPos ?props.inversionPos :null),    //user selected inversion position to display (maj or maj7 selected)
