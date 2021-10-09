@@ -13,11 +13,6 @@ import q from "./guitar_lib.js";
 function InfoPnl( props ){
   let {qry} = props
 
-  function degLabelClick(event){
-    event.stopPropagation()
-    let btn = event.target   
-    props.stateChange( 'scaleDegree', btn.dataset.scaledegree )
-  }
   function fsChordClick( event ){
     let btn = event.target
     // console.log('fsChordClick', btn.dataset.note, btn.dataset.abr)
@@ -50,29 +45,49 @@ function InfoPnl( props ){
         props.stateChange( 'fretSelectMatch', {type:'scale', note:btn.dataset.note, abr:btn.dataset.abr} )
     }
   }
-  function infoNoteClick(event){
+  function infoItemClick(event){
     event.stopPropagation()
 
     let btn = event.target   
     if(btn.dataset.selected === 'label'){    //user clicked the label
       props.stateChange( 'fretSelectMatch', null )
+      props.stateChange( 'chordInvrSelected', null )
       props.stateChange( 'noteFilter', 'clear' )
+      props.stateChange( 'scaleTriadSelected', null )
     }
-    else {   //default operation
+    else {   //default noteFilter: highlight all FretButtons with selected note
       if(btn.className !== 'ivl')
         btn = btn.parentNode
       
       let note = btn.dataset.note     
       if(typeof note === 'string')
         props.stateChange( 'noteFilter', note )
-        // props.stateChange( 'noteFilter', note, btn.className )
     }
   }
   function invrLabelClick(event){
     event.stopPropagation()
     let btn = event.target   
-    props.stateChange( 'inversionPos', btn.dataset.invr )
+    props.stateChange( 'chordInvrSelected', btn.dataset.invr )
   }
+  function triadLabelClick(event){
+    event.stopPropagation()
+    let btn = event.target   
+    props.stateChange( 'scaleTriadSelected', btn.dataset.scaletriad )
+  }
+  
+  function toggleFretSelectMatchDisplay(){
+    let ss = (qry.fretSelectMatchDisplay === 'Show' ?'Hide' :'Show')
+    props.stateChange( 'fretSelectMatchDisplay', ss)
+  }
+  function toggleScaleTriadDisplay(){
+    let ss = (qry.scaleTriadDisplay === 'Show' ?'Hide' :'Show')
+    props.stateChange( 'scaleTriadDisplay', ss)
+  }
+  function toggleChordInvrDisplay(){
+    let ss = (qry.chordInvrDisplay === 'Show' ?'Hide' :'Show')
+    props.stateChange( 'chordInvrDisplay', ss)
+  }
+
   function drawFretSelectMatches( html, key ){    //push matching chords and scales onto html[]
     let selected = 0
     
@@ -186,29 +201,15 @@ function InfoPnl( props ){
   }
 
 
-  function toggleFretSelectMatch(){
-    let ss = (qry.fretSelectMatchDisplay === 'Show' ?'Hide' :'Show')
-    props.stateChange( 'fretSelectMatchDisplay', ss)
-  }
-  function toggleScaleDegree(){
-    let ss = (qry.scaleDegreeDisplay === 'Show' ?'Hide' :'Show')
-    props.stateChange( 'scaleDegreeDisplay', ss)
-  }
-  function toggleChordInvr(){
-    console.log( 'toggleChordInvr()' )
-    let ss = (qry.inversionDisplay === 'Show' ?'Hide' :'Show')
-    props.stateChange( 'inversionDisplay', ss)
-  }
-
   let  selected = 0, html = [], key=0, lastkey=null
 
   if(qry.rootType === 'fretSelect'){    
       let fretSelectMatchDisplay = (qry.fretSelectMatchDisplay === 'Show' ?'up' :'dn')
       let fretSelectMatchTtl = (qry.fretSelectMatchDisplay === 'Show' ?'Hide matching chords and scales' :'Show matching chords and scales')
 
-      html.push( <span key={++key} className='propName' onClick={infoNoteClick}
+      html.push( <span key={++key} className='propName' onClick={infoItemClick}
          data-selected='label'>
-          <ArrowButton upOrDn={fretSelectMatchDisplay} width='1em' title={fretSelectMatchTtl} onChange={toggleFretSelectMatch}/>
+          <ArrowButton upOrDn={fretSelectMatchDisplay} width='1em' title={fretSelectMatchTtl} onChange={toggleFretSelectMatchDisplay}/>
           Fret select:&nbsp;
         </span> 
       )
@@ -221,7 +222,7 @@ function InfoPnl( props ){
         else selected = 0
         
         html.push( 
-          <span key={++key} className='ivl' onClick={infoNoteClick}
+          <span key={++key} className='ivl' onClick={infoItemClick}
             data-note={nobj.note} data-selected={selected}
             >&nbsp;{nobj.note} <sub>{nobj.ivl.abr}</sub> 
           </span> 
@@ -234,21 +235,21 @@ function InfoPnl( props ){
           // if(qry.collapsed !== true){
             html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
             html.push( <span key={++key} className='propName'
-             data-selected='label' onClick={infoNoteClick}
+             data-selected='label' onClick={infoItemClick}
             > &nbsp;</span> )
           // }
         }
         else{    //draw user select chord or scale match
           html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
            html.push( <span key={++key} className='propName'
-           data-selected='label' onClick={infoNoteClick}
+           data-selected='label' onClick={infoItemClick}
           >Selected, {qry.fretSelectMatch.obj.fullName}:&nbsp;</span> )
 
           for(let ivl of qry.fretSelectMatch.obj.ivls){   
             if(qry.noteFilter.indexOf( ivl.note ) >= 0) selected = 'noteFilter'
             else selected = 0
 
-            html.push( <span key={++key} className='ivl' onClick={infoNoteClick}
+            html.push( <span key={++key} className='ivl' onClick={infoItemClick}
               data-note={ivl.note} data-selected={selected}
             >&nbsp;{ivl.note} <sub>{ivl.abr}</sub> </span> )
           }
@@ -257,9 +258,9 @@ function InfoPnl( props ){
         key = drawFretSelectMatches( html, key )
       }
   } else
-  if(qry.rootType === 'selNote' && props.selNoteVal === 'All'){    //special case
+  if(qry.rootType === 'noteSelect' && props.selNoteVal === 'All'){    //special case
     html.push( <span key={++key} className='propName'
-       data-selected='label' onClick={infoNoteClick}
+       data-selected='label' onClick={infoItemClick}
       >{'All Notes'}</span> )
 
     if(qry.octave !== 0){
@@ -270,15 +271,13 @@ function InfoPnl( props ){
     lastkey = key
 
     if(qry.scale !== null){
-      let scaleDegreeDisplay = (qry.scaleDegreeDisplay === 'Show' ?'up' :'dn')
-      let scaleDegreeDisplayTtl = (qry.scaleDegreeDisplay === 'Show' ?'Hide Scale Degree Triads' :'Show Scale Degree Triads')
+      let uord = (qry.scaleTriadDisplay === 'Show' ?'up' :'dn')
+      let scaleTriadDisplayTtl = (qry.scaleTriadDisplay === 'Show' ?'Hide Scale Degree Triads' :'Show Scale Degree Triads')
 
       // html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
       html.push( 
-        <span key={++key} className='propName' onClick={infoNoteClick}
-         data-selected='label' 
-        >
-          <ArrowButton upOrDn={scaleDegreeDisplay} width='1em' title={scaleDegreeDisplayTtl} onChange={toggleScaleDegree}/>
+        <span key={++key} className='propName' onClick={infoItemClick} data-selected='label' >
+          <ArrowButton upOrDn={uord} width='1em' title={scaleTriadDisplayTtl} onChange={toggleScaleTriadDisplay}/>
           {qry.root.note +' ' +qry.scale.name +':'}
         </span> 
       )
@@ -287,31 +286,31 @@ function InfoPnl( props ){
         else selected = 0
         
         html.push(
-          <span key={++key} className='ivl' onClick={infoNoteClick} 
+          <span key={++key} className='ivl' onClick={infoItemClick} 
             data-note={ivl.note} data-selected={selected}
           >&nbsp;{ivl.note} <sub>{ivl.abr}</sub> 
           </span> 
         )
       })
 
-      if(qry.scaleTriads !== null && qry.scaleDegreeDisplay === 'Show'){   // draw scale degree triads
+      if(qry.scaleTriads !== null && qry.scaleTriadDisplay === 'Show'){   // draw scale degree triads
         html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
         html.push( 
-          <span key={++key} className='propName' onClick={infoNoteClick}
-           data-selected='label' 
-          >{qry.root.note +qry.scale.abr +' Scale Degree Triads:'}</span> 
+          <span key={++key} className='propName' onClick={infoItemClick} data-selected='label' >{ 
+            qry.root.note +qry.scale.abr +' Scale Degree Triads:'
+          }</span> 
         )
 
         qry.scaleTriads.list.forEach( triad => {
           html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
           
-          if( qry.scaleDegree === triad.num ) selected = 'degree'
+          if( qry.scaleTriadSelected === triad.num ) selected = 'triad'
           else selected = 0
           let ss = (triad.abr !== null ?triad.abr :'')
           
           html.push( 
-            <span key={++key} className='ivl' onClick={degLabelClick}
-             data-scaledegree={triad.num} data-selected={selected} >{
+            <span key={++key} className='ivl' onClick={triadLabelClick}
+             data-scaletriad={triad.num} data-selected={selected} >{
               triad.degree +'. ' + triad.root +ss +': '
             }</span> 
           )
@@ -321,7 +320,7 @@ function InfoPnl( props ){
             else selected = 0
 
             html.push( 
-              <span key={++key} className='ivl' onClick={infoNoteClick}
+              <span key={++key} className='ivl' onClick={infoItemClick}
                data-note={ivl.note} data-selected={selected}
               >&nbsp;{ivl.note} <sub>{ivl.abr}</sub> 
               </span>
@@ -331,16 +330,15 @@ function InfoPnl( props ){
       }
     }
     if(qry.chord !== null){
-      let inversionDisplay = (qry.inversionDisplay === 'Show' ?'up' :'dn')
-      let inversionDisplayTtl = (qry.inversionDisplay === 'Show' ?'Hide Inversions' :'Show Inversions')
+      let uord = (qry.chordInvrDisplay === 'Show' ?'up' :'dn')
+      let chordInvrDisplayTtl = (qry.chordInvrDisplay === 'Show' ?'Hide Inversions' :'Show Inversions')
 
       if(lastkey !== key)
         html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
 
       html.push( 
-        <span key={++key} className='propName' onClick={infoNoteClick}
-         data-selected='label'>
-          <ArrowButton upOrDn={inversionDisplay} width='1em' title={inversionDisplayTtl} onChange={toggleChordInvr}/>
+        <span key={++key} className='propName' onClick={infoItemClick} data-selected='label'>
+          <ArrowButton upOrDn={uord} width='1em' title={chordInvrDisplayTtl} onChange={toggleChordInvrDisplay}/>
           { qry.root.note 
             +(qry.rootType === 'fretRoot' ?qry.root.octave :'')
             +' ' +qry.chord.name +':' }        
@@ -352,19 +350,19 @@ function InfoPnl( props ){
         else selected = 0
 
         html.push( 
-          <span key={++key} className='ivl' onClick={infoNoteClick} 
+          <span key={++key} className='ivl' onClick={infoItemClick} 
             data-note={ivl.note} data-selected={selected}
           >&nbsp;{ivl.note} <sub>{ivl.abr}</sub> 
           </span> 
         )
       })
 
-      if(qry.inversions !== null && qry.inversionDisplay === 'Show'){    //draw inversions for major chords
+      if(qry.inversions !== null && qry.chordInvrDisplay === 'Show'){    //draw inversions for major chords
         let invrs = qry.inversions
         html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
 
         html.push( 
-          <span key={++key} className='propName' onClick={infoNoteClick}
+          <span key={++key} className='propName' onClick={infoItemClick}
             data-selected='label'>{
             invrs.root 
             +(qry.rootType === 'fretRoot' ?qry.root.octave :'')
@@ -374,7 +372,7 @@ function InfoPnl( props ){
 
         for(let pos in invrs.positions){
           let obj = invrs.positions[ pos ]
-          selected = (qry.inversionPos === pos ?'invr' :'')
+          selected = (qry.chordInvrSelected === pos ?'invr' :'')
           html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
           html.push( 
             <span key={++key} className='ivl' onClick={invrLabelClick}
@@ -389,7 +387,7 @@ function InfoPnl( props ){
             else selected = 0
 
             html.push( 
-              <span key={++key} className='ivl' onClick={infoNoteClick}
+              <span key={++key} className='ivl' onClick={infoItemClick}
                data-note={ivl.note} data-selected={selected}
               >&nbsp;{ivl.note +octave} <sub>{ivl.abr}</sub> 
               </span>
@@ -407,14 +405,14 @@ function InfoPnl( props ){
         html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
 
       html.push( <span key={++key} className='propName'
-       data-selected='label' onClick={infoNoteClick}
+       data-selected='label' onClick={infoItemClick}
       >{qry.note 
         +(qry.rootType === 'fretRoot' ?qry.root.octave :'')
         +' + ' 
         +qry.ivl.name +':'
        }</span> )
   
-      html.push( <span key={++key} className='ivl' onClick={infoNoteClick}
+      html.push( <span key={++key} className='ivl' onClick={infoItemClick}
         data-note={qry.ivl.note} data-selected={selected}
       >&nbsp;{qry.ivl.note}<sub>{qry.ivl.abr}</sub></span> )
     }

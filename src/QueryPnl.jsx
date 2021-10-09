@@ -56,7 +56,7 @@ class QueryPnl extends React.Component {
         
         this.last['rootType'] = qry.rootType
         this.last['root'] = qry.root
-        if(this.last['rootType'] === 'selNote')
+        if(this.last['rootType'] === 'noteSelect')
           this.props.stateChange( 'selNoteVal', '' )
         if(this.last['rootType'] === 'fretRoot')
           this.props.stateChange( 'fretRoot', null )
@@ -83,7 +83,7 @@ class QueryPnl extends React.Component {
     else{   //allow toggling param on and off
       if(lbl.dataset.type === 'note'){
         if( !this.last.rootType ) return
-        if(this.last.rootType === 'selNote'){
+        if(this.last.rootType === 'noteSelect'){
           if(this.last['root'] !== null)
             this.props.stateChange( 'selNoteVal', this.last['root'].note )
         } else

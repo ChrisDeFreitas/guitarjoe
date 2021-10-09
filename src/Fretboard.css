@@ -73,7 +73,7 @@
 .infoDiv .ivl[data-selected="noteFilter"] { background:#aaf; border-radius:3px; }  /* note in props.noteFilter */
 .infoDiv .ivl[data-selected="fretSelectMatch"] { background:#b1e6ff7a; border-radius:3px; }  /* user selected matching chord or scale */
 .infoDiv .ivl[data-selected="invr"]{ background-color:#e7e; }  
-.infoDiv .ivl[data-selected="degree"]{ background-color:#0cc; }  
+.infoDiv .ivl[data-selected="triad"]{ background-color:#0cc; }  
 .infoDiv .ivl sub{ font-size:0.6em; position:relative; left:-3px; top:-3px; }
 
 .btnFilter{ position:absolute; width:20px;

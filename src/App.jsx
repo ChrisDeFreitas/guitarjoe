@@ -66,18 +66,22 @@ function App(){
 				fretFirst={state.fretFirst}
 				fretLast={state.fretLast}
 				fretBtnText={state.fretBtnText}
-				fretFilter={state.fretFilter}
+				
+        fretFilter={state.fretFilter}
 				strgFltrList={state.strgFltrList}
         noteFilter={state.noteFilter}
+        
         fretSelect={state.fretSelect}
         fretSelectMatch={state.fretSelectMatch}
+
 				rootType={state.rootType}
 				fretRoot={state.fretRoot}
 				selNoteVal={state.selNoteVal} 
 				octave={state.octave} 
 				scaleName={state.scaleName}
 				chordName={state.chordName}
-				ivlName={state.ivlName}
+		
+        ivlName={state.ivlName}
       />
     }else{
       if(state !== false) //existing fretboard; magic of react does not overwrite old data

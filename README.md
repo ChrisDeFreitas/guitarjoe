@@ -78,8 +78,13 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 
 ## Updates
 
-#### 20211006:  
+#### 20211007:  
+- bug fix: when displaying chord inversions, clicking an InfoPnl label now correctly clears the selected interval and selected notes
+- bug fix: when fret buttons display an interval in their caption and error would occur when switched to a mode that did not have intervals. For example, when in FretRoot mode and turning off a Selected scale.
+- general refactoring for readablity including Fretboard.state variables
 
+
+#### 20211006:  
 - upgraded to v0.1.6  
 - the InfoPnl now displays triads built on degrees of the selected scale  
 -- reference: https://appliedguitartheory.com/lessons/building-chords-major-scale/  
@@ -179,11 +184,7 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo
-- bug: clicking an InfoPnl label, when displaying inversions, does not remove selected inversion
-- bug: when fretButtonStyle == NoteAbc, an exception sometimes occurs: ivl.abr missing
-- change names of fretButtonStyles so they are accurate
 - when fretButtonStyle displays an abc staff, try to make staff larger for octave = 2
-- rename rootType.selNote to noteSelect (for documentation)
 - implement transitions to smooth out user interactions  
 - implement regression testing with Selenium  
 - change layout of FretButton's controls to be position:absolute to prevent them from jumping up and down

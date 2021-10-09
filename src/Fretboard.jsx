@@ -19,33 +19,37 @@ class Fretboard extends React.Component{
     console.log('Fretboard.constructor()', props)
     super(props)
     this.qry = null
-    //keep state private to control children
+    //keep state private to isolate from children
     this.state = {
 			fbid:(props.fbid ?props.fbid :0),
 			
       collapsed:(props.collapsed ?props.collapsed :false),
       fretFirst:(props.fretFirst ?props.fretFirst :0),
       fretLast:(props.fretLast ?props.fretLast :q.fretboard.fretMax),
-      fretBtnStyle:(props.fretBtnStyle ?props.fretBtnStyle :'NoteFirst'),    //one of: NoteFirst, IvlFirst, NoteTab, NoteAbc
       fretFilter:(props.fretFilter ?props.fretFilter :[]),      //csv of fretN, if found then disable fret
       strgFilter:(props.strgFilter ?props.strgFilter :[]),    //csv of strN, if found then hide notes
       noteFilter:(props.noteFilter ?props.noteFilter :[]),    //notes on fetboard where button.data-selected=2; set by clicking infoPnl note
+      
+      fretBtnStyle:(props.fretBtnStyle ?props.fretBtnStyle :'NoteFirst'),    //one of: NoteFirst, IvlFirst, NoteTab, NoteAbc
+      rootType:(props.rootType ?props.rootType :''),    //one of: ['', fretRoot, fretSelect, noteSelect]
+
+      fretRoot:(props.fretRoot ?props.fretRoot :null),          //note object, set when fret clicked
+      selNoteVal:(props.selNoteVal ?props.selNoteVal :''),   //string, contains note selected in selNote control
+      octave:(props.octave ?props.octave :0), 
+
       fretSelect:(props.fretSelect ?props.fretSelect :[]),    //when rootType=fretSelect, list of frets and related data; set in fretPnl.fretClick()
       fretSelectMatch:(props.fretSelectMatch ?props.fretSelectMatch :null),    //user selects a chord or scale to view: {type, name}
       fretSelectMatchDisplay:(props.fretSelectMatchDisplay ?props.fretSelectMatchDisplay :'Show'),    //Show or Hide
 
-      rootType:(props.rootType ?props.rootType :''),    //one of: ['', fretRoot, fretSelect, selNote]
-      fretRoot:(props.fretRoot ?props.fretRoot :null),          //note object, set when fret clicked
-      selNoteVal:(props.selNoteVal ?props.selNoteVal :''),   //string, contains note selected in selNote
-      octave:(props.octave ?props.octave :0), 
       scaleName:(props.scaleName ?props.scaleName :''),
-      scaleDegree:(props.scaleDegree ?props.scaleDegree :null),
-      scaleDegreeDisplay:(props.scaleDegreeDisplay ?props.scaleDegreeDisplay :'Show'),    // Show or Hide
-      chordName:(props.chordName ?props.chordName :''),
-      ivlName:(props.ivlName ?props.ivlName :''), 
+      scaleTriadDisplay:(props.scaleTriadDisplay ?props.scaleTriadDisplay :'Show'),    // Show or Hide
+      scaleTriadSelected:(props.scaleTriadSelected ?props.scaleTriadSelected :null),    //null or degree of selected triad
       
-      inversionPos:(props.inversionPos ?props.inversionPos :null),    //user selected inversion position to display (maj or maj7 selected)
-      inversionDisplay:(props.inversionDisplay ?props.inversionDisplay :'Show'),    //Show or Hide
+      chordName:(props.chordName ?props.chordName :''),
+      chordInvrDisplay:(props.chordInvrDisplay ?props.chordInvrDisplay :'Show'),    //Show or Hide
+      chordInvrSelected:(props.chordInvrSelected ?props.chordInvrSelected :null),    //user selected inversion position to display
+
+      ivlName:(props.ivlName ?props.ivlName :''), 
     }
     this.duplicate = this.duplicate.bind(this)
     this.remove = this.remove.bind(this)
@@ -58,18 +62,18 @@ class Fretboard extends React.Component{
   }  
   reset(){
     this.setState({ collapsed:false })
-    this.setState({ fretSelectMatch:null })
-    this.setState({ fretSelectMatchDisplay:null })
     this.setState({ fretSelect:[] })
+    this.setState({ fretSelectMatch:null })
+    this.setState({ fretSelectMatchDisplay:'Show' })
+    this.setState({ fretFilter:[] })
     this.setState({ noteFilter:[] })
     this.setState({ strgFilter:[] })
-    this.setState({ fretFilter:[] })
     this.setState({ scaleName:'' })
-    this.setState({ scaleDegree:null })
-    this.setState({ scaleDegreeDisplay:'Show' })
+    this.setState({ scaleTriadDisplay:'Show' })
+    this.setState({ scaleTriadSelected:null })
     this.setState({ chordName:'' })
-    this.setState({ inversionPos:null })
-    this.setState({ inversionDisplay:'show' })
+    this.setState({ chordInvrSelected:null })
+    this.setState({ chordInvrDisplay:'Show' })
     this.setState({ rootType:'' })
     this.setState({ ivlName:'' })
     this.setState({ fretRoot:null })
@@ -89,8 +93,8 @@ class Fretboard extends React.Component{
   }
 
   inversionNoteByTab( tab ){
-    if(this.state.inversionPos === null) return null
-    for(let nobj of this.qry.inversionNotes){
+    if(this.state.chordInvrSelected === null) return null
+    for(let nobj of this.qry.chordInvrNotes){
       if(nobj.tab === tab) return nobj 
     } 
     return null
@@ -117,13 +121,13 @@ class Fretboard extends React.Component{
     if(key === 'collapsed'){
       if(val === true){
         this.setState({ fretSelectMatchDisplay: 'Hide' })
-        this.setState({ scaleDegreeDisplay: 'Hide' })
-        this.setState({ inversionDisplay: 'Hide' })
+        this.setState({ scaleTriadDisplay: 'Hide' })
+        this.setState({ chordInvrDisplay: 'Hide' })
       }
       else{
         this.setState({ fretSelectMatchDisplay: 'Show' })
-        this.setState({ scaleDegreeDisplay: 'Show' })
-        this.setState({ inversionDisplay: 'Show' })
+        this.setState({ scaleTriadDisplay: 'Show' })
+        this.setState({ chordInvrDisplay: 'Show' })
       }
       this.setState({ collapsed:val })
     }else
@@ -171,7 +175,7 @@ class Fretboard extends React.Component{
       if(val === '')
         this.setState({ rootType:'' })
       else
-        this.setState({ rootType:'selNote' })
+        this.setState({ rootType:'noteSelect' })
       this.setState({ fretRoot:null })
       this.setState({ fretSelect:[] })
       // this.setState({ fretSelectMatch:null })
@@ -254,26 +258,26 @@ class Fretboard extends React.Component{
     if(key === 'scaleName'){
       this.setState({ scaleName:val })
     }else
-    if(key === 'scaleDegree'){
-      val = Number(val)
-      if(this.state.scaleDegree === val)
-        this.setState({ scaleDegree: null })
+    if(key === 'scaleTriadSelected'){
+      if(val !== null) val = Number(val)
+      if(this.state.scaleTriadSelected === val)
+        this.setState({ scaleTriadSelected: null })
       else
-        this.setState({ scaleDegree: val })
+        this.setState({ scaleTriadSelected: val })
     }else
-    if(key === 'scaleDegreeDisplay'){
-      this.setState({ scaleDegreeDisplay:val })
+    if(key === 'scaleTriadDisplay'){
+      this.setState({ scaleTriadDisplay:val })
     }else
     if(key === 'chordName'){
       this.setState({ chordName:val })
     }else
-    if(key === 'inversionPos'){
-     if(this.state.inversionPos === val)
+    if(key === 'chordInvrSelected'){
+     if(this.state.chordInvrSelected === val)
        val = null
-     this.setState({ inversionPos:val })
+     this.setState({ chordInvrSelected:val })
     }else
-    if(key === 'inversionDisplay'){
-     this.setState({ inversionDisplay:val })
+    if(key === 'chordInvrDisplay'){
+     this.setState({ chordInvrDisplay:val })
     }else
     if(key === 'ivlName'){
       this.setState({ ivlName:val })
@@ -284,28 +288,33 @@ class Fretboard extends React.Component{
   makeQuery(){
     let qry = {
       fbid:this.state.fbid,
+
+      collapsed: this.state.collapsed,
+      fretBtnStyle: this.state.fretBtnStyle,
+      fretFilter: this.state.fretFilter,
+      noteFilter: this.state.noteFilter,
+
       rootType: this.state.rootType,
       root: null,
       note: (this.state.rootType === 'fretRoot' 
               ? this.state.fretRoot.notes[0] 
               : this.state.selNoteVal ), 
       octave: this.state.octave,
+      
       scale: null,
+      scaleTriadDisplay:this.state.scaleTriadDisplay,
+      scaleTriadIvls:null,
       scaleTriads:null,
-      scaleDegree:this.state.scaleDegree,
-      scaleDegreeDisplay:this.state.scaleDegreeDisplay,
-      scaleDegreeIvls:null,
+      scaleTriadSelected:this.state.scaleTriadSelected,
+      
       chord:null,
+      chordInvrDisplay:this.state.chordInvrDisplay,
+      chordInvrSelected:this.state.chordInvrSelected,
+      chordInvrNotes:null,
       inversions:null,
-      inversionPos:this.state.inversionPos,
-      inversionDisplay:this.state.inversionDisplay,
-      inversionNotes:null,
+
       ivl: null,
 
-      collapsed: this.state.collapsed,
-      fretBtnStyle: this.state.fretBtnStyle,
-      fretFilter: this.state.fretFilter,
-      noteFilter: this.state.noteFilter,
       fretSelect: this.state.fretSelect,
       fretSelectMatch: this.state.fretSelectMatch,
       fretSelectMatchDisplay: this.state.fretSelectMatchDisplay,
@@ -324,21 +333,21 @@ class Fretboard extends React.Component{
     else{
       if(qry.rootType === 'fretRoot')
         qry.root = this.state.fretRoot    //note object, set in FretPnl.fretClick()
-      if(qry.rootType === 'selNote' && qry.note !== '' && qry.note !== 'All')
+      if(qry.rootType === 'noteSelect' && qry.note !== '' && qry.note !== 'All')
         qry.root = q.notes.objByNote( qry.note )    //note object
 
 
       if(this.state.scaleName !== '' && qry.root){
         qry.scale = q.scales.obj( qry.note, this.state.scaleName )
         qry.scaleTriads = q.scales.degreeTriads( qry.note, this.state.scaleName )
-        if(qry.scaleDegree != null)
-          qry.scaleDegreeIvls = qry.scaleTriads.list[ qry.scaleDegree -1 ].ivls
+        if(qry.scaleTriadSelected != null)
+          qry.scaleTriadIvls = qry.scaleTriads.list[ qry.scaleTriadSelected -1 ].ivls
       }
       if(this.state.chordName !== '' && qry.root){
         qry.chord = q.chords.obj( qry.note, this.state.chordName )
         qry.inversions = q.chords.inversions(qry.root.note, qry.chord.abr, qry.root.octave )
-        if(qry.inversionPos !== null){
-          qry.inversionNotes = q.chords.inversionNotes(  qry.inversions, qry.inversionPos )
+        if(qry.chordInvrSelected !== null){
+          qry.chordInvrNotes = q.chords.inversionNotes(  qry.inversions, qry.chordInvrSelected )
         }
       }
       if(this.state.ivlName !== '' && qry.root){

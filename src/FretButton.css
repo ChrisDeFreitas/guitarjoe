@@ -29,19 +29,19 @@
 .fretButton[data-ivl="m7"] .supInterval,
 .fretButton[data-ivl="M7"] .supInterval{ color: #fff; text-shadow:1px 1px 1px #000;  }
 
-.fretButton[data-state="fretRoot"] { border: 1px #04ff00 solid; } /* green */
-.fretButton[data-state="selNote"] { border: 1px #fffb00 solid;  } /* yellow */
-.fretButton[data-state="fretSelect"] { border: 1px #00afff solid;  }  /* azure radiance */
-.fretButton[data-state="fretSelectMatch"] { background:#b1e6ff; }  /* Anakiwa */
-.fretButton[data-state="fretSelectMatch1"] { background:#41c1ed; }  /* root note */
-.fretButton[data-state="noteFilter"] { background:#aaf; }  /* Melrose */
-.fretButton[data-state="interval"] { background:#ffff9b; }  /*  pale yellow */
-.fretButton[data-state="chord"] { background:#ffc06f; }  /*  pale orange */
-.fretButton[data-state="chord1"] { background:#f90; }  /*  pale orange */
-.fretButton[data-state="invr"] { background:#e7e; }
-.fretButton[data-state="invr1"] { background:#e2e; }
-.fretButton[data-state="degree"] { background:#00e0e0; }
-.fretButton[data-state="degree1"] { background:#00a8a8; }
+.fretButton[data-state="fretRoot"]{ border: 1px #04ff00 solid; } /* green */
+.fretButton[data-state="noteSelect"]{ border: 1px #fffb00 solid;  } /* yellow */
+.fretButton[data-state="fretSelect"]{ border: 1px #00afff solid;  }  /* azure radiance */
+.fretButton[data-state="fretSelectMatch"]{ background:#b1e6ff; }  /* Anakiwa */
+.fretButton[data-state="fretSelectMatch1"]{ background:#41c1ed; }  /* root note */
+.fretButton[data-state="noteFilter"]{ background:#aaf; }  /* Melrose */
+.fretButton[data-state="interval"]{ background:#ffff9b; }  /*  pale yellow */
+.fretButton[data-state="chord"]{ background:#ffc06f; }  /*  pale orange */
+.fretButton[data-state="chord1"]{ background:#f90; }  /*  pale orange */
+.fretButton[data-state="invr"]{ background:#e7e; }
+.fretButton[data-state="invr1"]{ background:#e2e; }
+.fretButton[data-state="triad"]{ background:#00e0e0; }
+.fretButton[data-state="triad1"]{ background:#00a8a8; }
 
 /* .fretButton[data-selected="0"] {} */
 .fretButton[data-selected="1"] { background:#3ac664; }  /* emerald */

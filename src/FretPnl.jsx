@@ -56,7 +56,7 @@ class FretPnl extends React.Component{
       this.buttonClick( event )
       return
     } else
-    if(['','selNote'].indexOf(qry.rootType) >= 0){
+    if(['','noteSelect'].indexOf(qry.rootType) >= 0){
 		  this.props.stateChange( 'fretRoot', note )
     }else
     if(qry.rootType === 'fretRoot'){
@@ -97,7 +97,7 @@ class FretPnl extends React.Component{
   }
   noteFind( nobj ){    //select all frets with note = selNoteVal
     let qry = this.props.qry
-    if(qry.rootType !== 'selNote') return null
+    if(qry.rootType !== 'noteSelect') return null
 
     let idx = nobj.notes.indexOf(qry.note)
     if(qry.note === '' ||  idx >= 0){
@@ -159,17 +159,17 @@ class FretPnl extends React.Component{
     }
     return null
   }
-  scaleDegreeFind( nobj ){
+  scaleTriadFind( nobj ){
     let qry = this.props.qry
     if(qry.scale === null) return null
-    if(qry.scaleDegreeIvls === null) return null
+    if(qry.scaleTriadIvls === null) return null
 
-    let ivl = q.intervals.findNote( qry.scaleDegreeIvls, nobj )
+    let ivl = q.intervals.findNote( qry.scaleTriadIvls, nobj )
     if( ivl === null ) return null
 
     nobj.note = ivl.note
     nobj.ivl = ivl
-    nobj.state = 'degree' +(ivl.num === 1 ?1 :'')
+    nobj.state = 'triad' +(ivl.num === 1 ?1 :'')
     return <FretButton 
               root={qry.root} nobj={nobj}  qry={qry} 
               fretSelectFind={this.props.fretSelectFind} 
@@ -218,7 +218,7 @@ class FretPnl extends React.Component{
     let qry = this.props.qry
     if(qry.chord === null) return null
 
-    if(qry.inversionNotes !== null){    //inversion format take precedence
+    if(qry.chordInvrNotes !== null){    //inversion format take precedence
       let inv = this.props.inversionNoteByTab( nobj.tab )
       if(inv !== null){
         if(qry.octave === 0 || qry.octave === nobj.octave){
@@ -259,14 +259,14 @@ class FretPnl extends React.Component{
     
     let btn = null
     if( (qry.rootType === 'fretRoot' && nobj.tab === qry.root.tab)
-    ||  (qry.rootType === 'selNote' && nobj.notes.indexOf(qry.note) >= 0) ){ //this is the root note object
+    ||  (qry.rootType === 'noteSelect' && nobj.notes.indexOf(qry.note) >= 0) ){ //this is the root note object
       btn = 'root'
     } else
     if(qry.rootType === 'fretRoot' && q.fretboard.fretInRange(nobj, qry.root, 4) === true){
       if( nobj.notes.indexOf(qry.ivl.note) >= 0 )
         btn = true
     }else
-    if(qry.rootType === 'selNote' && nobj.notes.indexOf(qry.ivl.note) >= 0){
+    if(qry.rootType === 'noteSelect' && nobj.notes.indexOf(qry.ivl.note) >= 0){
       btn = true
     }
 
@@ -302,7 +302,7 @@ class FretPnl extends React.Component{
     // all modes respect selOctave filter
 
     //All notes mode
-    if(qry.rootType === 'selNote' && this.props.selNoteVal === 'All')
+    if(qry.rootType === 'noteSelect' && this.props.selNoteVal === 'All')
       btn = <FretButton 
               root={'ALL'} nobj={nobj}  qry={qry} 
               fretSelectFind={this.props.fretSelectFind} 
@@ -312,16 +312,16 @@ class FretPnl extends React.Component{
     if(btn === null) btn = this.fretSelectMatchFind( nobj )
     if(btn === null) btn = this.fretSelectFind( nobj )
 
-    //selNote mode
+    //noteSelect mode
     if(btn === null) btn = this.ivlFind( nobj )
     if(btn === null) btn = this.chordFind( nobj )
-    if(btn === null) btn = this.scaleDegreeFind( nobj )
+    if(btn === null) btn = this.scaleTriadFind( nobj )
     if(btn === null) btn = this.scaleFind( nobj )
     if(btn === null){
       if(qry.rootType === 'fretRoot')
         btn = this.rootFind( nobj )  //only select the fret clicked
       else
-      if(qry.rootType === 'selNote')
+      if(qry.rootType === 'noteSelect')
         btn = this.noteFind( nobj )  //select all frets with note = selNoteVal
     }
     if(btn === null) btn = this.octaveFind( nobj )

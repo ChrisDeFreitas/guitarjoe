@@ -35,8 +35,8 @@ function FretButton( props ){
     if(btn.nodeName !== 'BUTTON') return
     event.stopPropagation()
 
-    if(['fretRoot','selNote'].indexOf( qry.rootType ) >= 0  
-    && ['fretRoot','selNote'].indexOf( btn.dataset.state ) >= 0
+    if(['fretRoot','noteSelect'].indexOf( qry.rootType ) >= 0  
+    && ['fretRoot','noteSelect'].indexOf( btn.dataset.state ) >= 0
     && qry.scale === null && qry.chord === null && qry.ivl === null){    //nothing to do, turn off fretRoot state
 	    props.stateChange( 'fretRoot', null )
     } else
@@ -88,6 +88,15 @@ function FretButton( props ){
     btnStyle = qry.fretBtnStyle,
     ivl = nobj.ivl, 
     selected = 0
+    
+    if(ivl === undefined || ivl === null){
+      switch(btnStyle){
+        case 'IvlFirst': btnStyle = 'NoteFirst'; break;
+        case 'IvlAbc': btnStyle = 'NoteAbc'; break;
+        case 'IvlTab': btnStyle = 'NoteTab'; break;
+        default: break; //for React automated testing
+      } 
+    }
 
   //assign format for root note button
   if(root === 'ALL'){   //user selected All Notes
@@ -102,7 +111,7 @@ function FretButton( props ){
         btnState = qry.rootType
     }
   }else
-  if(qry.rootType === 'selNote'){
+  if(qry.rootType === 'noteSelect'){
     if(root.notes.indexOf( nobj.note ) >= 0){
       if(qry.chord === null)
         btnState = qry.rootType
@@ -124,7 +133,7 @@ function FretButton( props ){
   if(btnState === '' && nobj.state)
     btnState = nobj.state
   // overrides calculated state
-  if(nobj.state === 'degree' || nobj.state === 'degree1'
+  if(nobj.state === 'triad' || nobj.state === 'triad1'
   || nobj.state === 'invr'   || nobj.state === 'invr1' )  
     btnState = nobj.state
   if(qry.noteFilter.indexOf( nobj.note ) >= 0)   // allow overriding roottype because user selected
