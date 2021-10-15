@@ -36,7 +36,7 @@ function ArrowButton( props ){
 }
 
 ArrowButton.propTypes = {
-  upOrDn: PropTypes.string,
+  ArrowUpOrDn: PropTypes.string,
   title: PropTypes.string,
   width: PropTypes.string,
   onChange: PropTypes.func,

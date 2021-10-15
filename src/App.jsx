@@ -95,7 +95,8 @@ function App(){
     <div className="App">
 			<header className="App-header header">
         <Logo className="Logo" alt="Logo" />
-        GuitarJoe v0.1.6 <About />
+        GuitarJoe v0.1.6 
+        <About />
       </header>
 			{list}
     </div>

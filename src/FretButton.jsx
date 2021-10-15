@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 
 import './FretButton.css';
 import q from "./guitar_lib.js";
-import Abcjs from "./react-abcjs"
+import Abcjs from "./controls/react-abcjs"
 
 // sample:
 // <button className='fretButton'>
@@ -107,7 +107,9 @@ function FretButton( props ){
   }else
   if(qry.rootType === 'fretRoot'){
     if(nobj.notes.indexOf( root.note ) >= 0  &&  nobj.semis === root.semis){
-      if(qry.chord === null)
+      if(nobj.state === 'chord1')
+        btnState = 'chord0'   //defines fret root is chord root
+      else
         btnState = qry.rootType
     }
   }else
@@ -161,14 +163,12 @@ function FretButton( props ){
   
   //apply button caption style
   if(btnStyle === 'IvlFirst'){
-    if(nobj.ivl){
-      btncaption.push(
-        <span key={++key} className='spanIvl' onClick={buttonClick} >
-          <span key={++key} onClick={buttonClick} >{ivl.abr.substr(0,1)}</span>
-          {ivl.abr.substr(1)}
-        </span>
-      )
-    }
+    btncaption.push(
+      <span key={++key} className='spanIvl' onClick={buttonClick} >
+        <span key={++key} onClick={buttonClick} >{ivl.abr.substr(0,1)}</span>
+        {ivl.abr.substr(1)}
+      </span>
+    )
     btncaption.push(
       <sub key={++key} className='subNote' onClick={btnStyleChange}>{nobj.note}
           <sub key={++key} className='subOctave' >{nobj.octave}</sub>

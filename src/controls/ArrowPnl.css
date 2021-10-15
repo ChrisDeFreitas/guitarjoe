@@ -1,0 +1,11 @@
+/*
+  ArrowPnl.css
+  - by Chris DeFreitas, ChrisDeFreitas777@gmail.com
+  - styles for ArrowPnl.jsx
+
+*/
+
+.ArrowPnl{ border:none; outline:none; margin: 0 0 0.5em  0; padding:0;  }
+.ArrowPnlCaption{ border:none; margin:0; outline:none; padding:0; overflow:hidden; }
+.ArrowPnlCaption .ArrowBtn{ position:relative; left:8px; top:1px; }
+.ArrowPnlItems{ border:none; margin:0; outline:none; padding:0; overflow:hidden; }

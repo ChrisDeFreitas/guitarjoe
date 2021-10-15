@@ -229,12 +229,11 @@ class Fretboard extends React.Component{
       this.setState({ fretSelectMatch:val })
     }else
     if(key === 'fretSelectMatchDisplay'){
-      // for now. no other items displayed with fretSelectMatch
-      //this.setState({ fretSelectMatchDisplay:val })
-      if(val === 'Show')
-        this.stateChange( 'collapsed', false)
-      else
-        this.stateChange( 'collapsed', true)
+      this.setState({ fretSelectMatchDisplay:val })
+      // if(val === 'Show')
+      //   this.stateChange( 'collapsed', false)
+      // else
+      //   this.stateChange( 'collapsed', true)
     }else
     if(key === 'strgFilter'){
       val = Number( val )

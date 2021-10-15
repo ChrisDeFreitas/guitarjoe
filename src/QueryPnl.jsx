@@ -6,8 +6,9 @@
 */
 import React from 'react'
 
-import ArrowButton from './controls/ArrowButton'
+import './Fretboard.css';
 import InfoPnl from "./InfoPnl"
+import ArrowButton from './controls/ArrowButton'
 import q from "./guitar_lib.js"
 
 
@@ -19,7 +20,7 @@ class QueryPnl extends React.Component {
     this.btnDupeClick = this.btnDupeClick.bind(this)
     this.btnDelClick = this.btnDelClick.bind(this)
 
-    this.last = {}    //store last query params before reset via label.click
+    this.last = {}    //store last query params to allow reset via label.click
     this.selLabelClick = this.selLabelClick.bind(this)
     this.selChordChange = this.selChordChange.bind(this)
     this.btnClearClick = this.btnClearClick.bind(this)
@@ -31,19 +32,20 @@ class QueryPnl extends React.Component {
   }
 
   //event handlers
-  btnDelClick(){
-    this.props.remove()
-  }
-  btnDupeClick(){
-    this.props.duplicate()
-  }
-  btnCollapseClick( upordn ){
+  btnCollapseClick(){
+    // default, works:
     let val = !this.props.qry.collapsed
     this.props.stateChange( 'collapsed', val )
   }
   btnClearClick(){
     // this.props.dispatch({ type:"FretboardActions/fretFirstUpdate", payload:'' })
     this.props.reset()
+  }
+  btnDelClick(){
+    this.props.remove()
+  }
+  btnDupeClick(){
+    this.props.duplicate()
   }
   selLabelClick( event ){     //reset param to off value
     let qry = this.props.qry,
@@ -246,9 +248,10 @@ class QueryPnl extends React.Component {
     let qry = this.props.qry
     let qryBtnClass = (qry.collapsed ?'qryBtnSmall' :'qryBtn')
     let qryDisplayClass = (qry.collapsed ?'queryPnlHide' :'queryPnlShow')
-    let qryDisplay = (qry.collapsed ?'dn' :'up')
-    let qryDisplayTtl = (qry.collapsed ?'Show Query panel' :'Hide Query panel')
-    let qryDisplayWdth = (qry.collapsed ?'1.5em' :'2em')
+ 
+    let arrowUord = (qry.collapsed ?'dn' :'up')
+    let arrowTitle = (qry.collapsed ?'Show Query panel' :'Hide Query panel')
+    let arrowWidth = (qry.collapsed ?'1.5em' :'2em')
 
     let selNote = null
     let selOct = null
@@ -266,23 +269,24 @@ class QueryPnl extends React.Component {
     return (
       <div className={'queryPnl '+qryDisplayClass} >
         <table className='tbQuery' ><tbody><tr>
-        <td className='qryBtnsLeft'>
-           <ArrowButton upOrDn={qryDisplay} width={qryDisplayWdth} title={qryDisplayTtl} onChange={this.btnCollapseClick}/>
-        </td><td className='qryContent'>
-          <div className='queryControls' data-roottype={qry.rootType}>
+        <td className='tdQryBtnsLeft'>
+           <ArrowButton upOrDn={arrowUord} width={arrowWidth} title={arrowTitle} onChange={this.btnCollapseClick}/>
+        </td><td className='tdQryContent'>
+
+          <div className='queryControls' data-roottype={qry.rootType} >
             {selNote}
             {selOct}
             {selScale}
             {selChord}
             {selInt}
           </div>
+
           <InfoPnl 
             qry={qry} 
             selNoteVal={this.props.selNoteVal}
-            fretSelectFind={this.props.fretSelectFind}
             stateChange={this.props.stateChange}
-           />    
-        </td><td className='qryBtnsRight'>
+           />
+        </td><td className='tdQryBtnsRight'>
             <div className={qryBtnClass +' qryBtnClear'} onClick={this.btnClearClick} title='Reset query controls'>&#8635;</div>
             <div className={qryBtnClass +' qryBtnDupe'} onClick={this.btnDupeClick} title='Duplicate fretboard' >&#10010;</div>
             { qry.fbid === 0 ?null

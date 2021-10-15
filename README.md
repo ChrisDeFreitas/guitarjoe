@@ -68,6 +68,7 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
  - Application hosted on <a href='https://github.com/ChrisDeFreitas/guitarjoe' target='_new'>GitHub</a>   
  - Background image from <a href='https://www.flickr.com/photos/webtreatsetc/with/4514047664/' target='_new'>WebTreats ETC</a>  
  - Built with the <a href='https://reactjs.org/' target='_new'>React</a> Javascript library  
+ - <a href='https://www.framer.com/motion/' target='_new'>Framer Motion</a> animation library for React
  - Fuggles font by Robert Leuschke on <a href='https://fonts.google.com/?query=Robert+Leuschke/' target='_new'>Google Fonts</a>  
  - Guitar icon by monkik from the <a href='https://thenounproject.com/term/guitar/2588464/' target='_new'>Noun Project</a>  
  - <a href='https://developer.mozilla.org/'>Mozilla Developer Network</a> web technology reference
@@ -78,10 +79,25 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 
 ## Updates
 
+#### 20211015:  
+Implemented simple animations with [Framer Motion](https://www.framer.com/motion/).  It was applied to InfoPnl lists to provide a smoother user interaction.  The implementation is fairly basic, as a broader implementation will require a new level of state management, which will be down the road a bit.  
+   
+Updated guitar_lib.inversions() to correctly calculate inversion octaves, intervals and semitones.  When in FretRoot mode the InfoPnl now correctly displays octaves and intervals.   
+
+- updated AboutDlg with a "What's New" section
+- in FretRoot mode, when a chord is selected, the fretRoot button now maintains the green outline in addition to the orange background  
+- implemented ArrowPnl to animate compact/expand of chord inversions, scale triads, and selected fret matches
+- InfoPnl Chord Inversions now correctly display interval abbreviations
+- in FretRoot mode, InfoPnl Chord Inversions now correctly display octaves
+- updated guitar_lib.inversions() to correctly calculate octaves and semitones of notes
+- updated guitar_lib.inversions() to include correct interval names
+- added guitar_lib.inversionLog() to write inversions to console (to support of testing)
+- fixes, tweaks, and updates
+
 #### 20211007:  
 - bug fix: when displaying chord inversions, clicking an InfoPnl label now correctly clears the selected interval and selected notes
 - bug fix: when fret buttons display an interval in their caption and error would occur when switched to a mode that did not have intervals. For example, when in FretRoot mode and turning off a Selected scale.
-- general refactoring for readablity including Fretboard.state variables
+- general refactoring for readability including Fretboard.state variables
 
 
 #### 20211006:  
@@ -183,11 +199,11 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 - added Phrygian dominant scale   
 
 
-## ToDo
-- when fretButtonStyle displays an abc staff, try to make staff larger for octave = 2
-- implement transitions to smooth out user interactions  
+## ToDo  
+- About Dlg, make headings standout as they get lost in a sea of text; improve readability
+- refactor: disambiguate chord (object) vs chordName (string)
 - implement regression testing with Selenium  
-- change layout of FretButton's controls to be position:absolute to prevent them from jumping up and down
+- change layout of FretButton's controls to position:absolute to prevent them from jumping up and down
 - allow the first created Fretboard control to be deleted.  Currently, only its children may be deleted.
 - fix ./public/favicon.svg colors: image appears dim on white backgrounds  
 - browser bug: zooming out causes random frets and strings to disappear (assume due to x/y location; test by adjusting)   

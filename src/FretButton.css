@@ -38,6 +38,7 @@
 .fretButton[data-state="interval"]{ background:#ffff9b; }  /*  pale yellow */
 .fretButton[data-state="chord"]{ background:#ffc06f; }  /*  pale orange */
 .fretButton[data-state="chord1"]{ background:#f90; }  /*  pale orange */
+.fretButton[data-state="chord0"]{ background:#f90; border: 1px #04ff00 solid; }  /*  pale orange, fret root */
 .fretButton[data-state="invr"]{ background:#e7e; }
 .fretButton[data-state="invr1"]{ background:#e2e; }
 .fretButton[data-state="triad"]{ background:#00e0e0; }

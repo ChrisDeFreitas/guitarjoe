@@ -17,21 +17,33 @@ const About = () => (
   >
     {close => (
       <div className="modal">
-        <div className="header"> About GuitarJoe <hr className='hrLine' /> </div>
+        <div className="header"> 
+          About GuitarJoe 
+          <span style={{fontSize:'0.5em', display:'inline-block', marginLeft:'0.5em'}}>v1.6 20201015</span> 
+          <hr className='hrLine' /> 
+        </div>
         <div className="content">
 Important: <br />
 &nbsp;- Everything is clickable...please explore<br />
 &nbsp;- use your browser's zoom controls to enlarge/shrink the controls
 <br /><br />
+
 GuitarJoe is a free web application, no ads, no logins, no tracking.  
 The goal was to create a tool that would make guitar theory accessible while practicing.
 I am not anything close to a musician, so
-I was going crazy taking notes and diagraming chords, scales and intervals: I needed a tool
+I was going crazy taking notes and diagramming chords, scales and intervals: I needed a tool
 to facilitate my understanding so I could focus on the guitar instead of managing scraps of information.
 This application has successfully reduced my hair loss--I hope it has the same effect on you!
 <br /><br />
+
+Whats New in Update 20211015<br />
+1. Implemented simple animations to expand/collapse InfoPnl lists of scale degree triads, chord inversions, and FretSelect matches.
+<br />
+2. When in FretRoot mode, and a chord is selected, the InfoPnl now correctly displays octaves and intervals of chord inversions.
+<br /><br />
+
 About Chord Inversions<br />
-The guitar provides many combinations for inversions.  The app tryies to display the ideal inversion:  
+The guitar provides many combinations for inversions.  The app tries to display the ideal inversion:  
 The bass note is highlighted, then the remaining notes are selected in order, on higher strings.  
 Unfortunately, this 
 results in certain inversions having no selections on the fretboard, such as CMaj7 third position.  
@@ -44,6 +56,7 @@ Thanks to<br />
 &nbsp;- Application hosted on <a href='https://github.com/ChrisDeFreitas/guitarjoe' target='_new'>Github</a>  <br />
 &nbsp;- Background image from <a href='https://www.flickr.com/photos/webtreatsetc/with/4514047664/' target='_new'>WebTreats ETC</a> <br />
 &nbsp;- Built with the <a href='https://reactjs.org/' target='_new'>React</a> Javascript library <br />
+&nbsp;- <a href='https://www.framer.com/motion/' target='_new'>Framer Motion</a> animation library for React <br />
 &nbsp;- Fuggles font by Robert Leuschke on <a href='https://fonts.google.com/?query=Robert+Leuschke/' target='_new'>Google Fonts</a> <br />
 &nbsp;- Guitar icon by monkik from the <a href='https://thenounproject.com/term/guitar/2588464/' target='_new'>Noun Project</a> <br />
 &nbsp;- Popup control from <a href='https://react-popup.elazizi.com/' target='_new'>reactjs-popup</a> <br />
@@ -55,8 +68,7 @@ Created by Chris DeFreitas, BC Canada<br />
           <button
             className="button"
             onClick={() => {
-              console.log('modal closed ');
-              close();
+              close()
             }}
           >
             Close

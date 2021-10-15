@@ -105,8 +105,8 @@ describe.skip('test notes.calc()', () => {
 })
 
 
-describe.skip('test chord functions', () => {
-  it.skip("expect q.chords.byName('Maj').abr === 'maj' ", () => {
+describe('test chord functions', () => {
+  it("expect q.chords.byName('Maj').abr === 'maj' ", () => {
 		let chord = q.chords.byName('maj')
     expect( chord ).toBeTruthy()
     expect( chord.abr ).toBe( 'maj' )
@@ -120,7 +120,7 @@ describe.skip('test chord functions', () => {
     expect( result.positions.Second[2].note ).toBe( 'C' )
     expect( result.positions.Second[3].note ).toBe( 'E' )
     expect( result.positions.Second[3].semis ).toBe( 64 )
-  })
+  }) 
   it("test q.chords.inversions('c', 'min', 4)", () => {
 		let result = q.chords.inversions('c', 'min', 4 )
     expect( result ).toBeTruthy()
@@ -131,16 +131,40 @@ describe.skip('test chord functions', () => {
     expect( result.positions.Second[3].note ).toBe( 'E♭' )
     expect( result.positions.Second[3].semis ).toBe( 63 )
   })
-  it("test q.chords.inversions('c', 'maj7', 4)", () => {
-		let result = q.chords.inversions('c', 'maj7', 4 )
+  it("test q.chords.inversions('D', 'maj7', 3)", () => {
+		let result = q.chords.inversions('D', 'maj7', 3 )
     expect( result ).toBeTruthy()
     expect( Object.keys(result.positions).length ).toBe( 4 )
-    // console.log('result.positions:', result.positions )
-    expect( result.positions.Second[1].note ).toBe( 'G' )
-    expect( result.positions.Second[2].note ).toBe( 'B' )
-    expect( result.positions.Second[3].note ).toBe( 'C' )
-    expect( result.positions.Second[4].note ).toBe( 'E' )
-    expect( result.positions.Second[4].semis ).toBe( 64 )
+    q.chords.inversionLog( result, true )
+    expect( result.positions.Root[1].note ).toBe( 'D' )
+    expect( result.positions.Root[2].note ).toBe( 'F#' )
+    expect( result.positions.Root[3].note ).toBe( 'A' )
+    expect( result.positions.Root[4].note ).toBe( 'C#' )
+
+    expect( result.positions.First[1].note ).toBe( 'F#' )
+    expect( result.positions.First[2].note ).toBe( 'A' )
+    expect( result.positions.First[3].note ).toBe( 'C#' )
+    expect( result.positions.First[4].note ).toBe( 'D' )
+    // expect( result.positions.Second[4].semis ).toBe( 64 )
+  })
+  it("test q.chords.inversions('G', 'maj7', 3) Third position octaves = 4 4 4 5", () => {
+		let result = q.chords.inversions('G', 'maj7', 3 )
+    expect( result ).toBeTruthy()
+    expect( Object.keys(result.positions).length ).toBe( 4 )
+    q.chords.inversionLog( result, true )
+    expect( result.positions.Third[1].octave ).toBe( 4 )
+    expect( result.positions.Third[2].octave ).toBe( 4 )
+    expect( result.positions.Third[3].octave ).toBe( 4 )
+    expect( result.positions.Third[4].octave ).toBe( 5 )
+  })
+  it("test q.chords.inversions('G', 'sus2', 3) interval names", () => {
+		let result = q.chords.inversions('G', 'sus2', 3 )
+    expect( result ).toBeTruthy()
+    expect( Object.keys(result.positions).length ).toBe( 3 )
+    q.chords.inversionLog( result, true )
+    expect( result.positions.Second[1].interval ).toBe( 'Root' )
+    expect( result.positions.Second[2].interval ).toBe( 'Perfect fourth' )
+    expect( result.positions.Second[3].interval ).toBe( 'Perfect fifth' )
   })
   it("test q.chords.inversions('c', 'aug' )", () => {
 		let result = q.chords.inversions('c', 'aug' )
@@ -152,27 +176,27 @@ describe.skip('test chord functions', () => {
     expect( result.positions.Second[3].note ).toBe( 'E' )
     expect( result.positions.Second[3].semis ).toBe( 16 )
   })
-  it("visually test q.chords.inversionNotes('C','maj')", () => {
+  it.skip("visually test q.chords.inversionNotes('C','maj')", () => {
 		let result = q.chords.inversions('C','maj')
     expect( result ).toBeTruthy()
     //extract notes for inversions
     let list = q.chords.inversionNotes( result, 'Second' )
-    console.log( 'q.chords.inversionNotes()', list)
+    // console.log( 'q.chords.inversionNotes()', list)
   })
-  it("visually test q.chords.inversionNotes('C','7')", () => {
+  it.skip("visually test q.chords.inversionNotes('C','7')", () => {
 		let result = q.chords.inversions('C','7')
     expect( result ).toBeTruthy()
     //extract notes for inversions
     let list = q.chords.inversionNotes( result, 'First' )
-    console.log( 'q.chords.inversionNotes()', list)
+    // console.log( 'q.chords.inversionNotes()', list)
   })
-  it("visually test q.chords.inversionNotes('C','sus2')", () => {
+  it.skip("visually test q.chords.inversionNotes('C','sus2')", () => {
 		let result = q.chords.inversions('C','sus2')
     expect( result ).toBeTruthy()
     //extract notes for inversions
     let list = q.chords.inversionNotes( result, 'Third' )
-    console.log( 'q.chords.inversionNotes()', list)
-  })
+    // console.log( 'q.chords.inversionNotes()', list)
+  })  
 })
 
 describe.skip('test fretboard.objBySemis()', () => {
@@ -213,13 +237,13 @@ describe.skip('manual tests for notes.match() ', () => {
     //   "semis": q.semis.calc('E', 3),
     },
   ]
-  it.skip("manual test, one chord against selected notes", () => {
+  it("manual test, one chord against selected notes", () => {
     let chordName = 'maj'
     let note = 'G'
     let chord = q.chords.obj(note, chordName)
     let ivls = chord.ivls    
     let nobs = nobjList8
-    console.log( 'original nobjList:', nobs)
+    // console.log( 'original nobjList:', nobs)
   	let result = q.notes.match( ivls,  nobs)
     if(result === false)
       console.log( note, chord.name, ' failed',
@@ -233,7 +257,7 @@ describe.skip('manual tests for notes.match() ', () => {
   })
   it("manual test, finding all chords that match selected notes", () => {
     let nobs = nobjList8
-    console.log( 'original nobjList:', nobs)
+    // console.log( 'original nobjList:', nobs)
     let cnt = 0
     let last = null
     for(let chord of q.chords.list){    //test chord for a matching patter of notes
@@ -252,12 +276,12 @@ describe.skip('manual tests for notes.match() ', () => {
       // break
     }
   })
-  it.skip("manual test, one scale against selected notes", () => {
+  it("manual test, one scale against selected notes", () => {
     let scaleShort = 'Blues6'
     let scale = q.scales.obj('E', scaleShort)
     let ivls = scale.ivls    
     let nobs = nobjList8
-    console.log( 'original nobjList:', nobs)
+    // console.log( 'original nobjList:', nobs)
   	let result = q.notes.match( ivls,  nobs)
     if(result === false)
       console.log( scale.name+' failed',
@@ -269,9 +293,9 @@ describe.skip('manual tests for notes.match() ', () => {
       )
     }
   })
-  it.skip("manual test, finding all scales that match selected notes", () => {
+  it("manual test, finding all scales that match selected notes", () => {
     let nobs = nobjList8
-    console.log( 'original nobjList:', nobs)
+    // console.log( 'original nobjList:', nobs)
     let cnt = 0
     let last = null
     for(let scale of q.scales.list){    //test scale for a matching patter of notes
@@ -285,7 +309,8 @@ describe.skip('manual tests for notes.match() ', () => {
        	let result = q.notes.match( ivls,  nobs)
 
         if(result === true) 
-          console.log( ++cnt, note, scale.name+' match: ', ivls)
+          console.log( ++cnt, note, scale.name+' match: ', ivls.length)
+          // console.log( ++cnt, note, scale.name+' match: ', ivls)
       }
       // break
     }
@@ -293,22 +318,22 @@ describe.skip('manual tests for notes.match() ', () => {
 
 })
 
-describe('test scale functions', () => {
-  it("test inspect scales.degreeChords('C', 'Major')", () => {
-		let result = q.scales.degreeChords('C', 'Major')
+describe.skip('test scale functions', () => {
+  it("test inspect scales.degreeTriads('C', 'Major')", () => {
+		let result = q.scales.degreeTriads('C', 'Major')
     expect( result ).not.toBe( false )
  
-    // console.log( result.chords[6] )
-    expect( result.chords[1].abr ).toBe( 'min' )
-    expect( result.chords[6].abr ).toBe( 'dim' )
+    // console.log( result.list[6] )
+    expect( result.list[1].abr ).toBe( 'min' )
+    expect( result.list[6].abr ).toBe( 'dim' )
   })
   it("test inspect scales.degreeTriads('C', 'Minor')", () => {
 		let result = q.scales.degreeTriads('C', 'Minor')
     expect( result ).not.toBe( false )
  
-    console.log( result )
-    // console.log( result.chords[6] )
-    expect( result.chords[0].abr ).toBe( 'min' )
-    expect( result.chords[1].abr ).toBe( 'dim' )
+    // console.log( result )
+    // console.log( result.list[6] )
+    expect( result.list[0].abr ).toBe( 'min' )
+    expect( result.list[1].abr ).toBe( 'dim' )
   })
 })

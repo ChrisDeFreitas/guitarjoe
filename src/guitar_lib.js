@@ -1,20 +1,26 @@
 /*
-  //♭ &flat; alt+?
+  ♭ &flat; alt+?
   
   GuitarJoe's guitar logic
   by Chris DeFreitas, ChrisDeFreitas777@gmail.com
   
    Note:
+    - all objects returned are newly constructed, so they may by modified by the caller
     - note refers to what we usually call a note: C#
-    - note object: { strgnum:int, fret:int, note:'C#', semis:49, ... }
-    - note.semis is unique
+    - note object, nobj: { strgnum:int, fret:int, note:'C#', semis:49, ... }
+    - note.semis is unique: number of semitones, Middle C = 48
     - fret is an integer
-    - fobj is a fret object: frets.obj() => { strg:{}, fret:int, tab:'e12' }
+    - fret object, fobj: { strg:{}, fret:int, tab:'e12' }
     - ivl is an interval object: intervals.list[n]
+    - ivls is a list of interval objects
+    - chord is an object: chords.list[n]
     - assume: exception handling performed by caller
 
   Todo:
-    - check for code consistency
+    - disambiguate chord (object) vs chordName (string)
+    - verify code consistency
+    -- verify usage of for..in (not iterable) vs for..of (iterable)
+    --- confirm for..in is used with objects, not arrays
     - (when needed) update notes.calc() for ##/bb -- see comments in function
   
  */
@@ -96,7 +102,7 @@ var q = {
 
       return obj
     },
-    inversions( note, chord, octave = 0 ){   // return an inversion object for given note and scale
+    inversions( note, chordName, octave = 0 ){   // return an inversion object for given note and scale
       let robj = null
       if( typeof note === 'object' ){
         robj = note
@@ -108,42 +114,75 @@ var q = {
       if(octave === null) octave = 0
       robj.octave = Number(octave)
       let cobj = null
-      if( typeof chord === 'object' ){
-        cobj = chord
-        chord = cobj.abr
+      if( typeof chordName === 'object' ){
+        cobj = chordName
+        chordName = cobj.abr
       }else
-        cobj = q.chords.obj(note, chord)
+        cobj = q.chords.obj(note, chordName)
 
       let maxinversions = cobj.ivls.length
-      let result = { root:robj.note, chord:chord, octave:octave, max:maxinversions, positions:{} }
+      let result = { root:robj.note, chord:chordName, octave:octave, max:maxinversions, positions:[] }
       let rivls = cobj.ivls
       let positions = ['Root','First','Second','Third','Fourth','Fifth']
 
-
+      rivls[0].octave = robj.octave   // set correct octaves
+      let s0 = q.intervals.byNote( rivls[0].note ).semis     
+      for( let idx = 1; idx < maxinversions; idx++ ){
+        let s1 = q.intervals.byNote( rivls[idx].note ).semis
+        rivls[idx].octave = (s0 < s1 ?robj.octave :robj.octave +1)
+      }
+     
       for( let cnt = 1; cnt <= maxinversions; cnt++){
         let pos = positions[ cnt -1 ]
-        result.positions[ pos ] = {}
-        let obj = result.positions[ pos ]
+        let obj = result.positions[ pos ] = []
 
         for( let idx = 1; idx <= maxinversions; idx++ ){
-          let ioctave = robj.octave
+          let inc = 0
           let ridx = idx +(cnt -2) 
           if(ridx >= maxinversions) {
             ridx -= maxinversions
-            ioctave++
+            inc = 1
           }
-          // console.log({idx:idx, ridx:ridx})
+          let ioctave = ( rivls[ ridx ].octave +inc )
+                    
           obj[idx] ={ 
-            ...rivls[ ridx ], 
-            octave:ioctave,
-            semis:q.semis.calc( rivls[ ridx ].note, ioctave )
+            num: (ridx +1),
+            note: rivls[ ridx ].note,
+            octave: ioctave,
+            interval: null,
+            abr:null,
+            semis: q.semis.calc( rivls[ ridx ].note, ioctave ),
+            // chordNote: rivls[ ridx ],
           }
+          let isemis = (idx === 1 ?0 : obj[idx].semis -obj[1].semis)
+          let iobj = q.intervals.bySemis(isemis, true)
+          obj[idx].interval = (isemis === 0 ?'Root' :iobj.name )
+          obj[idx].abr = iobj.abr
+          // console.log( obj[idx] )
         }
       }
-      // console.log( result.positions )
+
       return result
     },
-    inversionNotes( invrObj, invrPos ){ //return note objects for all fretboard locations of given inversion
+    inversionLog( invrObj, includeSemis = false ){    // write to console
+      let caption = invrObj.root +invrObj.octave +' ' +invrObj.chord +' inversions:\n'
+      let data = ''
+      for( let pos in invrObj.positions){
+        data += ' ' +pos +': '
+        for( let obj of invrObj.positions[pos] ){
+          data += obj.interval +' - ' +obj.note +obj.octave
+            +( includeSemis === false ?' ' :'(' +obj.semis +') ' )
+        }
+        data += '\n'       
+      }
+      console.log( caption, data)
+    },
+    inversionNotes( invrObj, invrPos ){ //return note objects for inversion
+      //assume: inversion root is always the bass note 
+      //assume: notes returned must be on continguous strings
+      //assume: notes must exist within a range of frets from the bass note
+      //note: only return notes when all notes of inversion found
+      //note: some inversions will not have results because of these rules
 
       if( invrObj.positions[invrPos] === undefined )
         return null
@@ -181,7 +220,7 @@ var q = {
 
       let tmp = []  //temporary store for notes found
       let list = []     //returned with all notes found
-      for(let strgn = 6; strgn >= maxInversions; strgn--){   //because of inversion logic, rootnote can never be on upper strings
+      for(let strgn = 6; strgn >= maxInversions; strgn--){   //because of inversion logic, root note can never be on upper strings
 
         let rootfret = null
         while( rootfret === null || rootfret < q.fretboard.fretMax){  //allow searching for root note multiple times
