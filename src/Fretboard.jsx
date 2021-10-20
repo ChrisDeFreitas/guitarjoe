@@ -230,10 +230,6 @@ class Fretboard extends React.Component{
     }else
     if(key === 'fretSelectMatchDisplay'){
       this.setState({ fretSelectMatchDisplay:val })
-      // if(val === 'Show')
-      //   this.stateChange( 'collapsed', false)
-      // else
-      //   this.stateChange( 'collapsed', true)
     }else
     if(key === 'strgFilter'){
       val = Number( val )
@@ -360,7 +356,7 @@ class Fretboard extends React.Component{
   }
   render(){
     let qry = this.makeQuery()
-    // console.log('Fretboard.render()', this.props, this.state, qry)
+    console.log('Fretboard.render()', this.props, this.state, qry)
     return(
       <div className='fretboard' id={'Fretboard'+qry.fbid}>
         <FretPnl

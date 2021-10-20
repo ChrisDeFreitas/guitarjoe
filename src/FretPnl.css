@@ -21,7 +21,7 @@
   color:#3c31a7; 
 }
 .fretPnl .frameTop td .fretFilterDiv {     /* show a bar every third fret when qry.collpased=true */
-  border:none; border-bottom:solid; border-color:#0000; height:17px; width:91%; margin:0 0 0 3px;
+  border:none; border-bottom:solid; border-color:transparent; height:17px; width:91%; margin:0 0 0 3px;
   text-shadow:1px 1px 5px #0008;
 }
 .fretPnl .frameTop td .fretFilterCollapsed {     /* show a bar every third fret when qry.collpased=true */
