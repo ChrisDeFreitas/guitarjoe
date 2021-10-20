@@ -21,11 +21,11 @@
   color:#3c31a7; 
 }
 .fretPnl .frameTop td .fretFilterDiv {     /* show a bar every third fret when qry.collpased=true */
-  border:none; border-bottom:solid transparent 3px; height:17px; width:91%; margin:0 0 0 3px;
+  border:none; height:20px; width:91%; margin:0 0 0 3px;
   text-shadow:1px 1px 5px #0008;
 }
 .fretPnl .frameTop td .fretFilterCollapsed {     /* show a bar every third fret when qry.collpased=true */
-  border:none; border-bottom:solid #71b578 3px; height:17px; width:91%; margin:0 0 0 3px;
+  border-bottom:solid #71b578 3px; height:17px; width:91%; margin:0 0 0 3px;
 }
 .fretPnl tr .fret[data-fretfilter="true"] .fretbar{      /* filtered fretbar */
   background:#3a3a3a; 
