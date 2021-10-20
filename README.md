@@ -93,7 +93,7 @@ After playing with [Framer Motion](https://www.framer.com/motion/) a little more
 - resolved: clicking a fretbar with a button no longer activates button.onclick because user should click button. This prevents accidental button clicks on iPad/iPhone.
 - created Fret.jsx to simplify and consolidate FrePnl.render() 
 - FretSelect scale matches now match against all scales
-- AboutDlg update: made headings standout to improved readability
+- AboutDlg update: made headings standout to improve readability
 - added spin animations to buttons  
 - synchronized and optimized animations
 
