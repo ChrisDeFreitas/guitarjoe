@@ -5,6 +5,7 @@
 
 */
 import React from 'react'
+import { motion } from "framer-motion"
 
 import './Fretboard.css';
 import InfoPnl from "./InfoPnl"
@@ -33,7 +34,6 @@ class QueryPnl extends React.Component {
 
   //event handlers
   btnCollapseClick(){
-    // default, works:
     let val = !this.props.qry.collapsed
     this.props.stateChange( 'collapsed', val )
   }
@@ -154,7 +154,7 @@ class QueryPnl extends React.Component {
 
     let note = (qry.note === null ?'' :qry.note)
     return (
-      <div className='dataPnl pnlNote'>
+      <div className='dataPnl pnlNote' >
         <label data-selected={note !== ''} data-type='note' onClick={this.selLabelClick} >Note</label>
         <select value={note} className='selNote' onChange={this.selNoteChange} >{list}</select>
       </div>
@@ -173,7 +173,7 @@ class QueryPnl extends React.Component {
       list.push(<option key={ii} >{ii}</option>)
     }
     return (
-      <div className='dataPnl pnlOctave'>
+      <div className='dataPnl pnlOctave' >
         <label data-selected={oct !== 0} data-type='octave' onClick={this.selLabelClick} >Octave</label>
         <select value={oct} className='selOctave' onChange={this.selOctaveChange}>
            {list}
@@ -188,7 +188,7 @@ class QueryPnl extends React.Component {
       list.push(<option key={++ii} >{scale.name}</option>)
     }
     return (
-      <div className='dataPnl pnlScale'>
+      <div className='dataPnl pnlScale' >
         <label data-selected={selected !== ''} data-type='scale' onClick={this.selLabelClick} >Scale</label>
         <select value={selected} className='selScale' onChange={this.selScaleChange} >
           {list}
@@ -206,7 +206,7 @@ class QueryPnl extends React.Component {
     }
     if(selected !== '') datastate = 'chord'
     return (
-      <div className='dataPnl pnlChord'>
+      <div className='dataPnl pnlChord' >
         <label data-selected={selected !== ''} data-type='chord' onClick={this.selLabelClick} >Chord</label>
         <select value={selected} className='selChord' onChange={this.selChordChange} 
          data-state={datastate}>
@@ -217,7 +217,7 @@ class QueryPnl extends React.Component {
   }
   drawSelInterval(){
     let qry = this.props.qry,
-      list = [<option key='aaa' ></option>],
+      list = [<option key='aaa' data-abr='' ></option>],
       ii = 0, selected = '' , datastate = ''
     for(let ivl of q.intervals.list){
       if(ivl.semis === 0) continue
@@ -247,7 +247,7 @@ class QueryPnl extends React.Component {
     // console.log('queryPnl.render()', this.props)
     let qry = this.props.qry
     let qryBtnClass = (qry.collapsed ?'qryBtnSmall' :'qryBtn')
-    let qryDisplayClass = (qry.collapsed ?'queryPnlHide' :'queryPnlShow')
+    // let qryDisplayClass = (qry.collapsed ?'queryPnlHide' :'queryPnlShow')
  
     let arrowUord = (qry.collapsed ?'dn' :'up')
     let arrowTitle = (qry.collapsed ?'Show Query panel' :'Hide Query panel')
@@ -267,19 +267,26 @@ class QueryPnl extends React.Component {
     }
 
     return (
-      <div className={'queryPnl '+qryDisplayClass} >
+      <div className={'queryPnl queryPnlShow'} >
         <table className='tbQuery' ><tbody><tr>
         <td className='tdQryBtnsLeft'>
            <ArrowButton upOrDn={arrowUord} width={arrowWidth} title={arrowTitle} onChange={this.btnCollapseClick}/>
         </td><td className='tdQryContent'>
 
-          <div className='queryControls' data-roottype={qry.rootType} >
+          <motion.div className='queryControls' data-roottype={qry.rootType} 
+            animate={ qry.collapsed === true ?'collapsed' :'default' }
+            variants={{
+              collapsed: { height:'0px', borderWidth:'0px' },
+              default: { height:'auto', borderWidth:'1px' },
+            }}
+            transition={{ ease:"easeOut", duration:0.3 }}
+          >
             {selNote}
             {selOct}
             {selScale}
             {selChord}
             {selInt}
-          </div>
+          </motion.div>
 
           <InfoPnl 
             qry={qry} 
@@ -287,10 +294,31 @@ class QueryPnl extends React.Component {
             stateChange={this.props.stateChange}
            />
         </td><td className='tdQryBtnsRight'>
-            <div className={qryBtnClass +' qryBtnClear'} onClick={this.btnClearClick} title='Reset query controls'>&#8635;</div>
-            <div className={qryBtnClass +' qryBtnDupe'} onClick={this.btnDupeClick} title='Duplicate fretboard' >&#10010;</div>
+            <div className={qryBtnClass +' qryBtnClear'} onClick={this.btnClearClick} title='Reset query controls'>
+              <motion.div 
+                    whileTap={{ transform:'rotateZ(360deg)' }}
+                    transition={{ type:'spring', damping: 30 }}
+                  >
+                  &#8635;
+              </motion.div>
+            </div>
+            <div className={qryBtnClass +' qryBtnDupe'} onClick={this.btnDupeClick} title='Duplicate fretboard' >
+              <motion.div 
+                whileTap={{ transform:'rotateZ(360deg)' }}
+                transition={{ type:'spring', damping: 30 }}
+              >
+                &#10010;
+              </motion.div>              
+            </div>
             { qry.fbid === 0 ?null
-              :<div className={qryBtnClass +' qryBtnDel'} onClick={this.btnDelClick} title='Remove this fretboard' >&#10000;</div>
+              :<div className={qryBtnClass +' qryBtnDel'} onClick={this.btnDelClick} title='Remove this fretboard' >
+                  <motion.div 
+                    whileTap={{ transform:'rotateZ(360deg)' }}
+                    transition={{ type:'spring', damping: 30 }}
+                  >
+                    &#10000;
+                  </motion.div>
+                </div>
             }
         </td></tr></tbody></table>
       </div>

@@ -39,10 +39,7 @@ function ArrowPnl( props ){
           open: { height: 'auto' },
           closed: { height: '0px' },
         }}
-        transition={{
-          type: "spring", restSpeed:150, damping: 30,
-          duration:0.2
-        }}
+        transition={{ ease:"easeOut", duration:0.3 }}
         
         key={key()} 
         className='ArrowPnlItems' 

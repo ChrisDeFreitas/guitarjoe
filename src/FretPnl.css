@@ -20,6 +20,13 @@
 .fretPnl .frameTop td[data-fretfilter="true"]{      /* filtered fret numbers */
   color:#3c31a7; 
 }
+.fretPnl .frameTop td .fretFilterDiv {     /* show a bar every third fret when qry.collpased=true */
+  border:none; border-bottom:solid; border-color:#0000; height:17px; width:91%; margin:0 0 0 3px;
+  text-shadow:1px 1px 5px #0008;
+}
+.fretPnl .frameTop td .fretFilterCollapsed {     /* show a bar every third fret when qry.collpased=true */
+  border:none; border-bottom:solid; border-color:#71b578; height:17px; width:91%; margin:0 0 0 3px;
+}
 .fretPnl tr .fret[data-fretfilter="true"] .fretbar{      /* filtered fretbar */
   background:#3a3a3a; 
 }
@@ -65,15 +72,15 @@
   background-color:transparent; cursor:pointer; 
   color:#ffffff80;
   font-size:1em;
-  text-shadow:1px 1px 5px #0008;
+  /* text-shadow:1px 1px 5px #0008; */
   text-align:center;
   height:0.5em;
 }
-.fretPnl .frame td .collapsed{    /* show a bar every third fret when qry.collpased=true */
+/* .fretPnl .frame td .collapsed{    * show a bar every third fret when qry.collpased=true *
   background-color:#71b578;
   height:3px;
   margin-top:0.5em;
-}
+} */
 .fretPnl .frameBottom .tdBottom{ position:relative; }
 
 /* strings */

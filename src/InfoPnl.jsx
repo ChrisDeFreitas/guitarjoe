@@ -120,7 +120,6 @@ function InfoPnl( props ){
          list.push( {note:iobj.note, chord:chord} )
       }
     }
-
     for(let ob of list){    //write matching chords
       let chord = ob.chord
 
@@ -152,18 +151,20 @@ function InfoPnl( props ){
     lastkey = key
     lastname = null
     last = null
-    // for(let scale of q.scales.list){   ==> disabled because most scales are not necessary for this use
-    for(let scaleName of ['Major','Minor','Pen.Maj','Pen.min','Blues7','Blues6' /*,'Dbl.Hrm'*/]){
+    for(let scale of q.scales.list){   //==> disabled because most scales are not necessary for this use
+    //for(let scaleName of ['Major','Minor','Pen.Maj','Pen.min','Blues7','Blues6' /*,'Dbl.Hrm'*/]){
+
       //can optimize by caching related minor scales when major found: 
-      // Major:Nat.min; Pent Maj:Pen.min,Blues7,Blues6; Dbl.Hrm:Gypsy
+      //  Major:Nat.min; Pent Maj:Pen.min,Blues7,Blues6; Dbl.Hrm:Gypsy
+
       for(let iobj of q.intervals.list){  //iterate notes
         if(last != null && last.semis === iobj.semis) continue
         if(iobj.semis === 12) continue    //skip octave
         last = iobj
 
-        // let ivls = q.scales.obj( iobj.note, scale.name).ivls    
-        let scale = q.scales.obj( iobj.note, scaleName )
-        let ivls = scale.ivls    
+        let ivls = q.scales.obj( iobj.note, scale.name).ivls    
+        // let scale = q.scales.obj( iobj.note, scaleName )
+        // let ivls = scale.ivls    
   		  let result = q.notes.match( ivls, noblist)
 
        if(result === true) 
@@ -225,9 +226,8 @@ function InfoPnl( props ){
         else selected = 0
         
         htmlCaption.push( 
-          <span key={++key} className='ivl' onClick={infoItemClick}
-            data-note={nobj.note} data-selected={selected}
-            >&nbsp;{nobj.note} <sub>{nobj.ivl.abr}</sub> 
+          <span key={++key} className='ivl' onClick={infoItemClick} data-note={nobj.note} data-selected={selected} >
+             &nbsp;{nobj.note} <sub>{nobj.ivl.abr}</sub> 
           </span> 
         )
         last = nobj
@@ -242,9 +242,8 @@ function InfoPnl( props ){
       else{    //draw user select chord or scale match
         htmlItems.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
         htmlItems.push( 
-          <span key={++key} className='propName'
-            data-selected='label' onClick={infoItemClick}
-            >Selected, {qry.fretSelectMatch.obj.fullName}:&nbsp;
+          <span key={++key} className='propName' onClick={infoItemClick} data-selected='label' >
+            Selected, {qry.fretSelectMatch.obj.fullName}:&nbsp;
           </span> 
         )
 
@@ -253,8 +252,7 @@ function InfoPnl( props ){
           else selected = 0
 
           htmlItems.push( 
-            <span key={++key} className='ivl' onClick={infoItemClick}
-              data-note={ivl.note} data-selected={selected} >
+            <span key={++key} className='ivl' onClick={infoItemClick} data-note={ivl.note} data-selected={selected} >
               &nbsp;{ivl.note} <sub>{ivl.abr}</sub> 
             </span> 
           )

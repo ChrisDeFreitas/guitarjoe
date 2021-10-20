@@ -7,10 +7,6 @@
   text-shadow:1px 1px 1px #fff6; text-align:center;
 }
 .ArrowBtn div{ border:none; padding:0; position:relative; outline:0; }
-.ArrowBtnUp div{ transform:rotateZ(-90deg); text-shadow:-1px 1px 1px #fff6; 
-  left:-1px;
-}
-.ArrowBtnDn div{ transform:rotateZ(90deg);  text-shadow:1px -1px 1px #fff6; 
-  left:1px;
-}
+.ArrowBtnUp div{ text-shadow:-1px 1px 1px #fff6; }
+.ArrowBtnDn div{  text-shadow:1px -1px 1px #fff6; }
 

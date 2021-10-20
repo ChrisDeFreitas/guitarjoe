@@ -19,11 +19,11 @@ const About = () => (
       <div className="modal">
         <div className="header"> 
           About GuitarJoe 
-          <span style={{fontSize:'0.5em', display:'inline-block', marginLeft:'0.5em'}}>v1.6 20201015</span> 
+          <span className='hdVer'>v1.7 20201020</span> 
           <hr className='hrLine' /> 
         </div>
         <div className="content">
-Important: <br />
+<h3>Important: </h3>
 &nbsp;- Everything is clickable...please explore<br />
 &nbsp;- use your browser's zoom controls to enlarge/shrink the controls
 <br /><br />
@@ -34,15 +34,19 @@ I am not anything close to a musician, so
 I was going crazy taking notes and diagramming chords, scales and intervals: I needed a tool
 to facilitate my understanding so I could focus on the guitar instead of managing scraps of information.
 This application has successfully reduced my hair loss--I hope it has the same effect on you!
-<br /><br />
-
-Whats New in Update 20211015<br />
-1. Implemented simple animations to expand/collapse InfoPnl lists of scale degree triads, chord inversions, and FretSelect matches.
 <br />
-2. When in FretRoot mode, and a chord is selected, the InfoPnl now correctly displays octaves and intervals of chord inversions.
-<br /><br />
 
-About Chord Inversions<br />
+<h3>Whats New in Update 20211020</h3>
+1. When in FretSelect mode (selecting more than one note), the app will now search all scales for those notes.  
+Before only standard Western scales were searched: major, minor, pentatonic, and blues.  
+<br />
+2. Expanded implementation of animations to smooth user interactions.
+<br />
+3. This version includes a major update to code generating the Fretboard.
+Fixed a number of bugs. See <a href='https://github.com/ChrisDeFreitas/guitarjoe/' target='_new'>GitHub Repository</a> for details.
+<br />
+
+<h3>About Chord Inversions</h3>
 The guitar provides many combinations for inversions.  The app tries to display the ideal inversion:  
 The bass note is highlighted, then the remaining notes are selected in order, on higher strings.  
 Unfortunately, this 
@@ -51,8 +55,8 @@ results in certain inversions having no selections on the fretboard, such as CMa
 &nbsp;- Tested to work in Chrome(Windows), Firefox(Windows, Linux), and Safari(iPad, iPhone)<br />
 &nbsp;- Review documentation, updates and references in the <a href='https://github.com/ChrisDeFreitas/guitarjoe/' target='_new'>GitHub Repository</a> <br />
 &nbsp;- Send comments and bugs to <a href='mailto:ChrisDeFreitas777@gmail.com?subject=GuitarJoe:'>ChrisDeFreitas777@gmail.com</a>
-<br /><br />
-Thanks to<br />
+<br />
+<h3>Thanks to</h3>
 &nbsp;- Application hosted on <a href='https://github.com/ChrisDeFreitas/guitarjoe' target='_new'>Github</a>  <br />
 &nbsp;- Background image from <a href='https://www.flickr.com/photos/webtreatsetc/with/4514047664/' target='_new'>WebTreats ETC</a> <br />
 &nbsp;- Built with the <a href='https://reactjs.org/' target='_new'>React</a> Javascript library <br />

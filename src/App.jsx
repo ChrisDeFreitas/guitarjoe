@@ -73,13 +73,20 @@ function App(){
         
         fretSelect={state.fretSelect}
         fretSelectMatch={state.fretSelectMatch}
+        fretSelectMatchDisplay={state.fretSelectMatchDisplay}
 
 				rootType={state.rootType}
 				fretRoot={state.fretRoot}
 				selNoteVal={state.selNoteVal} 
 				octave={state.octave} 
+
 				scaleName={state.scaleName}
+        scaleTriadDisplay={state.scaleTriadDisplay}
+        scaleTriadSelected={state.scaleTriadSelected}
+
 				chordName={state.chordName}
+        chordInvrDisplay={state.chordInvrDisplay}
+        chordInvrSelected={state.chordInvrSelected}
 		
         ivlName={state.ivlName}
       />
@@ -95,7 +102,7 @@ function App(){
     <div className="App">
 			<header className="App-header header">
         <Logo className="Logo" alt="Logo" />
-        GuitarJoe v0.1.6 
+        GuitarJoe v0.1.7 
         <About />
       </header>
 			{list}

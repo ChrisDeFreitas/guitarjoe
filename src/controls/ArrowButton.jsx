@@ -1,17 +1,19 @@
 /*
   ArrowButton.jsx
   - by Chris DeFreitas, ChrisDeFreitas777@gmail.com
-  - arrow in button frame pointing up or down used to expand/collapse controls
-  - used by to exapnd and collpase controls GuitrJoe app
+  - an arrow in a button frame pointing up or down used to expand/collapse controls
+  - used by to expand and collpase controls in GuitrJoe app and ArrowPnl.jsx
 */
 import React  from 'react';
 import PropTypes from 'prop-types';
+import { motion } from "framer-motion"
 import './ArrowButton.css';
 
 function ArrowButton( props ){
 
+  //handle initial state
   let uord =  (props.upOrDn === '' ?'dn' :props.upOrDn.toLowerCase())
-  // console.log('ArrowButton Init', uord, props)
+  // console.log('ArrowButton function call', uord, props)
 
   function onClick(){
     let newud = (uord === 'up' ?'dn' :'up')
@@ -25,11 +27,20 @@ function ArrowButton( props ){
   let width = (props.width === '' ? '1em' :props.width)
   let dstyle = { height:width, width:width}
   let astyle = { fontSize:'calc( '+width+' * 0.8 )' }
-  let arrow = <div style={astyle} >&#10148;</div>
 
   return (
-    <div className={className} style={dstyle} onClick={onClick} title={props.title} > 
-      {arrow}
+    <div className={className} style={dstyle} onClick={onClick} title={props.title} 
+    > 
+      <motion.div style={astyle} 
+        animate={uord}
+        variants={{
+          up: { transform:'rotateZ(-90deg)', left:'-1px' },
+          dn: { transform:'rotateZ(90deg)',  left:'1px' },
+        }}
+        transition={{ ease:"easeOut", duration:0.4 }}
+      >
+      &#10148;
+      </motion.div>
     </div>
   )  
 

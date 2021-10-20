@@ -6,7 +6,10 @@
 */
 
 import React from 'react'
+import { motion } from "framer-motion"
+
 import './FretPnl.css';
+import Fret from './Fret.jsx';
 import FretButton from './FretButton.jsx';
 import q from "./guitar_lib.js";
 
@@ -18,6 +21,8 @@ class FretPnl extends React.Component{
     this.fretFltrClick = this.fretFltrClick.bind(this)
     this.strgFltrClick = this.strgFltrClick.bind(this)
   }
+  keyii = 0
+  key(){ return 'FPnl' +(++this.keyii) }
 
   fretClick( event ){
     let qry = this.props.qry,
@@ -52,8 +57,10 @@ class FretPnl extends React.Component{
     let note = q.notes.obj( strN, fret )
     let btn = document.querySelector( '#Fretboard' +qry.fbid +' .fretButton[data-tab=' +note.tab +']')
     if(btn !== null){
-      event.target = btn
-      this.buttonClick( event )
+      // Note: ignore because they should click the button
+      // however, this works:
+      //   event.target = btn
+      //   btn.click( event )
       return
     } else
     if(['','noteSelect'].indexOf(qry.rootType) >= 0){
@@ -87,7 +94,7 @@ class FretPnl extends React.Component{
     if(qry.rootType !== 'fretRoot') return null
 
     if(nobj.tab === qry.root.tab){
-      return <FretButton 
+      return <FretButton key={this.key()}
                 root={qry.root} nobj={nobj}  qry={qry} 
                 fretSelectFind={this.props.fretSelectFind} 
                 stateChange={this.props.stateChange} 
@@ -105,7 +112,7 @@ class FretPnl extends React.Component{
         if(qry.note !== '')
           nobj.note = qry.note
         // return qq.button( nobj, qry.root  )
-        return <FretButton 
+        return <FretButton key={this.key()} 
                 root={qry.root} nobj={nobj}  qry={qry} 
                 fretSelectFind={this.props.fretSelectFind} 
                 stateChange={this.props.stateChange} 
@@ -125,7 +132,7 @@ class FretPnl extends React.Component{
           nobj.ivl = fso.ivl
           nobj.note = fso.note
           // return qq.button( nobj, qry.root )
-          return <FretButton 
+          return <FretButton key={this.key()} 
                     root={qry.root} nobj={nobj}  qry={qry} 
                     fretSelectFind={this.props.fretSelectFind} 
                     stateChange={this.props.stateChange} 
@@ -149,7 +156,7 @@ class FretPnl extends React.Component{
           if(this.props.fretSelectFind( nobj.tab ) < 0)
             nobj.fsmatch = true
           // return qq.button( nobj, qry.root )
-          return <FretButton 
+          return <FretButton key={this.key()} 
                     root={qry.root} nobj={nobj}  qry={qry} 
                     fretSelectFind={this.props.fretSelectFind} 
                     stateChange={this.props.stateChange} 
@@ -170,7 +177,7 @@ class FretPnl extends React.Component{
     nobj.note = ivl.note
     nobj.ivl = ivl
     nobj.state = 'triad' +(ivl.num === 1 ?1 :'')
-    return <FretButton 
+    return <FretButton key={this.key()} 
               root={qry.root} nobj={nobj}  qry={qry} 
               fretSelectFind={this.props.fretSelectFind} 
               stateChange={this.props.stateChange} 
@@ -182,7 +189,7 @@ class FretPnl extends React.Component{
 
     if(qry.octave === nobj.octave){
       nobj.ivl = qry.ivl
-      return <FretButton 
+      return <FretButton key={this.key()} 
                 root={qry.root} nobj={nobj}  qry={qry} 
                 fretSelectFind={this.props.fretSelectFind} 
                 stateChange={this.props.stateChange} 
@@ -204,7 +211,7 @@ class FretPnl extends React.Component{
           nobj.ivl = ivl
           nobj.note = ivl.note
           // return qq.button( nobj, qry.root )
-          return <FretButton 
+          return <FretButton key={this.key()} 
                     root={qry.root} nobj={nobj}  qry={qry} 
                     fretSelectFind={this.props.fretSelectFind} 
                     stateChange={this.props.stateChange} 
@@ -225,7 +232,7 @@ class FretPnl extends React.Component{
           nobj.note = inv.note
           nobj.ivl = inv.invr
           nobj.state = 'invr' +(inv.invr.num === 1 ?1 :'')
-          return <FretButton 
+          return <FretButton key={this.key()} 
                     root={qry.root} nobj={nobj}  qry={qry} 
                     fretSelectFind={this.props.fretSelectFind} 
                     stateChange={this.props.stateChange} 
@@ -243,7 +250,7 @@ class FretPnl extends React.Component{
           nobj.ivl = ivl
           nobj.note = ivl.note
           nobj.state = 'chord' +(ivl.abr === 'P1' ?'1' :'')
-          return <FretButton 
+          return <FretButton key={this.key()} 
                     root={qry.root} nobj={nobj}  qry={qry} 
                     fretSelectFind={this.props.fretSelectFind} 
                     stateChange={this.props.stateChange} 
@@ -286,7 +293,7 @@ class FretPnl extends React.Component{
         btn = null
     }
     if(btn != null)
-      return <FretButton 
+      return <FretButton key={this.key()} 
                 root={qry.root} nobj={nobj}  qry={qry} 
                 fretSelectFind={this.props.fretSelectFind} 
                 stateChange={this.props.stateChange} 
@@ -303,7 +310,7 @@ class FretPnl extends React.Component{
 
     //All notes mode
     if(qry.rootType === 'noteSelect' && this.props.selNoteVal === 'All')
-      btn = <FretButton 
+      btn = <FretButton key={this.key()} 
               root={'ALL'} nobj={nobj}  qry={qry} 
               fretSelectFind={this.props.fretSelectFind} 
               stateChange={this.props.stateChange} 
@@ -336,7 +343,7 @@ class FretPnl extends React.Component{
     let trArray = [],
       fretMax = q.fretboard.fretMax,    
       first = this.props.fretFirst,
-      last = this.props.fretLast,
+      // last = this.props.fretLast,
       ss = ''
     for (let row = 1; row <= 9; row++) {
       let frets = []
@@ -344,69 +351,71 @@ class FretPnl extends React.Component{
       let strgFltr = this.props.strgFiltered( strN )
 
       for (let col = 0; col <= fretMax +1; col++) {
-        let tab = '',
-          fretFltr = (qry.fretFilter.indexOf( col ) >= 0)
+        let 
+          fretFltr = (qry.fretFilter.indexOf( col ) >= 0),
+          cls = '', 
+          clickfunc = this.fretClick,
+          content = null
 
-        let btnStrFltr = null    //create string filter button for fret0 and fretMax
-        if(col === 0 && strN >= 1 && strN <= 6){
-          btnStrFltr=(<div onClick={this.strgFltrClick} data-strn={strN}
-            className={'btnFilter btnStrgFltr btnStrgFltr'+strN}
-           ><div>&diams;</div></div>
-          )
-        }
-
-        if(row === 1){  //top border, fret filter disabled because may not be needed
-          let cls = (col === (fretMax +1) ?'borderRight tdBorder'+col :'tdBorder'+col)
+        if(row === 1){  //top border, with fret numbers, fret filtering
           let ss = (col === first || col === (fretMax +1) ?' ' :col)
-          if(ss === col && qry.collapsed === true){
-            if([5,7,9,12].indexOf(col) >= 0)
-              ss = <div data-fret={col} className='collapsed' >&nbsp;</div>
-            else
-              ss = ''
+          let ssClassName = 'fretFilterDiv'
+          if( qry.collapsed === true){
+            ss = ''
+            if( [5,7,9,12].indexOf(col) >= 0 )
+              ssClassName = 'fretFilterCollapsed'
           }
-          frets.push( <td key={col} 
-            data-fret={col} data-fretfilter={fretFltr}
-            onMouseDown={this.fretFltrClick} className={cls}>{ss}</td> 
-          )
+          cls = (col === (fretMax +1) ?'borderRight tdBorder'+col :'tdBorder'+col)
+          clickfunc = this.fretFltrClick
+/*
+this animation causes other anims to run on every re-draw
+              animate={ qry.collapsed === true ?'collapsed' :'default' }
+              variants={{
+                collapsed: { color:'#0000', textShadow:'1px 1px 5px #0000' },
+                default: { color:'#ffffff80', textShadow:'1px 1px 5px #0008' },
+              }}
+              transition={{ ease:"easeOut", duration:0.4 }}
+*/          
+          content = <div key={this.key()} data-fret={col} className={ssClassName} >{ss}</div>
         }else
         if(row === 9){  //bottom frame
-
-          if(col === (fretMax +1))    //right bottom corner frame
-            frets.push( <td key={col} className={'borderRight tdBottom col'+col}></td> )
-          else {      //bottom fret frame
-            frets.push(<td key={col} className={'tdBottom col'+col}></td>)
-           }
-
-        }else{   // generate frets with right and left borders
-
-          if(col === fretMax +1){   // right border
-            frets.push( <td key={col} data-strn={strN} data-col={col} className={'borderRight col'+col}></td> )
-          } 
-          else{ //fretboard cells
-            let btn = null, stringdiv = null, nobj = null
-
-            if(strN >= 1 && strN <= 6)
-              stringdiv = <div className='stringdiv' onClick={this.fretClick} data-strn={strN} data-fret={col} ></div>
-
-            //process fret button
-            if( strN <= 6
-             && fretFltr === false    //no filter applied to fret
-             && strgFltr === false    //no filter applied to string
-             && col >= first 
-             && col <= last){         //filter by fretboard range
-              nobj = q.notes.obj( strN, col )
-              tab = nobj.tab
-              btn = this.buttonFind( nobj )
-            }
-            frets.push(<td key={col} className={'fret fret'+col} onClick={this.fretClick} 
-              data-strn={strN} data-fret={col} data-tab={tab} data-fretfilter={fretFltr} >
-              {btnStrFltr}
-              {btn}
-              {stringdiv}
-              <div className='fretbar' onClick={this.fretClick} data-strn={strN} data-fret={col} ></div>
-            </td>)
-           }
+            cls = (col === (fretMax +1)
+              ? 'borderRight tdBottom col'+col    //right bottom corner frame
+              : 'tdBottom col'+col
+            )
         }
+        else{   // generate frets with right and left borders
+          cls = (col === fretMax +1
+            ?'borderRight col'+col      // right border
+            :'fret fret'+col)
+
+          //process fret button
+          let nobj = null
+          if( strN <= 6
+           && fretFltr === false    //no filter applied to fret
+           && strgFltr === false    //no filter applied to string
+           && col >= this.props.fretFirst 
+           && col <= this.props.fretLast){         //filter by fretboard range
+            nobj = q.notes.obj( strN, col )
+            content = this.buttonFind( nobj )
+          }
+        }
+        
+        frets.push(
+          <Fret key={this.key()}
+            fretFirst={this.props.fretFirst}
+            fretLast={this.props.fretLast}
+            fretFiltered={fretFltr} 
+
+            strg={strN} 
+            fret={col} 
+
+            className={cls} 
+            content={content}
+            onClick={clickfunc} 
+            strgFltrClick={this.strgFltrClick} 
+          />
+        )
       }
 
       if(row === 1) 

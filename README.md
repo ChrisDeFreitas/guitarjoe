@@ -32,9 +32,9 @@ Typically guitar chords are represented as fixed pattern of notes, leading to ap
 On a guitar, chord inversions work differently than in general music theory.  For guitar, the important part is the bass note, other notes may appear in any order.  In music theory all inversions require the shifted note to be exactly one octave higher.  Because the guitar provides so many possible combinations for inversions, the app straddles these uses by trying to display the ideal inversion:  The bass note is highlighted, then the remaining notes are selected in order on higher strings, ignoring octaves, and filtering by distance frets are from the bass note.  Unfortunately, this results in certain inversion having no selections on the fretboard, such as CMaj7 third position.  
 
 ## Technical Notes
-- The entire application is contained within the single web page; it does not require a remote server.  The only external link is to the <a href='https://fonts.google.com/?query=Robert+Leuschke/' target='_new'>Fuggles Google Font</a> used in the header. So one could use the ./docs folder on any webserver.
+- The entire application is contained within a single web page; it does not require a remote server.  The only external link is to the <a href='https://fonts.google.com/?query=Robert+Leuschke/' target='_new'>Fuggles Google Font</a> used in the header. So one could use the ./docs folder on any webserver.
 - The logic of the application resides in <a href='https://github.com/ChrisDeFreitas/guitarjoe/blob/main/src/guitar_lib.js'>guitar_lib.js</a>--the code should be readable by non-techies so  feel free to review/use/suggest changes.  I created the library's test suite as I initially built the library, so it will not test all functionality. The test suite is used primarily to develop complex functionality, such as guitar_lib.notes.match() that matches a list of notes to a list of intervals.
-- In terms of security, the application currently does not store or access browser data.  The future plans include saving/restoring application state using <a href='https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage'>HTML5 Local Storage</a>--but that is way in the future.  As the code is hosted on GitHub it is scanned on a regularly for security vulnerabilities and open for review by the public.
+- In terms of security, the application currently does not store or access browser data.  The future plans include saving/restoring application state using <a href='https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage'>HTML5 Local Storage</a>--but that is way in the future.  As the code is hosted on GitHub it is scanned regularly for security vulnerabilities and open for review by the public.
 - The application is a standard <a href='https://create-react-app.dev/'>Create React App</a>, except the ./build folder is renamed to ./docs to work with <a href='https://pages.github.com/'>GitHub Pages</a>.  See <a href='https://create-react-app.dev/docs/advanced-configuration'>BUILD_PATH environment variable</a> for details on that redirection.
 
 
@@ -79,6 +79,24 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 
 ## Updates
 
+#### 20211020:  
+When in FretSelect mode (selecting more than one note) the app wil now search all scales for those notes.  Before it was only searching the standard Western scales: major, minor, pentatonic, and blues.  
+
+Created Fret.jsx to offload processing from FrePnl.render(). This has been begging to be done and resolves a few issues that were lost in the complexity.  Fret.jsx only formulates HTML.  Logic and event handling remain in FretPnl.jsx. Requires a little more attention but its a good start at simplifying things.   
+
+After playing with [Framer Motion](https://www.framer.com/motion/) a little more, I found that I could adapt existing state handlers to work with Motion. I'm very impressed with Motion's stability and documentation.  I'll be incorporating it more widely to replace some Javascript logic.  
+
+- upgraded to v0.1.7
+- fixed bug in duplicate function: some values were not transferred to duplicated Fretboard
+- fixed bug: disabled frets can be selected
+- fixed bug: selecting the blank interval would cause a crash
+- resolved: clicking a fretbar with a button no longer activates button.onclick because user should click button. This prevents accidental button clicks on iPad/iPhone.
+- created Fret.jsx to simplify and consolidate FrePnl.render() 
+- FretSelect scale matches now match against all scales
+- AboutDlg update: made headings standout to improved readability
+- added spin animations to buttons  
+- synchronized and optimized animations
+
 #### 20211015:  
 Implemented simple animations with [Framer Motion](https://www.framer.com/motion/).  It was applied to InfoPnl lists to provide a smoother user interaction.  The implementation is fairly basic, as a broader implementation will require a new level of state management, which will be down the road a bit.  
    
@@ -91,7 +109,7 @@ Updated guitar_lib.inversions() to correctly calculate inversion octaves, interv
 - in FretRoot mode, InfoPnl Chord Inversions now correctly display octaves
 - updated guitar_lib.inversions() to correctly calculate octaves and semitones of notes
 - updated guitar_lib.inversions() to include correct interval names
-- added guitar_lib.inversionLog() to write inversions to console (to support of testing)
+- added guitar_lib.inversionLog() to write inversions to console (to support testing)
 - fixes, tweaks, and updates
 
 #### 20211007:  
@@ -200,14 +218,15 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo  
-- About Dlg, make headings standout as they get lost in a sea of text; improve readability
-- refactor: disambiguate chord (object) vs chordName (string)
-- implement regression testing with Selenium  
+- display useful messages to user with a SnackBar component or create something useful
+- is this a bug: when a string or fret is filtered, selected notes are not removed, but cannot be seen; this may confuse users; however, should it stay this way until user de-selects the notes?
+- guitar_lib refactor: disambiguate chord (object) vs chordName (string)
+- implement regression testing with Cypress.io  
+- Linux version of FireFox: string filter controls don't align to the strings   
 - change layout of FretButton's controls to position:absolute to prevent them from jumping up and down
 - allow the first created Fretboard control to be deleted.  Currently, only its children may be deleted.
 - fix ./public/favicon.svg colors: image appears dim on white backgrounds  
 - browser bug: zooming out causes random frets and strings to disappear (assume due to x/y location; test by adjusting)   
-- refactor FretPnl.render(): simplify, optimize  
 - add backup feature:  
 -- allow multiple backups by user assigning backup name  
 -- default backup name = 'Auto', will restore on startup; others must be manually loaded by user   

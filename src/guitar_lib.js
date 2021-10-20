@@ -203,7 +203,6 @@ var q = {
             // console.log('  search:', {iOctave:invr.octave, nOctave:nobj.octave, nobjFret:nobj.fret, parentFret:parentFret })
             if( parent === null || (nobj.fret >= parent.fret-3 && nobj.fret <= parent.fret+3 ))  //verify proximity of frets
             //don't verify octaves, leave it for the user to inspect
-            // && ( [0,1].indexOf(invr.octave) >= 0 || nobj.octave === invr.octave ))  //octave == 0||1 means note selected from QueryPnl.selNote
               break;
             else{   //keep searching string
               fret += 12

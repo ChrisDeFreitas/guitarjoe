@@ -25,6 +25,9 @@ function FretButton( props ){
 
   let {root, nobj, qry} = props
 
+  let keyii = 0
+  function key(){ return 'FBtn' +(++keyii) }
+
   function buttonClick(event){
     let btn = event.target
     if(btn.nodeName !== 'BUTTON'){ 
@@ -142,7 +145,7 @@ function FretButton( props ){
     btnState = 'noteFilter'
 
   //format button caption
-  let btncaption = [], key=0
+  let btncaption = []
   let renderParams = {    //for AbcJs
     minPadding:5,   //doesn't work
     paddingtop:0,
@@ -164,27 +167,27 @@ function FretButton( props ){
   //apply button caption style
   if(btnStyle === 'IvlFirst'){
     btncaption.push(
-      <span key={++key} className='spanIvl' onClick={buttonClick} >
-        <span key={++key} onClick={buttonClick} >{ivl.abr.substr(0,1)}</span>
+      <span key={key()} className='spanIvl' onClick={buttonClick} >
+        <span key={key()} onClick={buttonClick} >{ivl.abr.substr(0,1)}</span>
         {ivl.abr.substr(1)}
       </span>
     )
     btncaption.push(
-      <sub key={++key} className='subNote' onClick={btnStyleChange}>{nobj.note}
-          <sub key={++key} className='subOctave' >{nobj.octave}</sub>
+      <sub key={key()} className='subNote' onClick={btnStyleChange}>{nobj.note}
+          <sub key={key()} className='subOctave' >{nobj.octave}</sub>
       </sub>
     )
   }else
   if(btnStyle === 'IvlAbc'){
     btncaption.push(
-      <span key={++key} className='spanIvl' onClick={buttonClick} >
-        <span key={++key} onClick={buttonClick} >{ivl.abr.substr(0,1)}</span>
+      <span key={key()} className='spanIvl' onClick={buttonClick} >
+        <span key={key()} onClick={buttonClick} >{ivl.abr.substr(0,1)}</span>
         {ivl.abr.substr(1)}
       </span>
     )
     btncaption.push(
-      <sub key={++key} className='ivlabc abc' onClick={btnStyleChange}
-         ><Abcjs key={++key} 
+      <sub key={key()} className='ivlabc abc' onClick={btnStyleChange}
+         ><Abcjs key={key()} 
         abcNotation={'K:clef=none\n y' +q.notes.toAbc( nobj )}
         renderParams={renderParams} parserParams={{}} engraverParams={{}}
       /></sub>
@@ -192,36 +195,36 @@ function FretButton( props ){
   } else
   if(btnStyle === 'IvlTab'){
     btncaption.push(
-      <span key={++key} className='spanIvl' onClick={buttonClick} >
-        <span key={++key} onClick={buttonClick} >{ivl.abr.substr(0,1)}</span>
+      <span key={key()} className='spanIvl' onClick={buttonClick} >
+        <span key={key()} onClick={buttonClick} >{ivl.abr.substr(0,1)}</span>
         {ivl.abr.substr(1)}
       </span>
     )
     btncaption.push(
-      <sub key={++key} className='ivltab tab' onClick={btnStyleChange}
+      <sub key={key()} className='ivltab tab' onClick={btnStyleChange}
         >{nobj.tab}</sub>
     )
   }else
   if(btnStyle === 'NoteTab'){      
     btncaption.push(
-      <span key={++key} className='spanNote'  onClick={buttonClick} >{note}
-          <sub key={++key} className='subOctave' onClick={buttonClick} >{nobj.octave}</sub>
+      <span key={key()} className='spanNote'  onClick={buttonClick} >{note}
+          <sub key={key()} className='subOctave' onClick={buttonClick} >{nobj.octave}</sub>
       </span>
     )
     btncaption.push(
-      <sub key={++key} className='notetab tab' onClick={btnStyleChange}
+      <sub key={key()} className='notetab tab' onClick={btnStyleChange}
         >{nobj.tab}</sub>
     )
   }else
   if(btnStyle === 'NoteAbc'){
     btncaption.push(
-      <span key={++key} className='spanNote'  onClick={buttonClick} >{note}
-          <sub key={++key} className='subOctave' onClick={buttonClick} >{nobj.octave}</sub>
+      <span key={key()} className='spanNote'  onClick={buttonClick} >{note}
+          <sub key={key()} className='subOctave' onClick={buttonClick} >{nobj.octave}</sub>
       </span>
     )
     btncaption.push(
-      <sub key={++key} className='abc' onClick={btnStyleChange}
-         ><Abcjs key={++key} 
+      <sub key={key()} className='abc' onClick={btnStyleChange}
+         ><Abcjs key={key()} 
         abcNotation={'K:clef=none\n y' +q.notes.toAbc( nobj )}
         renderParams={renderParams} parserParams={{}} engraverParams={{}}
       /></sub>
@@ -229,19 +232,19 @@ function FretButton( props ){
   } 
   else {  // (btnStyle === 'NoteFirst')
     btncaption.push(
-      <span key={++key} className='spanNote'  onClick={buttonClick} >{note}
-          <sub key={++key} className='subOctave' onClick={buttonClick} >{nobj.octave}</sub>
+      <span key={key()} className='spanNote'  onClick={buttonClick} >{note}
+          <sub key={key()} className='subOctave' onClick={buttonClick} >{nobj.octave}</sub>
       </span>
     )
     if(nobj.ivl){
       btncaption.push(
-        <sub key={++key} className='subInterval' onClick={btnStyleChange} >{ivl.abr}</sub>
+        <sub key={key()} className='subInterval' onClick={btnStyleChange} >{ivl.abr}</sub>
       )
     }
   }
  
   return (
-    <button key={++key} className='fretButton'  onClick={buttonClick}
+    <button key={key()} className='fretButton'  onClick={buttonClick}
       data-strn={nobj.strgnum} data-fret={nobj.fret}  data-tab={nobj.tab} 
       data-state={btnState} data-selected={selected}
     >
