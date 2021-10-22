@@ -13,6 +13,11 @@ import q from "./guitar_lib.js";
 function InfoPnl( props ){
   let {qry} = props
 
+  function chordShapeClick(event){
+    event.stopPropagation()
+    let btn = event.target   
+    props.stateChange( 'chordShape', btn.dataset.shape )
+  }
   function fsChordClick( event ){
     let btn = event.target
     // console.log('fsChordClick', btn.dataset.note, btn.dataset.abr)
@@ -54,6 +59,7 @@ function InfoPnl( props ){
       props.stateChange( 'chordInvrSelected', null )
       props.stateChange( 'noteFilter', 'clear' )
       props.stateChange( 'scaleTriadSelected', null )
+      props.stateChange( 'chordShape', null )
     }
     else {   //default noteFilter: highlight all FretButtons with selected note
       if(btn.className !== 'ivl')
@@ -365,7 +371,7 @@ function InfoPnl( props ){
       htmlCaption = []
       htmlItems = []
 
-      htmlCaption.push( 
+      htmlCaption.push(     //chord caption
         <span key={++key} className='propName' onClick={infoItemClick} data-selected='label'>
           {qry.root.note 
             // +(qry.rootType === 'fretRoot' ?qry.root.octave :'')
@@ -373,7 +379,7 @@ function InfoPnl( props ){
         </span> 
       )
 
-      qry.chord.ivls.forEach( ivl => {
+      qry.chord.ivls.forEach( ivl => {    //chord intervals
         if(qry.noteFilter.indexOf( ivl.note ) >= 0) selected = 'noteFilter'
         else selected = 0
 
@@ -385,7 +391,29 @@ function InfoPnl( props ){
         )
       })
 
-      // if(qry.inversions !== null && qry.chordInvrDisplay === 'Show'){    //draw inversions for major chords
+      
+      if(['maj','min','7'].indexOf(qry.chord.abr) >= 0 ){ //draw chord shapes
+        htmlItems.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
+        htmlItems.push(
+          <span key={++key} className='propName' onClick={infoItemClick} data-selected='label'>
+            Bar Chord Shapes:&nbsp;
+          </span> 
+        )
+        let list = q.chords.shapesByChord( qry.chord.abr )
+        for( let shape of list ){
+          if(qry.chordShape === shape.abr) selected = 'chordShape'
+          else selected = 0
+
+          htmlItems.push( 
+            <span key={++key} className='ivl' onClick={chordShapeClick} 
+              data-shape={shape.abr} data-selected={selected} title={shape.name +' shape'}>
+              &nbsp;{shape.abr}&nbsp; 
+            </span> 
+          )
+        }
+      }
+      
+
       if( qry.inversions !== null ){    //draw inversions for major chords
         let invrs = qry.inversions
         htmlItems.push( <div key={++key} className='lineBreak'>&nbsp; </div>)

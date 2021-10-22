@@ -28,8 +28,7 @@
 var q = {
 
   chords: {
-    //verified against: https://www.omnicalculator.com/other/chord
-    list:[
+    list:[   //verified against: https://www.omnicalculator.com/other/chord
       {
         name:'Major triad', abr:'maj',
         intervals:[ 'P1', 'M3', 'P5' ]
@@ -72,35 +71,23 @@ var q = {
       }
       return null
     },
-    obj( root, chordName ){  //return chord with notes based on root
-      let ivls = [],
-        chord = q.chords.byName( chordName )
-      if(chord === null) return null
+    findByIvls( ivls ){    //find a chord by matching interval.abr
+      // return null or one of q.chords.list[]
+      for( let chord of q.chords.list ){
+        if(chord.intervals.length !== ivls.length) 
+          continue
 
-      if(typeof root === 'string')
-        root = q.intervals.byName( root )   //object returned to caller
-      if(root === null) return null
-
-      let preferFlats = ( 
-          chord.name.indexOf('Minor') >= 0  
-        ||chord.name.indexOf('Diminished') >= 0 
-        || root.note.indexOf('♭') >= 0)
-      for(let iname of chord.intervals){
-        let ivl = q.intervals.byName( iname )
-        let note = q.notes.calc( root, ivl, preferFlats )
-        ivls.push({ ...ivl, note:note })
+        let fnd = true
+        for( let ii = 0; ii < chord.intervals.length; ii++ ){
+           if(ivls[ii].abr !== chord.intervals[ii]){
+             fnd = false
+             break
+           }
+        }
+        if( fnd === true )    // all ivls match
+          return { ...chord }
       }
-
-      let obj = { 
-        ...chord, 
-        type:'chord',
-        fullName: root.note +' '+chord.name,
-        fullAbbrev: root.note +chord.abr,
-        root: root,
-        ivls:ivls
-      }
-
-      return obj
+      return null
     },
     inversions( note, chordName, octave = 0 ){   // return an inversion object for given note and scale
       let robj = null
@@ -109,7 +96,7 @@ var q = {
         note = robj.note
       }else{
         note = note.toUpperCase()
-        robj = q.notes.objByNote( note )
+        robj = q.notes.byNote( note )
       }
       if(octave === null) octave = 0
       robj.octave = Number(octave)
@@ -170,8 +157,9 @@ var q = {
       for( let pos in invrObj.positions){
         data += ' ' +pos +': '
         for( let obj of invrObj.positions[pos] ){
+          if(obj === undefined) continue    //positions[pos][0] === null
           data += obj.interval +' - ' +obj.note +obj.octave
-            +( includeSemis === false ?' ' :'(' +obj.semis +') ' )
+                + ( includeSemis === false ?' ' :'(' +obj.semis +') ' )
         }
         data += '\n'       
       }
@@ -252,25 +240,180 @@ var q = {
       if(list.length === 0) return null
       return list
     },
-    findByIvls( ivls ){    //find a chord by matching interval.abr
-      // return null or one of q.chords.list[]
-      for( let chord of q.chords.list ){
-        if(chord.intervals.length !== ivls.length) 
-          continue
+    obj( root, chordName ){  //return chord object with notes based on root arg
+      let ivls = [],
+        chord = q.chords.byName( chordName )
+      if(chord === null) return null
 
-        let fnd = true
-        for( let ii = 0; ii < chord.intervals.length; ii++ ){
-           if(ivls[ii].abr !== chord.intervals[ii]){
-             fnd = false
-             break
-           }
-        }
-        if( fnd === true )    // all ivls match
-          return { ...chord }
+      if(typeof root === 'string')
+        root = q.intervals.byName( root )   //object returned to caller
+      if(root === null) return null
+
+      let preferFlats = ( 
+          chord.name.indexOf('Minor') >= 0  
+        ||chord.name.indexOf('Diminished') >= 0 
+        || root.note.indexOf('♭') >= 0)
+      for(let iname of chord.intervals){
+        let ivl = q.intervals.byName( iname )
+        let note = q.notes.calc( root, ivl, preferFlats )
+        ivls.push({ ...ivl, note:note })
       }
-      return null
+
+      let obj = { 
+        ...chord, 
+        type:'chord',
+        fullName: root.note +' '+chord.name,
+        fullAbbrev: root.note +chord.abr,
+        root: root,
+        ivls:ivls
+      }
+
+      return obj
     },
 
+    shapes: [   //define patterns for finding barre chords
+      // https://www.guitarplayer.com/lessons/46-chord-shapes-you-must-know-the-ultimate-guide-to-chord-substitutions
+      // https://www.libertyparkmusic.com/guitar-chord-shapes-beginner-to-advanced/
+      // https://www.guitarhabits.com/what-is-the-caged-system-the-keys-to-the-fretboard/
+      // https://appliedguitartheory.com/lessons/minor-caged-system/
+      // https://www.cagedguitarsystem.net/caged-seventh-chords/
+      //
+      // a bar object defines the numerical relationship between the root fret
+      //   and frets on other strings
+      //
+      //rules:      
+      //  strg: root note found on this string, this is a tab string letter
+      //  cnt: number of frets consumed
+      //  list[ string ] === null: string not played
+      //  list[ string ] === integer: add to root fret number to obtain new fret on string
+      //
+      { name:'C Major', abr:'Cmaj', chordAbr:'maj', string:'A', cnt:4,
+        strings:{ E:null, A:0, D:-1, G:-3, B:-2, e:-3 }
+      },
+      { name:'A Major', abr:'Amaj', chordAbr:'maj', string:'A', cnt:3,
+        strings:{ E:null, A:0, D:2, G:2, B:2, e:0 }
+      },
+      { name:'G Major', abr:'Gmaj', chordAbr:'maj', string:'E', cnt:4,
+        strings:{ E:0, A:-1, D:-3, G:-3, B:-3, e:0 }
+      },
+      { name:'E Major', abr:'Emaj', chordAbr:'maj', string:'E', cnt:3,
+        strings:{ E:0, A:2, D:2, G:1, B:0, e:0 }
+      },
+      { name:'D Major', abr:'Dmaj', chordAbr:'maj', string:'D',  cnt:4,
+        strings:{ E:null, A:null, D:0, G:2, B:3, e:2 }
+      },
+      //
+      { name:'C Minor', abr:'Cmin', chordAbr:'min', string:'A', cnt:4,
+        strings:{ E:null, A:0, D:-2, G:-3, B:-2, e:null }
+      },
+      { name:'A Minor', abr:'Amin', chordAbr:'min', string:'A', cnt:3,
+        strings:{ E:null, A:0, D:2, G:2, B:1, e:0 }
+      },
+      { name:'G Minor', abr:'Gmin', chordAbr:'min', string:'E', cnt:4,
+        strings:{ E:0, A:-2, D:-3, G:-3, B:0, e:0 }
+      },
+      { name:'E Minor', abr:'Emin', chordAbr:'min', string:'E', cnt:3,
+        strings:{ E:0, A:2, D:2, G:0, B:0, e:0 }
+      },
+      { name:'D Minor', abr:'Dmin', chordAbr:'min', string:'D',  cnt:4,
+        strings:{ E:null, A:null, D:0, G:2, B:3, e:1 }
+      },
+      //
+      { name:'C Dominant seventh', abr:'C7', chordAbr:'7', string:'A', cnt:3,
+        strings:{ E:null, A:0, D:-1, G:0, B:-2, e:null }
+      },
+      { name:'A Dominant seventh', abr:'A7', chordAbr:'7', string:'A', cnt:3,
+        strings:{ E:null, A:0, D:2, G:0, B:2, e:0 }
+      },
+      { name:'G Dominant seventh', abr:'G7', chordAbr:'7', string:'E', cnt:4,
+        strings:{ E:0, A:-1, D:-3, G:-3, B:-3, e:-2 }
+      },
+      { name:'E Dominant seventh', abr:'E7', chordAbr:'7', string:'E', cnt:3,
+        strings:{ E:0, A:2, D:0, G:1, B:0, e:0 }
+      },
+      { name:'D Dominant seventh', abr:'D7', chordAbr:'7', string:'D',  cnt:4,
+        strings:{ E:null, A:null, D:0, G:2, B:1, e:2 }
+      } 
+      /*/
+      { name:'C Suspended fourth', abr:'Csus4', chordAbr:'sus4', string:'A', cnt:4,
+        strings:{ E:null, A:0, D:0, G:-3, B:-2, e:-2 }
+      },
+      /*/
+    ],
+    shapeByName( name ){   // return barre chord object
+      let bar = q.chords.shapes.find( obj => obj.abr === name || obj.name === name )
+      return (bar === undefined ?null :{ ...bar} )
+    },
+    shapesByChord( chordAbr ){   // return list of barre chord objects
+      let list = q.chords.shapes.filter( shape => shape.chordAbr === chordAbr )
+      if(list.length === 0) return null
+
+      for( let ii in list ){
+        list[ii] = { ...list[ii] }
+      }
+      return list
+    },
+    shapeTabs( shape, note ){    //return object wirh name and tabs for note's barre chord
+      if( typeof shape === 'string' )
+        shape = q.chords.shapeByName( shape )
+      if(typeof note === 'object')
+        note = note.note
+      // console.log( 111, shape )
+        
+      //find root string, fret
+      let roots = q.notes.find( shape.string, note )
+      // console.log( 222, shape.string, note, roots )
+      if( roots === null ) 
+        return null
+        
+      //calculate notes on remaining strings
+      let chord = q.chords.obj( note, shape.chordAbr )
+      // console.log( 333, chord )
+
+      let min = q.fretboard.fretMin
+      let max = q.fretboard.fretMax
+      let filter = 'right'
+      for( let strg in shape.strings){
+        let fret = shape.strings[ strg ]
+        if(fret != null && fret < 0){
+          filter = 'left'
+          break
+        }
+      }
+      if(filter === 'left') min += (shape.cnt -1)  //frets start at 0 (nut)
+      else max -= (shape.cnt -1)
+      // console.log( 444, shape.cnt, filter, q.fretboard.fretMin, min, q.fretboard.fretMax, max )
+
+      let result = []
+      for( let root of roots){
+        if(root.fret < min || root.fret > max ) continue
+        
+        let strings = { E:null, A:null, D:null, G:null, B:null, e:null }
+        for( let ltr in strings){
+          if( shape.strings[ltr] === null ){
+            strings[ltr] = null
+            continue
+          }
+          let tab = ltr +( root.fret +shape.strings[ltr] ) 
+          let note = q.notes.byTab( tab )
+          let ivl = chord.ivls.find( ivl => note.notes.indexOf( ivl.note ) >= 0 )
+          
+          strings[ltr] = { tab:tab, ...ivl }
+        }
+        
+        result.push({
+          chord:( root.note +' ' +chord.name ),
+          abr:( root.note +chord.abr ),
+          shape:( shape.abr +' shape' ),
+          shapeAbr: shape.abr,
+          root: root,
+          type:'shapeTabs',
+          strings:strings
+        })      
+      }
+
+      return result
+    },
   },
 
   fretboard: {
@@ -283,7 +426,7 @@ var q = {
       {num:6, note:'E', octave:2, semis:0, tabLetter:'E' }
     ],
 
-    fretMin:1,
+    fretMin:0,  //0 = nut
     fretMax:14,
     fretMinSet( nn ){   //not used as yet
       q.fretboard.fretMin = nn
@@ -301,7 +444,14 @@ var q = {
       }
     },
     strg( strgN ){  
-      return { ...q.fretboard.strings[ strgN -1 ] }
+      if( typeof strgN === 'number')
+        return { ...q.fretboard.strings[ strgN -1 ] }
+        
+      //assume tab letter
+      let result = q.fretboard.strings.find(
+        strg => strg.tabLetter === strgN
+      )
+      return ( result === undefined ?null :{ ...result } )
     },
     fretInRange(nobj, root, num = 3){
       //assume: root is a notes.obj()
@@ -325,7 +475,7 @@ var q = {
         notes: q.notes.bySemis(semis)
       }
     },
-    objBySemis( semis ){
+    bySemis( semis ){
       let fret = null,
         fretMax = q.fretboard.fretMax
       for(let strg of q.fretboard.strings){
@@ -336,7 +486,7 @@ var q = {
       }
       return null
     },
-    objByTab( tab ){
+    byTab( tab ){
       let ltr = tab.substr(0,1),
         fret = Number(tab.substr(1))
       for( let strg of q.fretboard.strings ){
@@ -438,11 +588,9 @@ var q = {
     },
     findNote( ivls, nobj ){   //return null or ivl containing note
       if(typeof nobj === 'string')
-        nobj = q.notes.objByNote( nobj )
+        nobj = q.notes.byNote( nobj )
       
-      let result = ivls.find( ivl => {
-        return ( nobj.notes.indexOf( ivl.note ) >= 0 )
-      })
+      let result = ivls.find( ivl => nobj.notes.indexOf( ivl.note ) >= 0 )
 
       if( typeof result !== 'object') return null
       return result
@@ -521,7 +669,8 @@ var q = {
       return newlet+newsfx
     },
 
-    find( strgN, note ){ //return null or list of note objects on string
+    find( strgN, note ){ // return null or list of note objects on string
+      note = note.toUpperCase()
       let result = []
       let strg = q.fretboard.strg( strgN )
       let max = strg.semis +q.fretboard.fretMax
@@ -561,11 +710,12 @@ var q = {
         tab: strg.tabLetter +fret
       }
     },
-    objByNote( note /*, octave = 0 */ ){
+    byNote( note /*, octave = 0 */ ){   // return note object
+      // assume note is a string
       let ivl = q.intervals.byNote( note ),
           semis = ivl.semis /* +(octave * 12) */,
           list = q.notes.bySemis( semis )
-          //, fobj = q.fretboard.objBySemis( semis )
+          //, fobj = q.fretboard.bySemis( semis )
       return {
         fret: null, // fobj.fret,    //null because input is not specific to a fret
         note:note,
@@ -577,9 +727,9 @@ var q = {
         tab: null // fobj.tab,
       }
     },
-    objByTab( tab ){
-      let fobj = q.fretboard.objByTab( tab )
-      return q.notes.obj( fobj.strg, fobj.fret )
+    byTab( tab ){
+      let fobj = q.fretboard.byTab( tab )
+      return q.notes.obj( fobj.strgnum, fobj.fret )
     },
 
     match( ivls, nobjList ){    //return true/false if notes in nobjList contained within ivls

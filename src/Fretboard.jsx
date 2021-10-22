@@ -48,6 +48,7 @@ class Fretboard extends React.Component{
       chordName:(props.chordName ?props.chordName :''),
       chordInvrDisplay:(props.chordInvrDisplay ?props.chordInvrDisplay :'Show'),    //Show or Hide
       chordInvrSelected:(props.chordInvrSelected ?props.chordInvrSelected :null),    //user selected inversion position to display
+      chordShape:(props.chordShape ?props.chordShape :''),
 
       ivlName:(props.ivlName ?props.ivlName :''), 
     }
@@ -74,6 +75,7 @@ class Fretboard extends React.Component{
     this.setState({ chordName:'' })
     this.setState({ chordInvrSelected:null })
     this.setState({ chordInvrDisplay:'Show' })
+    this.setState({ chordShape:'' })
     this.setState({ rootType:'' })
     this.setState({ ivlName:'' })
     this.setState({ fretRoot:null })
@@ -274,6 +276,13 @@ class Fretboard extends React.Component{
     if(key === 'chordInvrDisplay'){
      this.setState({ chordInvrDisplay:val })
     }else
+    if(key === 'chordShape'){
+      if( val === null ) val = ''
+      if(this.state.chordShape === val)
+        this.setState({ chordShape:'' })
+      else
+        this.setState({ chordShape:val })
+    }else
     if(key === 'ivlName'){
       this.setState({ ivlName:val })
     }else
@@ -306,6 +315,8 @@ class Fretboard extends React.Component{
       chordInvrDisplay:this.state.chordInvrDisplay,
       chordInvrSelected:this.state.chordInvrSelected,
       chordInvrNotes:null,
+      chordShape:this.state.chordShape,
+      chordShapeData:null,
       inversions:null,
 
       ivl: null,
@@ -329,7 +340,7 @@ class Fretboard extends React.Component{
       if(qry.rootType === 'fretRoot')
         qry.root = this.state.fretRoot    //note object, set in FretPnl.fretClick()
       if(qry.rootType === 'noteSelect' && qry.note !== '' && qry.note !== 'All')
-        qry.root = q.notes.objByNote( qry.note )    //note object
+        qry.root = q.notes.byNote( qry.note )    //note object
 
 
       if(this.state.scaleName !== '' && qry.root){
@@ -343,6 +354,9 @@ class Fretboard extends React.Component{
         qry.inversions = q.chords.inversions(qry.root.note, qry.chord.abr, qry.root.octave )
         if(qry.chordInvrSelected !== null){
           qry.chordInvrNotes = q.chords.inversionNotes(  qry.inversions, qry.chordInvrSelected )
+        }
+        if(qry.chordShape !== ''){
+          qry.chordShapeData = q.chords.shapeTabs(qry.chordShape, qry.root.note)
         }
       }
       if(this.state.ivlName !== '' && qry.root){

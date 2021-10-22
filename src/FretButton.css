@@ -39,6 +39,9 @@
 .fretButton[data-state="chord"]{ background:#ffc06f; }  /*  pale orange */
 .fretButton[data-state="chord1"]{ background:#f90; }  /*  pale orange */
 .fretButton[data-state="chord0"]{ background:#f90; border: 1px #04ff00 solid; }  /*  pale orange, fret root */
+.fretButton[data-state="chordShape"]{ background:#f1601e; }
+.fretButton[data-state="chordShape0"]{ background:#b04a1b; border: 1px #04ff00 solid; }
+.fretButton[data-state="chordShape1"]{ background:#b04a1b;  }
 .fretButton[data-state="invr"]{ background:#e7e; }
 .fretButton[data-state="invr1"]{ background:#e2e; }
 .fretButton[data-state="triad"]{ background:#00e0e0; }

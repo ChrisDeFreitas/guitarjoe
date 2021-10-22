@@ -105,7 +105,7 @@ describe.skip('test notes.calc()', () => {
 })
 
 
-describe('test chord functions', () => {
+describe.skip('test chord functions', () => {
   it("expect q.chords.byName('Maj').abr === 'maj' ", () => {
 		let chord = q.chords.byName('maj')
     expect( chord ).toBeTruthy()
@@ -176,21 +176,21 @@ describe('test chord functions', () => {
     expect( result.positions.Second[3].note ).toBe( 'E' )
     expect( result.positions.Second[3].semis ).toBe( 16 )
   })
-  it.skip("visually test q.chords.inversionNotes('C','maj')", () => {
+  it("visually test q.chords.inversionNotes('C','maj')", () => {
 		let result = q.chords.inversions('C','maj')
     expect( result ).toBeTruthy()
     //extract notes for inversions
     let list = q.chords.inversionNotes( result, 'Second' )
     // console.log( 'q.chords.inversionNotes()', list)
   })
-  it.skip("visually test q.chords.inversionNotes('C','7')", () => {
+  it("visually test q.chords.inversionNotes('C','7')", () => {
 		let result = q.chords.inversions('C','7')
     expect( result ).toBeTruthy()
     //extract notes for inversions
     let list = q.chords.inversionNotes( result, 'First' )
     // console.log( 'q.chords.inversionNotes()', list)
   })
-  it.skip("visually test q.chords.inversionNotes('C','sus2')", () => {
+  it("visually test q.chords.inversionNotes('C','sus2')", () => {
 		let result = q.chords.inversions('C','sus2')
     expect( result ).toBeTruthy()
     //extract notes for inversions
@@ -199,16 +199,58 @@ describe('test chord functions', () => {
   })  
 })
 
-describe.skip('test fretboard.objBySemis()', () => {
+
+describe('test chords.shape functions', () => {
+  it.skip("expect q.chords.shapeByName('D7').chordAbr === '7' ", () => {
+		let result = q.chords.shapeByName('D7')
+    expect( result ).toBeTruthy()
+    expect( result.chordAbr ).toBe( '7' )
+  })
+  it.skip("expect q.chords.shapesByChord('maj').length === 5 ", () => {
+		let result = q.chords.shapesByChord('maj')
+    expect( result ).toBeTruthy()
+    expect( result.length ).toBe( 5 )
+    // console.log( result )
+  })
+  it.skip("expect q.chords.shapeTabs('Emaj', 'e') = [E0,E12] ", () => {
+		let result = q.chords.shapeTabs('Emaj', 'e')
+    expect( result ).toBeTruthy()
+    expect( result.length ).toBe( 2 )
+    expect( result[0].root.tab ).toBe( 'E0' )
+    expect( result[1].root.tab ).toBe( 'E12' )
+    expect( result[0].strings.A ).toBe( 2 )
+    expect( result[1].strings.A ).toBe( 14 )
+    // console.log( result )
+  })
+  it("expect q.chords.shapeTabs('Gmaj', 'e') = [E12]  ", () => {
+		let result = q.chords.shapeTabs('Gmaj', 'e')
+    expect( result ).toBeTruthy()
+    expect( result.length ).toBe( 1 )
+    expect( result[0].root.tab ).toBe( 'E12' )
+    expect( result[0].strings.A.tab ).toBe( 'A11' )
+    // console.log( result[0] )
+  })
+  it.skip("expect q.chords.shapeTabs('Dmaj', 'd') = [D0]  ", () => {
+		let result = q.chords.shapeTabs('Dmaj', 'd')
+    expect( result ).toBeTruthy()
+    expect( result.length ).toBe( 1 )
+    expect( result[0].root.tab ).toBe( 'D0' )
+    expect( result[0].strings.A ).toBe( null )
+    // console.log( result )
+  })
+
+})
+
+describe.skip('test fretboard.bySemis()', () => {
   it("expect q.notes.bySemis('48', true).notes[0] = C", () => {
-		let result = q.fretboard.objBySemis('48')
+		let result = q.fretboard.bySemis('48')
     expect( result ).not.toBe( false )
     expect( result.notes[0] ).toBe( 'C' )
     expect( result.strgnum ).toBe( 2 )
     expect( result.fret ).toBe( 1 )
   })
-  it("expect q.fretboard.objBySemis(35).notes[0] === B ", () => {
-		let result = q.fretboard.objBySemis(35)
+  it("expect q.fretboard.bySemis(35).notes[0] === B ", () => {
+		let result = q.fretboard.bySemis(35)
     expect( result ).not.toBe( false )
     expect( result.notes[0] ).toBe( 'B' )
     expect( result.notes[1] ).toBe( 'C♭' )
@@ -308,9 +350,10 @@ describe.skip('manual tests for notes.match() ', () => {
         let ivls = sobj.ivls    
        	let result = q.notes.match( ivls,  nobs)
 
-        if(result === true) 
-          console.log( ++cnt, note, scale.name+' match: ', ivls.length)
+        if(result === true){
+          // console.log( ++cnt, note, scale.name+' match: ', ivls.length)
           // console.log( ++cnt, note, scale.name+' match: ', ivls)
+        }
       }
       // break
     }

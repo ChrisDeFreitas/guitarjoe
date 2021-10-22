@@ -79,6 +79,11 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 
 ## Updates
 
+#### 20211022:  
+
+- added bar chord shapes for major, minor and seventh chords  
+- minor tweaks and updates
+
 #### 20211020:  
 When in FretSelect mode (selecting more than one note) the app wil now search all scales for those notes.  Before it was only searching the standard Western scales: major, minor, pentatonic, and blues.  
 

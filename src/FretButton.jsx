@@ -139,7 +139,8 @@ function FretButton( props ){
     btnState = nobj.state
   // overrides calculated state
   if(nobj.state === 'triad' || nobj.state === 'triad1'
-  || nobj.state === 'invr'   || nobj.state === 'invr1' )  
+  || nobj.state === 'invr' || nobj.state === 'invr1'
+  || nobj.state === 'chordShape' || nobj.state === 'chordShape0' || nobj.state === 'chordShape1' )
     btnState = nobj.state
   if(qry.noteFilter.indexOf( nobj.note ) >= 0)   // allow overriding roottype because user selected
     btnState = 'noteFilter'

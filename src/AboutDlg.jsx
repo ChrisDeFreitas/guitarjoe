@@ -36,13 +36,19 @@ to facilitate my understanding so I could focus on the guitar instead of managin
 This application has successfully reduced my hair loss--I hope it has the same effect on you!
 <br />
 
-<h3>Whats New in Update 20211020</h3>
-1. When in FretSelect mode (selecting more than one note), the app will now search all scales for those notes.  
+<h3>Whats New in v1.7</h3>
+1. Added bar chord shapes.  To use: <br />
+&nbsp; &nbsp; 1. Select a note<br />
+&nbsp; &nbsp; 2. Select the major, minor, or dominant sevent chord<br />
+&nbsp; &nbsp; 3. The available chord shapes will appear in the InfoPanel. <br />
+&nbsp; &nbsp; &nbsp; &nbsp; Click one to have it drawn on the fretboard.
+<br />
+2. When in FretSelect mode (selecting more than one note), the app will now search all scales for those notes.  
 Before only standard Western scales were searched: major, minor, pentatonic, and blues.  
 <br />
-2. Expanded implementation of animations to smooth user interactions.
+3. Expanded use of animations to smooth user interactions.
 <br />
-3. This version includes a major update to code generating the Fretboard.
+4. This version includes a major update to code generating the Fretboard.
 Fixed a number of bugs. See <a href='https://github.com/ChrisDeFreitas/guitarjoe/' target='_new'>GitHub Repository</a> for details.
 <br />
 

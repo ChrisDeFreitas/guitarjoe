@@ -6,7 +6,7 @@
 */
 
 import React from 'react'
-import { motion } from "framer-motion"
+// import { motion } from "framer-motion"
 
 import './FretPnl.css';
 import Fret from './Fret.jsx';
@@ -225,6 +225,27 @@ class FretPnl extends React.Component{
     let qry = this.props.qry
     if(qry.chord === null) return null
 
+    if(qry.chordShapeData != null){
+      for( let shape of qry.chordShapeData ){
+        for( let strlet in shape.strings ){
+          if(shape.strings[strlet] === null) continue
+          let tab = shape.strings[strlet].tab
+          if( nobj.tab === tab ){
+            nobj.note = shape.strings[strlet].note
+            nobj.ivl = shape.strings[strlet]
+            nobj.state = 'chordShape' 
+            if( qry.root.tab === tab ) nobj.state += 0
+            else
+            if( nobj.notes.indexOf( shape.root.note ) >= 0 ) nobj.state += 1
+            return <FretButton key={this.key()} 
+                      root={qry.root} nobj={nobj}  qry={qry} 
+                      fretSelectFind={this.props.fretSelectFind} 
+                      stateChange={this.props.stateChange} 
+                    />
+          }
+        }
+      }
+    }
     if(qry.chordInvrNotes !== null){    //inversion format take precedence
       let inv = this.props.inversionNoteByTab( nobj.tab )
       if(inv !== null){
