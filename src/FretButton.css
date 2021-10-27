@@ -17,9 +17,9 @@
 .fret0 .fretButton { left:39px; }
 .strg2 .fretButton,
 .strg3 .fretButton,
-.strg4 .fretButton{ top:calc( 1em + 6px) }
+.strg4 .fretButton{ top:calc( 1em + 7px) }
 .strg5 .fretButton,
-.strg6 .fretButton{ top:calc( 1em + 7px) }
+.strg6 .fretButton{ top:calc( 1em + 8px) }
 
 /* appearance of interval captions */
 .fretButton[data-ivl="P1"] sup{ color: #fff; text-shadow:1px 1px 1px #441616; }
@@ -69,6 +69,8 @@
 /* Safari 11+ */
 @media not all and (min-resolution:.001dpcm)
 { @supports (-webkit-appearance:none) and (stroke-color:transparent) {
+  
+  /* adjust button captions */
   .fretButton .spanNote { display:block; position:relative; left:-5px; top:0px; }
   .btnFlatNote{ letter-spacing:-4px; position:relative; top:-2px; }
   .fretButton .subInterval{ cursor:alias; top:-15px; right:-20px; }
@@ -77,4 +79,11 @@
   .fretButton .ivltab{ cursor:alias; top:0px; right:-5px; }
   .fretButton .notetab{ cursor:alias; top:-15px; right:-20px; }
 
+  /* position fretButton over string */
+  .strg1 .fretButton{ top:calc( 6px) }
+  .strg2 .fretButton{ top:calc( 1em + 11px) }
+  .strg3 .fretButton,
+  .strg4 .fretButton{ top:calc( 1em + 12.5px) }
+  .strg5 .fretButton,
+  .strg6 .fretButton{ top:calc( 1em + 12px) }
 }}

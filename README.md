@@ -79,6 +79,12 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 
 ## Updates
 
+#### 20211027:  
+
+- refactored string filter buttons to resolve issue on Linux Firefox
+- adjusted fret button position on iPhone and iPad
+- Chord Inversions: added note that some can't be displayed
+
 #### 20211022:  
 
 - added bar chord shapes for major, minor and seventh chords  
@@ -227,7 +233,6 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 - is this a bug: when a string or fret is filtered, selected notes are not removed, but cannot be seen; this may confuse users; however, should it stay this way until user de-selects the notes?
 - guitar_lib refactor: disambiguate chord (object) vs chordName (string)
 - implement regression testing with Cypress.io  
-- Linux version of FireFox: string filter controls don't align to the strings   
 - change layout of FretButton's controls to position:absolute to prevent them from jumping up and down
 - allow the first created Fretboard control to be deleted.  Currently, only its children may be deleted.
 - fix ./public/favicon.svg colors: image appears dim on white backgrounds  

@@ -26,9 +26,11 @@ function Fret( props ){
 
   let btnStrFltr = null    //string filter image for fret0
   if(fret === 0 && strg >= 1 && strg <= 6){
+    // <div>&diams;</div>
     btnStrFltr=(
-     <div key={key()} className={'btnFilter btnStrgFltr btnStrgFltr'+strg} onClick={props.strgFltrClick} data-strn={strg} data-fret={fret} >
-      <div>&diams;</div>
+     <div key={key()} className={'btnStrgFltr btnStrgFltr'+strg} onClick={props.strgFltrClick} data-strn={strg} data-fret={fret} 
+      title='Click to enable/disable this string'>
+      <div>&nbsp;</div>
      </div>
     )
   }

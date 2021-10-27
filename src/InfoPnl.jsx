@@ -414,7 +414,7 @@ function InfoPnl( props ){
       }
       
 
-      if( qry.inversions !== null ){    //draw inversions for major chords
+      if( qry.inversions !== null ){    //draw inversions
         let invrs = qry.inversions
         htmlItems.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
 
@@ -451,6 +451,13 @@ function InfoPnl( props ){
             )
           }
         }
+
+        htmlItems.push( 
+          <span key={++key} className='propName'  data-selected='note'>
+            Note: some inversions can not be displayed, see "About" for details.
+          </span>
+         )
+        
       }
 
       html.push(<ArrowPnl 

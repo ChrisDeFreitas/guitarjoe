@@ -19,7 +19,7 @@ const About = () => (
       <div className="modal">
         <div className="header"> 
           About GuitarJoe 
-          <span className='hdVer'>v1.7 20201020</span> 
+          <span className='hdVer'>v1.7 20201027</span> 
           <hr className='hrLine' /> 
         </div>
         <div className="content">
@@ -36,10 +36,10 @@ to facilitate my understanding so I could focus on the guitar instead of managin
 This application has successfully reduced my hair loss--I hope it has the same effect on you!
 <br />
 
-<h3>Whats New in v1.7</h3>
+<h3>New in v1.7</h3>
 1. Added bar chord shapes.  To use: <br />
 &nbsp; &nbsp; 1. Select a note<br />
-&nbsp; &nbsp; 2. Select the major, minor, or dominant sevent chord<br />
+&nbsp; &nbsp; 2. Select the major, minor, or dominant seventh chord<br />
 &nbsp; &nbsp; 3. The available chord shapes will appear in the InfoPanel. <br />
 &nbsp; &nbsp; &nbsp; &nbsp; Click one to have it drawn on the fretboard.
 <br />
@@ -50,6 +50,10 @@ Before only standard Western scales were searched: major, minor, pentatonic, and
 <br />
 4. This version includes a major update to code generating the Fretboard.
 Fixed a number of bugs. See <a href='https://github.com/ChrisDeFreitas/guitarjoe/' target='_new'>GitHub Repository</a> for details.
+<br />
+5. Modified string filter buttons to resolve a formatting issue with Firefox on Linux
+<br />
+6. Ajusted fret button position on iPhone and iPad
 <br />
 
 <h3>About Chord Inversions</h3>

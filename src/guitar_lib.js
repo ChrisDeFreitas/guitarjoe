@@ -1,7 +1,7 @@
 /*
   ♭ &flat; alt+?
   
-  GuitarJoe's guitar logic
+  GuitarJoe's guitar theory logic
   by Chris DeFreitas, ChrisDeFreitas777@gmail.com
   
    Note:
@@ -17,14 +17,8 @@
     - assume: exception handling performed by caller
 
   Todo:
-    - disambiguate chord (object) vs chordName (string)
-    - verify code consistency
-    -- verify usage of for..in (not iterable) vs for..of (iterable)
-    --- confirm for..in is used with objects, not arrays
     - (when needed) update notes.calc() for ##/bb -- see comments in function
-  
- */
-
+*/
 var q = {
 
   chords: {

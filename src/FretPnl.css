@@ -15,7 +15,7 @@
   background-color:#3d3b4fff; border:0; padding:0; 
   height:2em; max-height:2em; width:5em; min-width:5em; position:relative;
 }
-.fretPnl .strg .fret{ cursor:pointer; }   /* all fret cells */
+.fretPnl .strg .fret{ cursor:pointer; position:relative; }   /* all fret cells */
  
 .fretPnl .frameTop td[data-fretfilter="true"]{      /* filtered fret numbers */
   color:#3c31a7; 
@@ -76,11 +76,6 @@
   text-align:center;
   height:0.5em;
 }
-/* .fretPnl .frame td .collapsed{    * show a bar every third fret when qry.collpased=true *
-  background-color:#71b578;
-  height:3px;
-  margin-top:0.5em;
-} */
 .fretPnl .frameBottom .tdBottom{ position:relative; }
 
 /* strings */
@@ -95,4 +90,14 @@
 .fretPnl .strg5 .stringdiv{ height:2px;  }
 .fretPnl .strg6 .stringdiv{ height:2.5px;  }
 
-
+/* string filter buttons */
+.fretPnl .btnStrgFltr{ background:#177d7f; border:none; border-radius:5px;
+  color:#177d7f; cursor:pointer; outline:0; z-index:100;
+  position:absolute; font-size:16px; width:32px; left:px; 
+}
+.fretPnl .btnStrgFltr1{  top:7px; }
+.fretPnl .btnStrgFltr2{  top:23px; }
+.fretPnl .btnStrgFltr3,
+.fretPnl .btnStrgFltr4,
+.fretPnl .btnStrgFltr5,
+.fretPnl .btnStrgFltr6{  top:24px; }

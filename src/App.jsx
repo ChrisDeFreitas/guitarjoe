@@ -18,7 +18,7 @@ function App(){
 
   const [fbs, setFbs] = useState( [{id:0, state:true}] )  //one cell for each fretboard instance
   const [newid, setNewId] = useState( null )		// assigned in duplicate()
-  
+
   function indexOfFbid( fbid ){
     for(let ii=0; ii < fbs.length; ii++){
       if(fbs[ii].id === fbid)
