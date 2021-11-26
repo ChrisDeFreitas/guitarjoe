@@ -10,6 +10,7 @@ import { motion } from "framer-motion"
 import './Fretboard.css';
 import InfoPnl from "./InfoPnl"
 import ArrowButton from './controls/ArrowButton'
+import HelpManager from './controls/HelpManager.jsx'
 import q from "./guitar_lib.js"
 
 
@@ -18,7 +19,11 @@ class QueryPnl extends React.Component {
   constructor(props){
     super(props)
 
+    this.helpManagerOpen = true  //have helpManager remove self when === false
+                                 //technique does not work with state because of re-renders
+
     this.btnDupeClick = this.btnDupeClick.bind(this)
+    this.btnHelpClick = this.btnHelpClick.bind(this)
     this.btnDelClick = this.btnDelClick.bind(this)
 
     this.last = {}    //store last query params to allow reset via label.click
@@ -46,6 +51,17 @@ class QueryPnl extends React.Component {
   }
   btnDupeClick(){
     this.props.duplicate()
+  }
+  btnHelpClick(){
+    if( this.helpManagerOpen === true ){  
+      this.helpManagerOpen = false //will hide then call parent.stateChange
+      this.forceUpdate()
+    }
+    else{ //show help
+      this.helpManagerOpen = true
+      let val = !this.props.qry.helpManager
+      this.props.stateChange( 'helpManager', val )
+    }
   }
   selLabelClick( event ){     //reset param to off value
     let qry = this.props.qry,
@@ -247,8 +263,17 @@ class QueryPnl extends React.Component {
     // console.log('queryPnl.render()', this.props)
     let qry = this.props.qry
     let qryBtnClass = (qry.collapsed ?'qryBtnSmall' :'qryBtn')
-    // let qryDisplayClass = (qry.collapsed ?'queryPnlHide' :'queryPnlShow')
- 
+
+    let helpManager = null
+    if(qry.helpManager === true){
+      helpManager = <HelpManager fbid={qry.fbid} 
+        stateChange={this.props.stateChange} 
+        isOpen={this.helpManagerOpen} 
+      />
+    }
+    else
+     this.helpManagerOpen = false //reset
+    
     let arrowUord = (qry.collapsed ?'dn' :'up')
     let arrowTitle = (qry.collapsed ?'Show Query panel' :'Hide Query panel')
     let arrowWidth = (qry.collapsed ?'1.5em' :'2em')
@@ -293,6 +318,7 @@ class QueryPnl extends React.Component {
             selNoteVal={this.props.selNoteVal}
             stateChange={this.props.stateChange}
            />
+           {helpManager}
         </td><td className='tdQryBtnsRight'>
             <div className={qryBtnClass +' qryBtnClear'} onClick={this.btnClearClick} title='Reset query controls'>
               <motion.div 
@@ -301,6 +327,14 @@ class QueryPnl extends React.Component {
                   >
                   &#8635;
               </motion.div>
+            </div>
+            <div className={qryBtnClass +' qryBtnHelp'} onClick={this.btnHelpClick} title='Display help panel' >
+              <motion.div 
+                whileTap={{ transform:'rotateZ(360deg)' }}
+                transition={{ type:'spring', damping: 30 }}
+              >
+                &#63;
+              </motion.div>              
             </div>
             <div className={qryBtnClass +' qryBtnDupe'} onClick={this.btnDupeClick} title='Duplicate fretboard' >
               <motion.div 

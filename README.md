@@ -50,6 +50,7 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
   - <a href='https://chir.ag/projects/name-that-color/'>Name that Color</a> by Chirag Meta 
   - [Scale calculator](https://www.scales-chords.com/scalenav.php)
   - [A Study of Scales](https://ianring.com/musictheory/scales/)
+  - [Why are there 3 Minor Scales?](https://www.schoolofcomposition.com/why-are-there-3-minor-scales/)
   - Web based fretboard with paid services: [Fretastic](https://fretastic.com/guitar)
   - Wikipedia: [Chord names and symbols](https://en.wikipedia.org/wiki/Chord_names_and_symbols_(popular_music))
   - Wikipedia: [Diatonic scale](https://en.wikipedia.org/wiki/Diatonic_scale)
@@ -68,9 +69,11 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
  - Application hosted on <a href='https://github.com/ChrisDeFreitas/guitarjoe' target='_new'>GitHub</a>   
  - Background image from <a href='https://www.flickr.com/photos/webtreatsetc/with/4514047664/' target='_new'>WebTreats ETC</a>  
  - Built with the <a href='https://reactjs.org/' target='_new'>React</a> Javascript library  
+ - <a href='https://github.com/sass/dart-sass' target='_new'>Dart Sass</a>  
  - <a href='https://www.framer.com/motion/' target='_new'>Framer Motion</a> animation library for React
  - Fuggles font by Robert Leuschke on <a href='https://fonts.google.com/?query=Robert+Leuschke/' target='_new'>Google Fonts</a>  
  - Guitar icon by monkik from the <a href='https://thenounproject.com/term/guitar/2588464/' target='_new'>Noun Project</a>  
+ - <a href='https://www.npmjs.com/package/markdown-to-jsx/'>markdown-to-jsx</a>  
  - <a href='https://developer.mozilla.org/'>Mozilla Developer Network</a> web technology reference
  - Popup control from <a href='https://react-popup.elazizi.com/' target='_new'>reactjs-popup</a>  
  - <a href='https://github.com/rigobauer/react-abcjs'>react-abcjs</a>, a React component that uses abcjs 
@@ -78,6 +81,18 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 
 
 ## Updates
+
+#### 20211126:  
+Added help documentation that appears on startup. It is also accessible from the new "?" button in the QueryPanel. It will be updated over time as I agonize over my writing process.  
+
+To facilitate the documentation I created a component called HelpManager that allows documentation to be written with Markdown. Its working very well so far.  
+
+Also introduced the use of Sass to pave the way to refactoring FretButton.jsx.  
+
+- changed to v0.1.8
+- created HelpManager component to control help display
+- installed Dart Sass to simplify CSS wrangling  
+- for clarity in docs, renamed FretButton to NoteButton 
 
 #### 20211027:  
 
@@ -229,10 +244,8 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo  
-- display useful messages to user with a SnackBar component or create something useful
+- refactor FretButton.jsx: rename to NoteButton for consistency with help docs
 - is this a bug: when a string or fret is filtered, selected notes are not removed, but cannot be seen; this may confuse users; however, should it stay this way until user de-selects the notes?
-- guitar_lib refactor: disambiguate chord (object) vs chordName (string)
-- implement regression testing with Cypress.io  
 - change layout of FretButton's controls to position:absolute to prevent them from jumping up and down
 - allow the first created Fretboard control to be deleted.  Currently, only its children may be deleted.
 - fix ./public/favicon.svg colors: image appears dim on white backgrounds  

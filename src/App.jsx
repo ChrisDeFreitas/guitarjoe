@@ -4,7 +4,7 @@
   - entrypoint for GuitrJoe app
 
 */
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 import './App.css';
 // import './Bgnd.css';
@@ -13,11 +13,17 @@ import Fretboard from "./Fretboard"
 import About from "./AboutDlg"
 import { ReactComponent as Logo } from './resources/logo.svg'
 
-
 function App(){
 
   const [fbs, setFbs] = useState( [{id:0, state:true}] )  //one cell for each fretboard instance
   const [newid, setNewId] = useState( null )		// assigned in duplicate()
+
+  const useFirstRender = () => {    //will return false after initial call
+    const ref = useRef(true);
+    const firstRender = ref.current;
+    ref.current = false;
+    return firstRender;
+  }
 
   function indexOfFbid( fbid ){
     for(let ii=0; ii < fbs.length; ii++){
@@ -55,7 +61,10 @@ function App(){
     // console.log('App.remove()', fbid, list)
   }
 
-  let list = [], fbCount=fbs.length
+  let list = [], 
+    fbCount=fbs.length,
+    firstRender = useFirstRender()
+
   for(let ii=0; ii < fbCount; ii++){
     let el = null,
       id = fbs[ii].id,       //use in .key to help react
@@ -89,10 +98,17 @@ function App(){
         chordInvrSelected={state.chordInvrSelected}
 		
         ivlName={state.ivlName}
+        helpManager={state.helpManager}
+        firstRender={false}
       />
     }else{
-      if(state !== false) //existing fretboard; magic of react does not overwrite old data
-        el = <Fretboard key={id} fbid={id} duplicate={duplicate} remove={remove} />
+      if(state !== false){ //existing fretboard; magic of react does not overwrite old data
+        el = <Fretboard key={id} fbid={id} 
+          duplicate={duplicate} 
+          firstRender={firstRender}
+          remove={remove} 
+        />
+      }
     }
     if(el != null)
       list.push( el )
@@ -102,7 +118,7 @@ function App(){
     <div className="App">
 			<header className="App-header header">
         <Logo className="Logo" alt="Logo" />
-        GuitarJoe v0.1.7 
+        GuitarJoe v0.1.8 
         <About />
       </header>
 			{list}

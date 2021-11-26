@@ -20,6 +20,10 @@ class Fretboard extends React.Component{
     super(props)
     this.qry = null
     //keep state private to isolate from children
+
+    let helpManager = (props.helpManager ?props.helpManager : false)
+    if(props.firstRender === true) helpManager = true
+
     this.state = {
 			fbid:(props.fbid ?props.fbid :0),
 			
@@ -51,6 +55,8 @@ class Fretboard extends React.Component{
       chordShape:(props.chordShape ?props.chordShape :''),
 
       ivlName:(props.ivlName ?props.ivlName :''), 
+      // helpManager:(props.helpManager ?props.helpManager : false), 
+      helpManager:helpManager, 
     }
     this.duplicate = this.duplicate.bind(this)
     this.remove = this.remove.bind(this)
@@ -78,6 +84,7 @@ class Fretboard extends React.Component{
     this.setState({ chordShape:'' })
     this.setState({ rootType:'' })
     this.setState({ ivlName:'' })
+    this.setState({ helpManager:false })
     this.setState({ fretRoot:null })
     this.setState({ selNoteVal:'' })
     this.setState({ octave:0 })
@@ -286,6 +293,9 @@ class Fretboard extends React.Component{
     if(key === 'ivlName'){
       this.setState({ ivlName:val })
     }else
+    if(key === 'helpManager'){
+      this.setState({ helpManager:val })
+    }else
     if(key === 'semis')
       this.setState({ semis:val })
   }
@@ -324,6 +334,8 @@ class Fretboard extends React.Component{
       fretSelect: this.state.fretSelect,
       fretSelectMatch: this.state.fretSelectMatch,
       fretSelectMatchDisplay: this.state.fretSelectMatchDisplay,
+     
+      helpManager: this.state.helpManager,
     }
     if(qry.rootType === 'fretSelect'){
       qry.root = this.state.fretSelect[0]    //note object, set in FretPnl.fretClick()
@@ -370,7 +382,7 @@ class Fretboard extends React.Component{
   }
   render(){
     let qry = this.makeQuery()
-    console.log('Fretboard.render()', this.props, this.state, qry)
+    // console.log('Fretboard.render()', this.props, this.state, qry)
     return(
       <div className='fretboard' id={'Fretboard'+qry.fbid}>
         <FretPnl

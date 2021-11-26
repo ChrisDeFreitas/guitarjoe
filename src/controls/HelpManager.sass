@@ -1,0 +1,79 @@
+// 
+//  HelpManager.sass
+  - by Chris DeFreitas, ChrisDeFreitas777@gmail.com
+  - sass for HelpMnager.jsx
+
+@mixin hilited()
+  background-color: #7c7
+  border-radius: 5px
+  color: white
+  cursor: pointer
+
+.helpManagerFrame
+  background-color: #fff
+  border: 2px inset #0006
+  border-radius: 5px
+  color: #777
+  font-size: 0.8em
+  margin: 0 auto
+  padding: 0.5em 1.5em 0.5em 2em
+  text-align: left
+  width: 40em
+  height: 0px   // expanded with framer-motion
+  overflow-y: hidden
+
+  .menuFrame   // top breadcrumb menu
+    font-size: 0.8em
+    position: relative
+    left: -2px
+    .btnClose
+      border-radius: 5px
+      color: #D80
+      font-size: 1.2em
+      padding: 5px 10px
+      position: absolute
+      top: 10px
+      right: 20px
+      &:hover
+        @include hilited
+    span
+      padding: 2px 5px
+      &:hover
+        @include hilited
+
+  .titleFrame   // topic.title || topic.tile (link.title)
+    color: #333
+    font-size: 1.2em
+    font-style: italic
+    padding: 0.5em 0 0 0
+    text-shadow: 1px 1px 1px #bbc
+
+  .contentFrame  // help markdown text: topic.content
+    font-size: 1em
+    padding: 0 1em
+    height: auto
+    max-height: 35em
+    overflow-y: auto
+    p       // format markdown
+      margin: 0.8em 0 0.5em 0
+    ul       // format markdown
+      margin: 0
+      padding: 0 0 0 2em
+
+  .relatedFrame  // related topics: topic.related
+    font-size: 1.2em
+    padding: 1em 0 1em 1em
+    
+    .caption
+      color: #333
+      font-style: italic
+      margin: 0 0 0.3em -1em
+      text-shadow: 1px 1px 1px #bbc
+    span
+      font-size: 0.8em
+      padding: 2px 5px
+      &:hover
+        @include hilited
+      //&:first-child   <<< fails in sass
+        // background-color: red
+        // margin: 0 0 0 -1em

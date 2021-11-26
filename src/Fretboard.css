@@ -42,7 +42,7 @@
 .dataPnl select[data-state="chord"]{ background-color:#eab555; }
 
 .tdQryBtnsLeft{ padding:0.5em 0.25em 0 0; text-align:right; width:8em; } 
-.tdQryBtnsRight{ padding:0.5em 0 0 0.5em; text-align:left; width:12em; } 
+.tdQryBtnsRight{ padding:0.5em 0 0 0.5em; text-align:left; width:16em; } 
 /* .queryPnlHide .tdQryBtnsLeft, 
 .queryPnlHide .tdQryBtnsRight{ padding-top:0; }
 */
@@ -50,8 +50,9 @@
   box-shadow: 5px 5px 15px 1px #0000007a; color:#000; cursor:pointer; 
   display:inline-block; margin:0 0.25em;
   font-weight:normal; text-shadow:1px 1px 1px #fff6; text-align:center;
-  font-size:1.25em; padding:2px 5px;
+  font-size:1.25em; padding:2px 5px; width:1em;
  }
+/* .qryBtnHelp{  } */
 .qryBtnSmall{
   background-color:hsl(177deg 68% 31% / 92%); border-radius:5px; 
   box-shadow: 5px 5px 15px 1px #0000007a; color:#000; cursor:pointer; 
