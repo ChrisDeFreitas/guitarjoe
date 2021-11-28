@@ -70,7 +70,7 @@ In AllNotes mode, the caption cycles between staff and tab data.
 \n
 **Fret Numbers**\n
 - Fret numbers are located above the FretBoard.
-If the FretBoard is collapsed the buttons are removed and green lines appear 
+If the FretBoard is collapsed the buttons are removed and green lines be 
 above frets 5, 7, 9, and 12.
 - Click a Fret Number to disable a fret and hide any NoteButtons on the fret.
 The fret is grayed and it's notes are not clickable.
