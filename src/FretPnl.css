@@ -76,7 +76,7 @@
   text-align:center;
   height:0.5em;
 }
-.fretPnl .frameBottom .tdBottom{ position:relative; }
+.fretPnl .frameBottom .tdBottom{ cursor:default; position:relative; }
 
 /* strings */
 .fretPnl tr[data-fltr="true"] .stringdiv{ background-color:#ffffff20; }

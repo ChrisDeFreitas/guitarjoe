@@ -30,28 +30,27 @@ helpData.QuickTips = {
   title:'Quick Tips',
   related:['Fretboard', 'QueryPanel', 'InfoPanel', 'Scales','Chords','Intervals'],
   content:`
-See the About dialog for details about the application and code repository on GitHub.
-GuitarJoe works in four modes that are activated automatically based on how it is used:
+GuitarJoe works in four modes that are automatically activated:
 \n
 **AllNotes Mode** - Display all notes on fretboard\n
-- From the Note list, select 'All' - all notes on the Fretboard are populated with NoteButtons.
+- From the Note list, select 'All' - the Fretboard is populated with NoteButtons.
+- Click the button's left caption to give it a green background.
+- Click the button's right caption to cycle between Staff and Tab data.
 - Use the Octave list to display notes in a selected Octave.
-- On any NoteButton, click the note to highlight the button in green.
-- On any NoteButton, click the lower right corner to cycle between Staff and Tab display.
 \n
 **NoteSelect Mode** - Display a Root note across the fretboard\n
-- From the Note list, select any note - Root NoteButtons are drawn across the fretboard.
-- Selected scales, chords, and intervals will be based on the Root.
+- From the Note list, select any note - All Root NoteButtons are displayed.
+- Selected scales, chords, and intervals will use this Root.
 \n
 **FretRoot Mode** - Focus on notes in part of the fretboard\n
 - Click a note on the fretboard - this is the Root note.
 - Selected octaves, scales, and chords will be within 3 frets of the Root.
-
 \n
 **FretSelect Mode** - Find matching chords and notes\n
 - Click multiple notes on the fretboard - related chords and scales will be 
 displayed within the InfoPanel.
-- The first note clicked is the Root note.
+
+See "About" for application and GitHub code repository details.
   `,
 }
 helpData.Fretboard = {
@@ -61,27 +60,28 @@ helpData.Fretboard = {
 The Fretboard contains the first 14 frets of a guitar fretboard.
 It has many clickable features:\n
 **Notes**\n
-- Click on any note to place a NoteButton.
-- Click the NoteButton's caption to highlight the button in green.
-- Click the NoteButton's lower right corner to cycle the data displayed.
-In AllNotes mode, it cycles between Staff and Tab display. 
-In the other modes it will cycle through combinations of note, interval, staff and tab data.
+- Click on any note to place a NoteButton -   
+If it is the only button, click again to remove it.  
+If more than one, they will have left and right captions.  
+- Click the left caption to highlight the button in green.  
+In FretSelect mode, this will remove the button from the Fretboard.  
+- Click the right caption to cycle combinations of note, interval, staff and tab data.  
+In AllNotes mode, the caption cycles between staff and tab data.   
 \n
 **Fret Numbers**\n
 - Fret numbers are located above the FretBoard.
 If the FretBoard is collapsed the buttons are removed and green lines appear 
-above fret numbers 5, 7, 9, and 12.
+above frets 5, 7, 9, and 12.
 - Click a Fret Number to disable a fret and hide any NoteButtons on the fret.
-The fret is grayed and notes on the fret will no longer be clickable.
-- When clicked again, existing NoteButtons will be returned.
+The fret is grayed and it's notes are not clickable.
+- When clicked again, existing NoteButtons will be replaced.
 - If the FretBoard is collapsed the space remains clickable.
 \n
 **String Filter Buttons**\n
 - The String Filter Buttons are green rectangles on the string's left edge.
-- Click a String button to disable a string and hide any NoteButtons 
-on the string. The string is grayed and
-notes on the string will no longer be clickable.
-- When clicked again, existing NoteButtons will be returned.
+- Click one to disable the string and hide NoteButtons on the string. 
+The string is grayed and it's notes are not clickable.
+- When clicked again, existing NoteButtons will be replaced.
 \n
   `
 }
@@ -94,7 +94,7 @@ Use it to tell GuitarJoe what work you want to do.
 Features:\n
 
 **Collapse Button**\n
-- This is the first button from the left, with the arrow.  Click to compact or expand the display.
+- This is the arrow button on the far left.  Click to compact or expand the display.
 \n
 **List Captions**\n
 - Clicking a caption will toggle the last selected value on and off.  
@@ -102,8 +102,7 @@ Features:\n
 \n
 **Note List**\n
 - Select a Root note to work with. 
-Selected Octaves, Scales, Chords, and Intervals will be 
-relative to the Root note.
+Selected Octaves, Scales, Chords, and Intervals will use this as their root.
 - Select "All" to display all NoteButtons on the Fretboard.
 - When "All" is selected, only the Octave list will be active.
 \n
@@ -114,14 +113,14 @@ relative to the Root note.
 **Scale List**\n
 - Select from a variety of scales. 
 - When a scale is selected, Scale Degrees based on the Root note are displayed 
-below the QueryPanl within the InfoPanel.
-- The NoteButtons displayed are determined by the GuitarJoe's Mode.
+below, within the InfoPanel.
+- The scale's NoteButtons displayed are determined by the Mode.
 \n
 **Chord List**\n
 - Select from a variety of chords. 
 - When a chord is selected, Chord Inversions based on the Root note are displayed 
-below the QueryPanl within the InfoPanel.
-- The NoteButtons displayed are determined by the GuitarJoe's Mode.
+below, within the InfoPanel.
+- The chord's NoteButtons displayed are determined by the Mode.
 \n
 **Interval List**\n
 - Display NoteButtons the selected Interval from the Root note.
@@ -130,7 +129,7 @@ below the QueryPanl within the InfoPanel.
 - Remove all changes to the Fretboard.
 \n
 **Help Button**\n
-- Click to toggle this Help Panel.
+- Click to toggle this HelpPanel.
 \n
 **Duplicate Button**\n
 - Click to create a duplicate of the Fretboard.  Any number of Fretboards may be created.

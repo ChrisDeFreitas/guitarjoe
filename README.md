@@ -82,6 +82,13 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 
 ## Updates
 
+#### 20211128:  
+- fixed: clicking off fretboard, below string 6, was selecting a note
+- fixed: clicking string after fret 14 raised error
+- prevented HelpPanel from flashing when content changes
+- updated help 
+- tweaks
+
 #### 20211126:  
 Added help documentation that appears on startup. It is also accessible from the new "?" button in the QueryPanel. It will be updated over time as I agonize over my writing process.  
 
@@ -244,6 +251,10 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo  
+- transfer AboutDlg content to HelpData.js  
+-- ??? will AboutDlg require new HelpManager props: HideMenu, HideRelated  
+-- ??? or replace AboutDlg with HelpPanel  
+- add Links in content to Related Topics: See also linkToHelpManager:About
 - refactor FretButton.jsx: rename to NoteButton for consistency with help docs
 - is this a bug: when a string or fret is filtered, selected notes are not removed, but cannot be seen; this may confuse users; however, should it stay this way until user de-selects the notes?
 - change layout of FretButton's controls to position:absolute to prevent them from jumping up and down

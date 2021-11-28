@@ -30,34 +30,32 @@ class FretPnl extends React.Component{
       strN = Number(cell.dataset.strn), 
       fret = Number(cell.dataset.fret)
 
+    event.stopPropagation()
     if( isNaN(strN) ){
       console.log('FretPnl.fretClick() error, bad caller:', cell)
       return 
     }
-    event.stopPropagation()
-    if(cell.dataset.fretfilter === "true")
+    if(strN > 7 || fret > q.fretboard.fretMax || cell.dataset.fretfilter === "true")
       return
 
+    //calc string number in use
     if(strN === 7){
-      strN = 6
+      strN = 6 
     }else
-    if(strN !== 1 && cell.nodeName === 'TD'){ //calc string to use
-      let  cy = event.clientY,
-        abs = cell.getBoundingClientRect(),
-        top = abs.top,
-        mid = top +(cell.offsetHeight  /2)
-
+    if(strN !== 1){ 
+      let cy = event.clientY,
+      rect = cell.getBoundingClientRect(),
+      mid = rect.top +(cell.offsetHeight  /2)
       if(cy < mid) strN--
     }
 
     if(this.props.strgFiltered( strN ) === true)
       return
 
-    // console.log('fretPnl.fretClick:', strN, fret, cell.className)
     let note = q.notes.obj( strN, fret )
     let btn = document.querySelector( '#Fretboard' +qry.fbid +' .fretButton[data-tab=' +note.tab +']')
     if(btn !== null){
-      // Note: ignore because they should click the button
+      // Note: ignore because user must click button
       // however, this works:
       //   event.target = btn
       //   btn.click( event )

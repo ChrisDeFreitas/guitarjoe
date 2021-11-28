@@ -93,12 +93,13 @@ function HelpManager( props ) {
   return(
     <motion.div className='helpManagerFrame' id={'helpManager'+fbid}
       key={key()}
-      animate={isOpen ? "open" : "closed"}
+      initial={'open'}
+      animate={isOpen ?'open' :'closed'}
       variants={{
-        open: { height: 'auto', opacity:1 },
-        closed: { height: '0px', opacity:0 },
+        open: { height:'auto', opacity:1 },
+        closed: { height:'0px', opacity:0 },
       }}
-      transition={{ ease:"easeOut", duration:0.3 }}
+      transition={{ ease:'easeOut', duration:0.3 }}
       onAnimationComplete={onAniComplete}
     >
       <div className='menuFrame'>
