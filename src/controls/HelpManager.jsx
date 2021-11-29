@@ -22,11 +22,13 @@ function HelpManager( props ) {
   // console.log('HelpManager', props)
   
   let {fbid, stateChange} = props
-  const [isOpen, setIsOpen] = useState( true )
+  const [isOpen, setIsOpen] = useState( true )  //false = rollup, then remove component
+  const [topicClicked, setTopicClicked] = useState( false ) //true = new topic to display, do not rollup because 
   const [crumbs, setCrumbs] = useState( ['Help'] )
 
-  if(props.isOpen === false && isOpen === true)
+  if(props.isOpen === false && isOpen === true){
     setIsOpen( false )    //close request from QueryPanel
+  }
 
   function topicClick( event ){
     let btn = event.target,
@@ -38,6 +40,8 @@ function HelpManager( props ) {
       list = crumbs.slice( 0, idx +1 )
     else
       list.push( topic )
+      
+    setTopicClicked( true )
     setCrumbs( list )
   }
   function btnCloseClick(){
@@ -93,9 +97,10 @@ function HelpManager( props ) {
   return(
     <motion.div className='helpManagerFrame' id={'helpManager'+fbid}
       key={key()}
-      initial={'open'}
+      initial={topicClicked ?'open' :'closed'}
       animate={isOpen ?'open' :'closed'}
       variants={{
+        initial: { height:'0px', opacity:0 },
         open: { height:'auto', opacity:1 },
         closed: { height:'0px', opacity:0 },
       }}
@@ -119,6 +124,7 @@ function HelpManager( props ) {
 HelpManager.propTypes = {
   fbid: PropTypes.number,
   isOpen: PropTypes.bool,
+  // firstRender: PropTypes.bool,  
   stateChange: PropTypes.func,
 }
 export default HelpManager

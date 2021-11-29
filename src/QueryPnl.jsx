@@ -266,7 +266,9 @@ class QueryPnl extends React.Component {
 
     let helpManager = null
     if(qry.helpManager === true){
-      helpManager = <HelpManager fbid={qry.fbid} 
+      helpManager = <HelpManager 
+        fbid={qry.fbid} 
+        // firstRender={this.helpManagerOpen === true}
         stateChange={this.props.stateChange} 
         isOpen={this.helpManagerOpen} 
       />

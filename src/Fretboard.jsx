@@ -301,7 +301,8 @@ class Fretboard extends React.Component{
   }
   makeQuery(){
     let qry = {
-      fbid:this.state.fbid,
+      fbid: this.state.fbid,
+      firstRender: this.props.firstRender,
 
       collapsed: this.state.collapsed,
       fretBtnStyle: this.state.fretBtnStyle,
