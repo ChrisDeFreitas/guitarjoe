@@ -24,6 +24,9 @@
   height: 0px   // expanded with framer-motion
   opacity: 0    // changed with framer-motion
 
+  a
+    color: #333
+
   .menuFrame   // top breadcrumb menu
     font-size: 0.8em
     position: relative
@@ -47,16 +50,20 @@
     color: #333
     font-size: 1.2em
     font-style: italic
+    // font-weight: bold
     padding: 0.5em 0 0 0
     text-shadow: 1px 1px 1px #bbc
 
   .contentFrame  // help markdown text: topic.content
     font-size: 1em
     padding: 0 1em
-    // height: auto
     height: 30em
     max-height: 30em
     overflow-y: auto
+    // h2       // format markdown
+    h3       // format markdown, same as: ** **\n
+      font-size: 1em
+      margin: 0.8em 0 0.5em 0
     p       // format markdown
       margin: 0.8em 0 0.5em 0
     ul       // format markdown

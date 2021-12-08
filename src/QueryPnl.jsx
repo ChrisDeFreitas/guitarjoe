@@ -19,6 +19,10 @@ class QueryPnl extends React.Component {
   constructor(props){
     super(props)
 
+    this.scaleInfoNew = false
+    this.scaleInfoClose = false
+    this.chordInfoNew = false
+    this.chordInfoClose = false
     this.helpManagerOpen = true  //have helpManager remove self when === false
                                  //technique does not work with state because of re-renders
 
@@ -63,6 +67,7 @@ class QueryPnl extends React.Component {
       this.props.stateChange( 'helpManager', val )
     }
   }
+  
   selLabelClick( event ){     //reset param to off value
     let qry = this.props.qry,
       lbl = event.target,
@@ -79,15 +84,27 @@ class QueryPnl extends React.Component {
         if(this.last['rootType'] === 'fretRoot')
           this.props.stateChange( 'fretRoot', null )
       }else
-      if(lbl.dataset.type === 'chord'){
-        if(qry.chord === null) return
-        this.last['chordName'] = qry.chord.name
-        this.props.stateChange( 'chordName', '' )
-      }else
       if(lbl.dataset.type === 'scale'){
         if(qry.scale === null) return
         this.last['scaleName'] = qry.scale.name
-        this.props.stateChange( 'scaleName', '' )
+        this.scaleInfoNew = false
+        if(qry.scaleTriadDisplay === 'Collapse'){
+          this.props.stateChange( 'scaleName', '' )
+        }else{    //remove panel after close ani
+          this.scaleInfoClose = true
+          this.forceUpdate()
+        }
+      }else
+      if(lbl.dataset.type === 'chord'){
+        if(qry.chord === null) return
+        this.last['chordName'] = qry.chord.name
+        this.chordInfoNew = false
+        if(qry.chordInvrDisplay === 'Collapse'){
+          this.props.stateChange( 'chordName', '' )
+        }else{    //remove panel after close ani
+          this.chordInfoClose = true
+          this.forceUpdate()
+        }
       }else
       if(lbl.dataset.type === 'octave'){
         this.last['octave'] = qry.octave
@@ -110,13 +127,19 @@ class QueryPnl extends React.Component {
             this.props.stateChange( 'fretRoot', this.last['root'] )
         }
       }else
-      if(lbl.dataset.type === 'chord'){
-        if(this.last['chordName'] && this.last['chordName'] !== '')
-          this.props.stateChange( 'chordName', this.last['chordName'] )
-      }else
       if(lbl.dataset.type === 'scale'){
-        if(this.last['scaleName'] && this.last['scaleName'] !== '')
+        if(this.last['scaleName'] && this.last['scaleName'] !== ''){
+          this.scaleInfoNew = (this.props.scaleName === '')
           this.props.stateChange( 'scaleName', this.last['scaleName'] )
+          this.props.stateChange( 'scaleTriadDisplay', 'Show' )
+        }
+      }else
+      if(lbl.dataset.type === 'chord'){
+        if(this.last['chordName'] && this.last['chordName'] !== ''){
+          this.chordInfoNew = (this.props.chordName === '')
+          this.props.stateChange( 'chordName', this.last['chordName'] )
+          this.props.stateChange( 'chordInvrDisplay', 'Show' )
+        }
       }else
       if(lbl.dataset.type === 'octave'){
         if(this.last['octave'] && this.last['octave'] !== '')
@@ -142,23 +165,39 @@ class QueryPnl extends React.Component {
     else
       this.props.stateChange( 'octave', Number(val) )
   }
+  selScaleChange( event ){
+    let sel = event.target,
+      val = sel.options[sel.selectedIndex].text
+    if(val !== ''){
+      this.scaleInfoNew = (this.props.scaleName === '')
+      this.props.stateChange( 'scaleName', val )
+    }
+    else{
+      this.scaleInfoNew = false
+      this.scaleInfoClose = true
+      this.forceUpdate()
+    }
+  }
+  selChordChange( event ){
+    let sel = event.target,
+      val = sel.options[sel.selectedIndex].text.trim()
+    if(val !== ''){
+      this.chordInfoNew = (this.props.chordName === '')
+      this.props.stateChange( 'chordName', val )
+    }
+    else{
+      this.chordInfoNew = false
+      this.chordInfoClose = true
+      this.forceUpdate()
+    }
+  }
   selIntervalChange( event ){
     let sel = event.target,
       opt = sel.options[sel.selectedIndex],
       abr = opt.dataset.abr
     this.props.stateChange( 'ivlName', abr )
   }
-  selChordChange( event ){
-    let sel = event.target,
-      val = sel.options[sel.selectedIndex].text
-    this.props.stateChange( 'chordName', val )
-  }
-  selScaleChange( event ){
-    let sel = event.target,
-      val = sel.options[sel.selectedIndex].text
-    this.props.stateChange( 'scaleName', val )
-  }
-
+  
   // draw controls
   drawSelNote(){
     let qry = this.props.qry,
@@ -263,18 +302,6 @@ class QueryPnl extends React.Component {
     // console.log('queryPnl.render()', this.props)
     let qry = this.props.qry
     let qryBtnClass = (qry.collapsed ?'qryBtnSmall' :'qryBtn')
-
-    let helpManager = null
-    if(qry.helpManager === true){
-      helpManager = <HelpManager 
-        fbid={qry.fbid} 
-        // firstRender={this.helpManagerOpen === true}
-        stateChange={this.props.stateChange} 
-        isOpen={this.helpManagerOpen} 
-      />
-    }
-    else
-     this.helpManagerOpen = false //reset
     
     let arrowUord = (qry.collapsed ?'dn' :'up')
     let arrowTitle = (qry.collapsed ?'Show Query panel' :'Hide Query panel')
@@ -293,6 +320,22 @@ class QueryPnl extends React.Component {
       selChord = this.drawSelChord()
     }
 
+    let scaleInfoClose = this.scaleInfoClose
+    let chordInfoClose = this.chordInfoClose
+    this.scaleInfoClose = false  //reset, if set
+    this.chordInfoClose = false  
+
+    let helpManager = null
+    if(qry.helpManager === true){
+      helpManager = <HelpManager 
+        fbid={qry.fbid} 
+        stateChange={this.props.stateChange} 
+        isOpen={this.helpManagerOpen} 
+      />
+    }
+    else
+     this.helpManagerOpen = false //reset
+    
     return (
       <div className={'queryPnl queryPnlShow'} >
         <table className='tbQuery' ><tbody><tr>
@@ -318,6 +361,13 @@ class QueryPnl extends React.Component {
           <InfoPnl 
             qry={qry} 
             selNoteVal={this.props.selNoteVal}
+
+            scaleInfoNew={this.scaleInfoNew}
+            scaleInfoClose={scaleInfoClose}
+            
+            chordInfoNew={this.chordInfoNew}
+            chordInfoClose={chordInfoClose}
+            
             stateChange={this.props.stateChange}
            />
            {helpManager}
@@ -330,7 +380,7 @@ class QueryPnl extends React.Component {
                   &#8635;
               </motion.div>
             </div>
-            <div className={qryBtnClass +' qryBtnHelp'} onClick={this.btnHelpClick} title='Display help panel' >
+            <div className={qryBtnClass +' qryBtnHelp'} onClick={this.btnHelpClick} title='Display HelpPanel' >
               <motion.div 
                 whileTap={{ transform:'rotateZ(360deg)' }}
                 transition={{ type:'spring', damping: 30 }}

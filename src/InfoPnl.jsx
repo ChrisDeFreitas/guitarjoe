@@ -11,6 +11,8 @@ import ArrowPnl from './controls/ArrowPnl'
 import q from "./guitar_lib.js";
 
 function InfoPnl( props ){
+  // console.log('InfoPnl.render()', props)
+
   let {qry} = props
 
   function chordShapeClick(event){
@@ -82,17 +84,25 @@ function InfoPnl( props ){
   }
   
   function toggleFretSelectMatchDisplay(){
-    let ss = (qry.fretSelectMatchDisplay === 'Show' ?'Hide' :'Show')
+    let ss = (qry.fretSelectMatchDisplay === 'Show' ?'Collapse' :'Show')
     props.stateChange( 'fretSelectMatchDisplay', ss)
   }
   function toggleScaleTriadDisplay(){
-    let ss = (qry.scaleTriadDisplay === 'Show' ?'Hide' :'Show')
+    let ss = (qry.scaleTriadDisplay === 'Show' ?'Collapse' :'Show')
     props.stateChange( 'scaleTriadDisplay', ss)
   }
   function toggleChordInvrDisplay(){
-    let ss = (qry.chordInvrDisplay === 'Show' ?'Hide' :'Show')
+    let ss = (qry.chordInvrDisplay === 'Show' ?'Collapse' :'Show')
     props.stateChange( 'chordInvrDisplay', ss)
   }
+  
+  function scaleCloseCallback(){
+    props.stateChange( 'scaleName', '' )
+  }
+  function chordCloseCallback(){
+    props.stateChange( 'chordName', '' )
+  }
+  
 
   function drawFretSelectMatches( html, key ){    //push matching chords and scales onto html[]
     let selected = 0
@@ -209,12 +219,12 @@ function InfoPnl( props ){
 
 
   let selected = 0, html = [], key=0, lastkey=null
-  let arrowUord, arrowTitle, arrowFunc, htmlCaption = [], htmlItems = []    //for ArrowPnl
+  let  //for ArrowPnl
+    arrowTitle, arrowFunc, 
+    firstRender, isOpen, closeCB,
+    htmlCaption = [], htmlItems = []    
 
   if(qry.rootType === 'fretSelect'){    
-      arrowUord = (qry.fretSelectMatchDisplay === 'Show' ?'up' :'dn')
-      arrowTitle = 'Show/hide matching chords and scales'
-      arrowFunc = toggleFretSelectMatchDisplay
       htmlCaption = []
       htmlItems = []
 
@@ -267,16 +277,26 @@ function InfoPnl( props ){
       }
       key = drawFretSelectMatches( htmlItems, key )
 
+      arrowTitle = 'Show/hide matching chords and scales'
+      arrowFunc = toggleFretSelectMatchDisplay
+
+      firstRender = (qry.fretSelectMatchDisplay === 'Show')
+      isOpen = (qry.fretSelectMatchDisplay === 'Show')
+      closeCB = null
+
       html.push(<ArrowPnl 
         key={++key} 
         caption={htmlCaption}
         items={htmlItems}
 
-        arrowUpOrDn={arrowUord} 
         arrowWidth='1em' 
         arrowTitle={arrowTitle} 
 
         onChange={arrowFunc}
+
+        firstRender={firstRender}
+        isOpen={isOpen} 
+        closeCallback={closeCB}
       />)
   } else
   if(qry.rootType === 'noteSelect' && props.selNoteVal === 'All'){    //special case
@@ -292,9 +312,6 @@ function InfoPnl( props ){
     lastkey = key
 
     if(qry.scale !== null){
-      arrowUord = (qry.scaleTriadDisplay === 'Show' ?'up' :'dn')
-      arrowTitle = 'Show/hide scale degree triads'
-      arrowFunc = toggleScaleTriadDisplay
       htmlCaption = []
       htmlItems = []
 
@@ -315,7 +332,6 @@ function InfoPnl( props ){
         )
       })
 
-      // if(qry.scaleTriads !== null && qry.scaleTriadDisplay === 'Show'){   // draw scale degree triads
       if( qry.scaleTriads !== null ){   // draw scale degree triads
         htmlItems.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
         htmlItems.push( 
@@ -352,22 +368,33 @@ function InfoPnl( props ){
         })
       }
 
+      arrowTitle = 'Show/hide scale degree triads'
+      arrowFunc = toggleScaleTriadDisplay
+
+      firstRender = (props.scaleInfoNew === true && qry.scaleTriadDisplay === 'Show')
+      isOpen = (qry.scaleTriadDisplay === 'Show')
+      closeCB = null
+      if(props.scaleInfoClose === true) {
+        isOpen = false
+        closeCB = scaleCloseCallback
+      }
+
       html.push(<ArrowPnl 
         key={++key} 
         caption={htmlCaption}
         items={htmlItems}
 
-        arrowUpOrDn={arrowUord} 
         arrowWidth='1em' 
         arrowTitle={arrowTitle} 
 
         onChange={arrowFunc}
+
+        firstRender={firstRender}
+        isOpen={isOpen} 
+        closeCallback={closeCB}
       />)
     }
     if(qry.chord !== null){
-      arrowUord = (qry.chordInvrDisplay === 'Show' ?'up' :'dn')
-      arrowTitle = 'Show/hide inversions'
-      arrowFunc = toggleChordInvrDisplay
       htmlCaption = []
       htmlItems = []
 
@@ -460,16 +487,30 @@ function InfoPnl( props ){
         
       }
 
+      arrowTitle = 'Show/hide inversions'
+      arrowFunc = toggleChordInvrDisplay
+
+      firstRender = (props.chordInfoNew === true && qry.chordInvrDisplay === 'Show')
+      isOpen = (qry.chordInvrDisplay === 'Show')
+      closeCB = null
+      if(props.chordInfoClose === true) {
+        isOpen = false
+        closeCB = chordCloseCallback
+      }
+
       html.push(<ArrowPnl 
         key={++key} 
         caption={htmlCaption}
         items={htmlItems}
 
-        arrowUpOrDn={arrowUord} 
         arrowWidth='1em' 
         arrowTitle={arrowTitle} 
-
+        
         onChange={arrowFunc}
+       
+        firstRender={firstRender}
+        isOpen={isOpen} 
+        closeCallback={closeCB}
       />)
     }
     if(qry.ivl !== null){
@@ -508,6 +549,12 @@ InfoPnl.propTypes = {
   qry: PropTypes.object,
   selNoteVal: PropTypes.string,
   stateChange: PropTypes.func,
+
+  scaleInfoNew: PropTypes.bool,
+  scaleInfoClose: PropTypes.bool,
+
+  chordInfoNew: PropTypes.bool,
+  chordInfoClose: PropTypes.bool,
 }
 
 export default InfoPnl

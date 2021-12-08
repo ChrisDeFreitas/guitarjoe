@@ -9,7 +9,7 @@
   color:#000; border:none; border-radius:5px;  box-shadow:1px 1px 5px #0007;
   text-align:left; margin:0; padding-left:10px;
   position:absolute; top:5px; left:15px; height:2em; width:4.5em;
-  z-index:100;
+  overflow:hidden; z-index:100;
 }
 .fretButton{ background:linear-gradient(180deg, #fff,#eec 50%,hsl(60deg 5% 36%) 100%); }
 
@@ -37,8 +37,8 @@
 .fretButton[data-state="noteFilter"]{ background:#aaf; }  /* Melrose */
 .fretButton[data-state="interval"]{ background:#ffff9b; }  /*  pale yellow */
 .fretButton[data-state="chord"]{ background:#ffc06f; }  /*  pale orange */
-.fretButton[data-state="chord1"]{ background:#f90; }  /*  pale orange */
 .fretButton[data-state="chord0"]{ background:#f90; border: 1px #04ff00 solid; }  /*  pale orange, fret root */
+.fretButton[data-state="chord1"]{ background:#f90; }  /*  pale orange */
 .fretButton[data-state="chordShape"]{ background:#f1601e; }
 .fretButton[data-state="chordShape0"]{ background:#b04a1b; border: 1px #04ff00 solid; }
 .fretButton[data-state="chordShape1"]{ background:#b04a1b;  }

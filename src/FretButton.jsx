@@ -43,13 +43,15 @@ function FretButton( props ){
     && qry.scale === null && qry.chord === null && qry.ivl === null){    //nothing to do, turn off fretRoot state
 	    props.stateChange( 'fretRoot', null )
     } else
-    if(qry.rootType === 'fretSelect' && btn.dataset.state === 'fretSelect'
-    && btn.dataset.tab === qry.fretSelect[0].tab){ //hide button
+    if(qry.rootType === 'fretSelect' 
+    && btn.dataset.state === 'fretSelect'
+    && btn.dataset.tab === qry.fretSelect[0].tab){ //root note, stop fretSelect mode
         // console.log('buttonClick(): stop fretSelect')
     		props.stateChange( 'fretSelect', null )
         return
     } else
-    if(qry.rootType === 'fretSelect' && props.fretSelectFind( btn.dataset.tab ) >= 0){ //this is a selected fret
+    if(qry.rootType === 'fretSelect' 
+    && props.fretSelectFind( btn.dataset.tab ) >= 0){ //this is a selected note
       if(qry.fretSelect.length === 2 )    //one selected fret after this hidden, change to fretRoot
 		    props.stateChange( 'fretRoot', qry.fretSelect[0] )
       else    //more than two frets selected, deselect this button
@@ -123,7 +125,6 @@ function FretButton( props ){
     }
   }else
   if(qry.rootType === 'fretSelect'){
-    // if(nobj.ivl.abr === 'P1' && nobj.tab === qry.fretSelect[0].tab){
     if(nobj.tab === qry.fretSelect[0].tab){
       btnState = qry.rootType
     }else

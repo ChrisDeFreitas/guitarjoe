@@ -46,11 +46,11 @@ class Fretboard extends React.Component{
       fretSelectMatchDisplay:(props.fretSelectMatchDisplay ?props.fretSelectMatchDisplay :'Show'),    //Show or Hide
 
       scaleName:(props.scaleName ?props.scaleName :''),
-      scaleTriadDisplay:(props.scaleTriadDisplay ?props.scaleTriadDisplay :'Show'),    // Show or Hide
+      scaleTriadDisplay:(props.scaleTriadDisplay ?props.scaleTriadDisplay :'Show'),    // Show or Collapse
       scaleTriadSelected:(props.scaleTriadSelected ?props.scaleTriadSelected :null),    //null or degree of selected triad
       
       chordName:(props.chordName ?props.chordName :''),
-      chordInvrDisplay:(props.chordInvrDisplay ?props.chordInvrDisplay :'Show'),    //Show or Hide
+      chordInvrDisplay:(props.chordInvrDisplay ?props.chordInvrDisplay :'Show'),    // Show/Collapse
       chordInvrSelected:(props.chordInvrSelected ?props.chordInvrSelected :null),    //user selected inversion position to display
       chordShape:(props.chordShape ?props.chordShape :''),
 
@@ -129,9 +129,9 @@ class Fretboard extends React.Component{
     // else
     if(key === 'collapsed'){
       if(val === true){
-        this.setState({ fretSelectMatchDisplay: 'Hide' })
-        this.setState({ scaleTriadDisplay: 'Hide' })
-        this.setState({ chordInvrDisplay: 'Hide' })
+        this.setState({ fretSelectMatchDisplay: 'Collapse' })
+        this.setState({ scaleTriadDisplay: 'Collapse' })
+        this.setState({ chordInvrDisplay: 'Collapse' })
       }
       else{
         this.setState({ fretSelectMatchDisplay: 'Show' })

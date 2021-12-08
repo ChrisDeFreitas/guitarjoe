@@ -3,19 +3,6 @@
   - by Chris DeFreitas, ChrisDeFreitas777@gmail.com
   - data for HelpManager.jsx
 
-  data structure:
-    helpData = {
-      default: topic2,    //required, default topic displayed on startup
-      topic1: {           // a link record
-        title: string,
-        link: topic2,     //display content for this topic
-      },
-      topic2: {           //a standard help record, at least one required
-        title: string,
-        related: array,   //related topics, displayed at bottom of window
-        content: Markdown text    //help info
-      }
-    }
 */
 
 var helpData = {}
@@ -48,9 +35,10 @@ GuitarJoe works in four modes that are automatically activated:
 \n
 **FretSelect Mode** - Find matching chords and notes\n
 - Click multiple notes on the fretboard - related chords and scales will be 
-displayed within the InfoPanel.
+displayed within the InfoPanel.\n
+\n 
+See "About" for application and GitHub code repository details.  
 
-See "About" for application and GitHub code repository details.
   `,
 }
 helpData.Fretboard = {
@@ -59,7 +47,7 @@ helpData.Fretboard = {
   content:`
 The Fretboard contains the first 14 frets of a guitar fretboard.
 It has many clickable features:\n
-**Notes**\n
+### Notes 
 - Click on any note to place a NoteButton -   
 If it is the only button, click again to remove it.  
 If more than one, they will have left and right captions.  
@@ -68,7 +56,7 @@ In FretSelect mode, this will remove the button from the Fretboard.
 - Click the right caption to cycle combinations of note, interval, staff and tab data.  
 In AllNotes mode, the caption cycles between staff and tab data.   
 \n
-**Fret Numbers**\n
+### Fret Numbers
 - Fret numbers are located above the FretBoard.
 If the FretBoard is collapsed the buttons are removed and green lines be 
 above frets 5, 7, 9, and 12.
@@ -77,7 +65,7 @@ The fret is grayed and it's notes are not clickable.
 - When clicked again, existing NoteButtons will be replaced.
 - If the FretBoard is collapsed the space remains clickable.
 \n
-**String Filter Buttons**\n
+### String Filter Buttons
 - The String Filter Buttons are green rectangles on the string's left edge.
 - Click one to disable the string and hide NoteButtons on the string. 
 The string is grayed and it's notes are not clickable.

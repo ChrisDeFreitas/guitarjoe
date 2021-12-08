@@ -82,6 +82,17 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 
 ## Updates
 
+#### 20212--:  
+This update was pushed to address a critical error that was overlooked in testing: clicking a string did not work.
+
+The ArrowPanel open and close animations were added, but it will be refactored to use the shouldComponentUpdate() lifecycle method.
+
+- fixed bug: clicking a string directly created a notebutton on string above
+- AllNotes mode fix: clicking below string 6 selects notebutton
+- ArrowPnl.jsx fix: refactored animations, its not perfect, but a few steps closer
+- HelpManager update: added ability to link to other topics and other topic headings
+
+
 #### 20211128:  
 - fixed: clicking off fretboard, below string 6, was selecting a note
 - fixed: clicking string after fret 14 raised error
@@ -251,9 +262,9 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo  
-- transfer AboutDlg content to HelpData.js  
--- ??? will AboutDlg require new HelpManager props: HideMenu, HideRelated  
--- ??? or replace AboutDlg with HelpPanel  
+- selecting chord and interval removes root highlighting; should follow border color pattern for root note  
+-- refactor noteButton css with saas to simplify logic  
+- transfer AboutDlg content to HelpData.js ; update AboutDlg to use markdown
 - add Links in content to Related Topics: See also linkToHelpManager:About
 - refactor FretButton.jsx: rename to NoteButton for consistency with help docs
 - is this a bug: when a string or fret is filtered, selected notes are not removed, but cannot be seen; this may confuse users; however, should it stay this way until user de-selects the notes?

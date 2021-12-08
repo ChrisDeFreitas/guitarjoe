@@ -42,11 +42,13 @@ class FretPnl extends React.Component{
     if(strN === 7){
       strN = 6 
     }else
-    if(strN !== 1){ 
+    if( strN !== 1 && cell.className.indexOf('stringdiv') < 0 ){ 
       let cy = event.clientY,
-      rect = cell.getBoundingClientRect(),
-      mid = rect.top +(cell.offsetHeight  /2)
-      if(cy < mid) strN--
+        rect = cell.getBoundingClientRect(),
+        mid = rect.top +(cell.offsetHeight  /2)
+      if(cy < mid) {
+        strN--
+      }
     }
 
     if(this.props.strgFiltered( strN ) === true)
@@ -385,16 +387,7 @@ class FretPnl extends React.Component{
               ssClassName = 'fretFilterCollapsed'
           }
           cls = (col === (fretMax +1) ?'borderRight tdBorder'+col :'tdBorder'+col)
-          clickfunc = this.fretFltrClick
-/*
-this animation causes other anims to run on every re-draw
-              animate={ qry.collapsed === true ?'collapsed' :'default' }
-              variants={{
-                collapsed: { color:'#0000', textShadow:'1px 1px 5px #0000' },
-                default: { color:'#ffffff80', textShadow:'1px 1px 5px #0008' },
-              }}
-              transition={{ ease:"easeOut", duration:0.4 }}
-*/          
+          clickfunc = this.fretFltrClick   
           content = <div key={this.key()} data-fret={col} className={ssClassName} >{ss}</div>
         }else
         if(row === 9){  //bottom frame
