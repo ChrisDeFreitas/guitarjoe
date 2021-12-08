@@ -82,7 +82,7 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 
 ## Updates
 
-#### 20212--:  
+#### 2021207:  
 This update was pushed to address a critical error that was overlooked in testing: clicking a string did not work.
 
 The ArrowPanel open and close animations were added, but it will be refactored to use the shouldComponentUpdate() lifecycle method.
