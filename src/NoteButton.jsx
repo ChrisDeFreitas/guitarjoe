@@ -1,18 +1,18 @@
 /*
-  FretButton.jsx
+  NoteButton.jsx
   - by Chris DeFreitas, ChrisDeFreitas777@gmail.com
-  - used by FrePnl.jsx of GuitrJoe app
+  - used by FretPnl.jsx of GuitrJoe app
 
 */
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './FretButton.css';
+import './NoteButton.scss';
 import q from "./guitar_lib.js";
 import Abcjs from "./controls/react-abcjs"
 
 // sample:
-// <button className='fretButton'>
+// <button className='noteButton'>
 //   <span className=spanNote >C
 //     <sub className='subOctave' >octave</sub>
 //   </span>
@@ -20,10 +20,13 @@ import Abcjs from "./controls/react-abcjs"
 // </button>
 
 
-function FretButton( props ){
-  // console.log('FretButton', props)
+function NoteButton( props ){
+  // console.log('NoteButton', props)
 
   let {root, nobj, qry} = props
+
+  if(qry.octave !== 0 && qry.octave !== nobj.octave)
+    return null  
 
   let keyii = 0
   function key(){ return 'FBtn' +(++keyii) }
@@ -38,32 +41,22 @@ function FretButton( props ){
     if(btn.nodeName !== 'BUTTON') return
     event.stopPropagation()
 
-    if(['fretRoot','noteSelect'].indexOf( qry.rootType ) >= 0  
-    && ['fretRoot','noteSelect'].indexOf( btn.dataset.state ) >= 0
+    if(['fretRoot','noteSelect'].indexOf( qry.mode ) >= 0  
+    && btn.classList.contains('root')
     && qry.scale === null && qry.chord === null && qry.ivl === null){    //nothing to do, turn off fretRoot state
 	    props.stateChange( 'fretRoot', null )
     } else
-    if(qry.rootType === 'fretSelect' 
-    && btn.dataset.state === 'fretSelect'
+    if(qry.mode === 'fretSelect' 
+    && btn.classList.contains('root')
     && btn.dataset.tab === qry.fretSelect[0].tab){ //root note, stop fretSelect mode
-        // console.log('buttonClick(): stop fretSelect')
-    		props.stateChange( 'fretSelect', null )
-        return
+      props.stateChange( 'fretSelect', null )
     } else
-    if(qry.rootType === 'fretSelect' 
+    if(qry.mode === 'fretSelect' 
     && props.fretSelectFind( btn.dataset.tab ) >= 0){ //this is a selected note
-      if(qry.fretSelect.length === 2 )    //one selected fret after this hidden, change to fretRoot
-		    props.stateChange( 'fretRoot', qry.fretSelect[0] )
-      else    //more than two frets selected, deselect this button
-     		props.stateChange( 'fretSelect', btn.dataset.tab)
+      props.stateChange( 'fretSelect', btn.dataset.tab)   //toggle btn
     }
     else{   //toggle button selected state
-      let selected = Number( btn.dataset.selected )
-      if(selected === 0)
-        btn.dataset.selected = 1
-      else
-      if(selected === 1)
-        btn.dataset.selected = 0
+      btn.classList.toggle('selected')
     }
   }
   function btnStyleChange(event){   //toggle formatting of fret button captions
@@ -89,64 +82,11 @@ function FretButton( props ){
    		props.stateChange( 'fretBtnStyle', 'NoteFirst' )
   }
 
-  let btnState = '', 
-    btnStyle = qry.fretBtnStyle,
+  let btnStyle = qry.fretBtnStyle,
     ivl = nobj.ivl, 
     selected = 0
-    
-    if(ivl === undefined || ivl === null){
-      switch(btnStyle){
-        case 'IvlFirst': btnStyle = 'NoteFirst'; break;
-        case 'IvlAbc': btnStyle = 'NoteAbc'; break;
-        case 'IvlTab': btnStyle = 'NoteTab'; break;
-        default: break; //for React automated testing
-      } 
-    }
-
-  //assign format for root note button
-  if(root === 'ALL'){   //user selected All Notes
-    if(qry.octave !== 0 && qry.octave !== nobj.octave)
-      return null      
-    if( ['NoteAbc','NoteTab'].indexOf( qry.fretBtnStyle ) < 0 )
-      btnStyle = 'NoteAbc'
-  }else
-  if(qry.rootType === 'fretRoot'){
-    if(nobj.notes.indexOf( root.note ) >= 0  &&  nobj.semis === root.semis){
-      if(nobj.state === 'chord1')
-        btnState = 'chord0'   //defines fret root is chord root
-      else
-        btnState = qry.rootType
-    }
-  }else
-  if(qry.rootType === 'noteSelect'){
-    if(root.notes.indexOf( nobj.note ) >= 0){
-      if(qry.chord === null)
-        btnState = qry.rootType
-    }
-  }else
-  if(qry.rootType === 'fretSelect'){
-    if(nobj.tab === qry.fretSelect[0].tab){
-      btnState = qry.rootType
-    }else
-    if(nobj.fsmatch){
-      btnState = 'fretSelectMatch'
-      if(nobj.notes.indexOf( qry.fretSelectMatch.obj.ivls[0].note ) >= 0) //obj = scale || chord
-        btnState += 1   //fretSelectMatch1 == root note of chord or scale
-    }
-  }
-
-  //button.dataset.state used to apply CSS
-  if(btnState === '' && nobj.state)
-    btnState = nobj.state
-  // overrides calculated state
-  if(nobj.state === 'triad' || nobj.state === 'triad1'
-  || nobj.state === 'invr' || nobj.state === 'invr1'
-  || nobj.state === 'chordShape' || nobj.state === 'chordShape0' || nobj.state === 'chordShape1' )
-    btnState = nobj.state
-  if(qry.noteFilter.indexOf( nobj.note ) >= 0)   // allow overriding roottype because user selected
-    btnState = 'noteFilter'
-
-  //format button caption
+ 
+    //format button caption
   let btncaption = []
   let renderParams = {    //for AbcJs
     minPadding:5,   //doesn't work
@@ -160,12 +100,21 @@ function FretButton( props ){
     textboxpadding:0,
   }
 
-  let note = nobj.note
-  if( note.indexOf('♭') >= 1 )    //safari does not render ♭ properly
-    note = <span className='btnFlatNote'>{note}</span>
-  else
-    note = <span>{note}</span>
+  let note = <span>{nobj.note}</span>
+  // if( note.indexOf('♭') >= 1 )    //safari does not render ♭ properly
+  //   note = <span className='btnFlatNote'>{note}</span>
+  // else
+    // note = 
   
+  if(ivl === undefined || ivl === null){
+    switch(btnStyle){
+      case 'IvlFirst': btnStyle = 'NoteFirst'; break;
+      case 'IvlAbc': btnStyle = 'NoteAbc'; break;
+      case 'IvlTab': btnStyle = 'NoteTab'; break;
+      default: break; //for React automated testing
+    } 
+  }
+
   //apply button caption style
   if(btnStyle === 'IvlFirst'){
     btncaption.push(
@@ -245,17 +194,37 @@ function FretButton( props ){
     }
   }
  
+  //apply classes in a specific order
+  let btnClass =  [ qry.mode ]
+  if(nobj.notes.indexOf( root.note ) >= 0){
+    btnClass.push('root')
+    if(qry.mode === 'fretRoot'){
+      if(qry.root.tab === nobj.tab)
+        btnClass.push('moderoot')
+    }
+  }
+  if((nobj.fretFltr && nobj.fretFltr === true) 
+  || (nobj.strgFltr && nobj.strgFltr === true) ){
+    btnClass.push('filtered')
+  }
+  if(qry.noteFilter.indexOf( nobj.note ) >= 0){
+    btnClass.push('noteFilter')
+  }else
+  if(nobj.mode !== undefined){
+    btnClass.push(nobj.mode)
+  }
+
   return (
-    <button key={key()} className='fretButton'  onClick={buttonClick}
+    <button key={key()} className={'noteButton '+btnClass.join(' ')}  onClick={buttonClick}
       data-strn={nobj.strgnum} data-fret={nobj.fret}  data-tab={nobj.tab} 
-      data-state={btnState} data-selected={selected}
+      data-selected={selected}
     >
       {btncaption}
     </button>
   )  
 }
 
-FretButton.propTypes = {
+NoteButton.propTypes = {
   root: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object
@@ -266,4 +235,4 @@ FretButton.propTypes = {
   stateChange: PropTypes.func,
 }
 
-export default FretButton
+export default NoteButton

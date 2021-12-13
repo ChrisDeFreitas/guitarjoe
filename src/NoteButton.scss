@@ -1,0 +1,113 @@
+/*
+    NoteButton.sass
+        by Chris DeFreitas, ChrisDeFreitas777@gmail.com
+        styles for buttons displayed by NoteButton.jsx
+*/
+@use 'sass:color';
+
+// position buttons over strings
+.fret0 .noteButton { left:39px; }
+.strg2 .noteButton,
+.strg3 .noteButton,
+.strg4 .noteButton{ top:calc( 1em + 7px) }
+.strg5 .noteButton,
+.strg6 .noteButton{ top:calc( 1em + 8px) }
+
+.noteButton { 
+    
+  background:linear-gradient(180deg, #fff,#eec 50%,hsl(60deg 5% 36%) 100%);
+  color:#000; border:none; border-radius:5px;  box-shadow:1px 1px 5px #0007;
+  text-align:left; margin:0; padding-left:10px;
+  position:absolute; top:5px; left:15px; height:2em; width:4.5em;
+  overflow:hidden; z-index:100;
+  
+  &.AllNotes{ border:none; }
+  &.fretRoot.moderoot{ border: 1px #04ff00 solid; } /* green */
+  &.noteSelect.root{ border: 1px #fffb00 solid;  } /* yellow */
+  &.fretSelect.root{ border: 1px #00afff solid;  }  /* azure radiance */
+
+  //fretSelect mode
+  $bgColor: #b1e6ff;
+  // &.fretSelect{ background:$bgColor; }   not used
+  // &.fretSelect.root{ background:color.scale( $bgColor, $lightness: -15% ); } 
+  &.fretSelectMatch{ background:$bgColor; } 
+  &.fretSelectMatch.root{ background:color.scale( $bgColor, $lightness: -15% ); } 
+
+  
+  // fretRoot and noteSelect style classes ordered within NoteButton.jsx:
+  &.noteFilter{ background:#aaf; }  // Melrose
+
+  //intervals
+  $bgColor: #ffff9b;  //pale yellow
+  &.interval{ background:$bgColor; } 
+  &.interval.root{ background:color.scale( $bgColor, $lightness: -30% ); } 
+
+  //chords
+  $bgColor: #e7e;  // 
+  &.invr{ background:$bgColor; } 
+  &.invr.root{ background:color.scale( $bgColor, $lightness: -30% ); } 
+
+  $bgColor: #f1601e;  //   
+  &.chordShape{ background:$bgColor; } 
+  &.chordShape.root{ background:color.scale( $bgColor, $lightness: -30% ); } 
+  
+  $bgColor: #ffc06f;     //pale orange
+  &.chord{ background:$bgColor; } 
+  &.chord.root{ background:color.scale( $bgColor, $lightness: -20% ); } 
+
+  //scales
+  $bgColor: #00e0e0;  //   
+  &.triad{ background:$bgColor; } 
+  &.triad.root{ background:color.scale( $bgColor, $lightness: -20% ); } 
+
+  //apply to all modes
+  $bgColor: #3ac664;  //   
+  &.selected{ background:$bgColor; }  // emerald 
+  &.root.selected{ background:color.scale( $bgColor, $lightness: -20% ); }
+
+  &.filtered,
+  &.root.filtered{ opacity: 0.08; }
+
+}
+
+// appearance of interval captions 
+.noteButton[data-ivl='P1'] sup{ color: #fff; text-shadow:1px 1px 1px #441616; }
+.noteButton[data-ivl='m3'] .supInterval,
+.noteButton[data-ivl='M3'] .supInterval{ color: #fff; text-shadow:1px 1px 1px #000; }
+.noteButton[data-ivl='P5'] .supInterval{ color: #fff; text-shadow:1px 1px 1px #000; }
+.noteButton[data-ivl='m7'] .supInterval,
+.noteButton[data-ivl='M7'] .supInterval{ color: #fff; text-shadow:1px 1px 1px #000;  }
+
+// format button text/caption 
+.noteButton sup{ color:#0f000fa0; font-size:0.7em; position:absolute; top:0px; text-shadow:none;  }
+.noteButton sub{ color:#00000050; text-shadow:none; position:relative; }
+.noteButton .subInterval{ cursor:alias; top:0px; right:-12px; }
+.noteButton .abc{ cursor:alias; top:-15px; right:-25px; display:block; max-width:20px; }
+.noteButton .ivlabc{ cursor:alias; top:-12px; right:-25px; display:block; max-width:20px; }
+.noteButton .tab{ cursor:alias; top:-1px; right:-12px; }
+.noteButton .spanNote .subOctave{ color:#0008; font-size:0.6em; }
+.noteButton .spanIvl span{ color:#0007; font-size:0.7em; }
+.noteButton .subNote{ cursor:alias; top:0px; right:-12px; }
+
+
+// for Safari 11+ 
+@media not all and (min-resolution:.001dpcm)
+{ @supports (-webkit-appearance:none) and (stroke-color:transparent) {
+  
+  /* adjust button captions */
+  .noteButton .spanNote { display:block; position:relative; left:-5px; top:0px; }
+  // .btnFlatNote{ letter-spacing:-4px; position:relative; top:-2px; }
+  .noteButton .subInterval{ cursor:alias; top:-15px; right:-20px; }
+  .noteButton .abc{ cursor:alias; top:-16px; right:-15px; display:block; max-width:15px; }
+  .noteButton .ivlabc{ cursor:alias; top:-14px; right:-15px; display:block; max-width:15px; }
+  .noteButton .ivltab{ cursor:alias; top:0px; right:-5px; }
+  .noteButton .notetab{ cursor:alias; top:-15px; right:-20px; }
+
+  /* position noteButton over string */
+  .strg1 .noteButton{ top:calc( 6px) }
+  .strg2 .noteButton{ top:calc( 1em + 11px) }
+  .strg3 .noteButton,
+  .strg4 .noteButton{ top:calc( 1em + 12.5px) }
+  .strg5 .noteButton,
+  .strg6 .noteButton{ top:calc( 1em + 12px) }
+}}

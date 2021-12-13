@@ -43,7 +43,7 @@ class Fretboard extends React.Component{
 
       fretSelect:(props.fretSelect ?props.fretSelect :[]),    //when rootType=fretSelect, list of frets and related data; set in fretPnl.fretClick()
       fretSelectMatch:(props.fretSelectMatch ?props.fretSelectMatch :null),    //user selects a chord or scale to view: {type, name}
-      fretSelectMatchDisplay:(props.fretSelectMatchDisplay ?props.fretSelectMatchDisplay :'Show'),    //Show or Hide
+      fretSelectMatchDisplay:(props.fretSelectMatchDisplay ?props.fretSelectMatchDisplay :'Show'),    //Show or Collapse
 
       scaleName:(props.scaleName ?props.scaleName :''),
       scaleTriadDisplay:(props.scaleTriadDisplay ?props.scaleTriadDisplay :'Show'),    // Show or Collapse
@@ -226,12 +226,17 @@ class Fretboard extends React.Component{
       list.sort(function (a, b) {
         return a.ivl.semis - b.ivl.semis
       })
-
-      this.setState({ fretSelect:list })
-      if(this.state.rootType !== 'fretSelect'){   //set rootType to fretSelect
-        this.setState({ rootType:'fretSelect' })
-        this.setState({ fretRoot:null })
-        this.setState({ selNoteVal:'' })
+      
+      if(list.length === 1){
+        this.stateChange( 'fretRoot', list[0] )
+      }
+      else{
+        this.setState({ fretSelect:list })
+        if(this.state.rootType !== 'fretSelect'){   //set rootType to fretSelect
+          this.setState({ rootType:'fretSelect' })
+          this.setState({ fretRoot:null })
+          this.setState({ selNoteVal:'' })
+        }
       }
     }else
     if(key === 'fretSelectMatch'){
@@ -303,13 +308,14 @@ class Fretboard extends React.Component{
     let qry = {
       fbid: this.state.fbid,
       firstRender: this.props.firstRender,
+      mode: '',
+      rootType: this.state.rootType,    //eventually replace with mode 
 
       collapsed: this.state.collapsed,
       fretBtnStyle: this.state.fretBtnStyle,
       fretFilter: this.state.fretFilter,
       noteFilter: this.state.noteFilter,
 
-      rootType: this.state.rootType,
       root: null,
       note: (this.state.rootType === 'fretRoot' 
               ? this.state.fretRoot.notes[0] 
@@ -338,6 +344,14 @@ class Fretboard extends React.Component{
      
       helpManager: this.state.helpManager,
     }
+
+    if(qry.note === 'All'){
+      qry.mode = 'AllNotes'
+      if( ['NoteAbc','NoteTab'].indexOf( qry.fretBtnStyle ) < 0 )
+        qry.fretBtnStyle = 'NoteAbc'
+    } else
+      qry.mode = qry.rootType
+
     if(qry.rootType === 'fretSelect'){
       qry.root = this.state.fretSelect[0]    //note object, set in FretPnl.fretClick()
   
@@ -375,7 +389,6 @@ class Fretboard extends React.Component{
       if(this.state.ivlName !== '' && qry.root){
         qry.ivl = q.intervals.byName( this.state.ivlName )    //this.state.ivlName == abr
         qry.ivl.note = q.notes.calc( qry.note, qry.ivl )
-        // qry.ivl.notes = q.notes.bySemis( qry.root.semis +qry.ivl.semis )
       }
     }
     this.qry = qry

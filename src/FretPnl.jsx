@@ -10,7 +10,7 @@ import React from 'react'
 
 import './FretPnl.css';
 import Fret from './Fret.jsx';
-import FretButton from './FretButton.jsx';
+import NoteButton from './NoteButton.jsx';
 import q from "./guitar_lib.js";
 
 class FretPnl extends React.Component{
@@ -55,7 +55,7 @@ class FretPnl extends React.Component{
       return
 
     let note = q.notes.obj( strN, fret )
-    let btn = document.querySelector( '#Fretboard' +qry.fbid +' .fretButton[data-tab=' +note.tab +']')
+    let btn = document.querySelector( '#Fretboard' +qry.fbid +' .noteButton[data-tab=' +note.tab +']')
     if(btn !== null){
       // Note: ignore because user must click button
       // however, this works:
@@ -79,7 +79,6 @@ class FretPnl extends React.Component{
       fret = Number( btn.dataset.fret )
 
     event.stopPropagation()
-    // console.log( 'fretFltrClick:', fret, qry.fretFilter )
     this.props.stateChange( 'fretFilter', fret )
   }
   strgFltrClick( event ){
@@ -94,7 +93,7 @@ class FretPnl extends React.Component{
     if(qry.rootType !== 'fretRoot') return null
 
     if(nobj.tab === qry.root.tab){
-      return <FretButton key={this.key()}
+      return <NoteButton key={this.key()}
                 root={qry.root} nobj={nobj}  qry={qry} 
                 fretSelectFind={this.props.fretSelectFind} 
                 stateChange={this.props.stateChange} 
@@ -111,13 +110,13 @@ class FretPnl extends React.Component{
       if(qry.octave === 0 || qry.octave === nobj.octave){
         if(qry.note !== '')
           nobj.note = qry.note
-        // return qq.button( nobj, qry.root  )
-        return <FretButton key={this.key()} 
+        // nobj.mode = 'noteSelect'
+        return <NoteButton key={this.key()} 
                 root={qry.root} nobj={nobj}  qry={qry} 
                 fretSelectFind={this.props.fretSelectFind} 
                 stateChange={this.props.stateChange} 
               />
-  }  }
+    } }
     return null
   }
   fretSelectFind( nobj ){
@@ -131,8 +130,8 @@ class FretPnl extends React.Component{
         if(qry.octave === 0 || qry.octave === nobj.octave){
           nobj.ivl = fso.ivl
           nobj.note = fso.note
-          // return qq.button( nobj, qry.root )
-          return <FretButton key={this.key()} 
+          nobj.mode = 'fretSelect'
+          return <NoteButton key={this.key()} 
                     root={qry.root} nobj={nobj}  qry={qry} 
                     fretSelectFind={this.props.fretSelectFind} 
                     stateChange={this.props.stateChange} 
@@ -154,9 +153,10 @@ class FretPnl extends React.Component{
           nobj.ivl = ivl
           nobj.note = ivl.note
           if(this.props.fretSelectFind( nobj.tab ) < 0)
-            nobj.fsmatch = true
-          // return qq.button( nobj, qry.root )
-          return <FretButton key={this.key()} 
+            nobj.mode = 'fretSelectMatch'
+          else
+            nobj.mode = 'fretSelect'
+          return <NoteButton key={this.key()} 
                     root={qry.root} nobj={nobj}  qry={qry} 
                     fretSelectFind={this.props.fretSelectFind} 
                     stateChange={this.props.stateChange} 
@@ -176,8 +176,8 @@ class FretPnl extends React.Component{
 
     nobj.note = ivl.note
     nobj.ivl = ivl
-    nobj.state = 'triad' +(ivl.num === 1 ?1 :'')
-    return <FretButton key={this.key()} 
+    nobj.mode = 'triad'
+    return <NoteButton key={this.key()} 
               root={qry.root} nobj={nobj}  qry={qry} 
               fretSelectFind={this.props.fretSelectFind} 
               stateChange={this.props.stateChange} 
@@ -189,7 +189,7 @@ class FretPnl extends React.Component{
 
     if(qry.octave === nobj.octave){
       nobj.ivl = qry.ivl
-      return <FretButton key={this.key()} 
+      return <NoteButton key={this.key()} 
                 root={qry.root} nobj={nobj}  qry={qry} 
                 fretSelectFind={this.props.fretSelectFind} 
                 stateChange={this.props.stateChange} 
@@ -210,8 +210,8 @@ class FretPnl extends React.Component{
         if(qry.octave === 0 || qry.octave === nobj.octave){
           nobj.ivl = ivl
           nobj.note = ivl.note
-          // return qq.button( nobj, qry.root )
-          return <FretButton key={this.key()} 
+          nobj.mode = 'scale'
+          return <NoteButton key={this.key()} 
                     root={qry.root} nobj={nobj}  qry={qry} 
                     fretSelectFind={this.props.fretSelectFind} 
                     stateChange={this.props.stateChange} 
@@ -233,11 +233,8 @@ class FretPnl extends React.Component{
           if( nobj.tab === tab ){
             nobj.note = shape.strings[strlet].note
             nobj.ivl = shape.strings[strlet]
-            nobj.state = 'chordShape' 
-            if( qry.root.tab === tab ) nobj.state += 0
-            else
-            if( nobj.notes.indexOf( shape.root.note ) >= 0 ) nobj.state += 1
-            return <FretButton key={this.key()} 
+            nobj.mode = 'chordShape' 
+            return <NoteButton key={this.key()} 
                       root={qry.root} nobj={nobj}  qry={qry} 
                       fretSelectFind={this.props.fretSelectFind} 
                       stateChange={this.props.stateChange} 
@@ -252,8 +249,8 @@ class FretPnl extends React.Component{
         if(qry.octave === 0 || qry.octave === nobj.octave){
           nobj.note = inv.note
           nobj.ivl = inv.invr
-          nobj.state = 'invr' +(inv.invr.num === 1 ?1 :'')
-          return <FretButton key={this.key()} 
+          nobj.mode = 'invr'
+          return <NoteButton key={this.key()} 
                     root={qry.root} nobj={nobj}  qry={qry} 
                     fretSelectFind={this.props.fretSelectFind} 
                     stateChange={this.props.stateChange} 
@@ -270,8 +267,8 @@ class FretPnl extends React.Component{
         if(qry.octave === 0 || qry.octave === nobj.octave){
           nobj.ivl = ivl
           nobj.note = ivl.note
-          nobj.state = 'chord' +(ivl.abr === 'P1' ?'1' :'')
-          return <FretButton key={this.key()} 
+          nobj.mode = 'chord'
+          return <NoteButton key={this.key()} 
                     root={qry.root} nobj={nobj}  qry={qry} 
                     fretSelectFind={this.props.fretSelectFind} 
                     stateChange={this.props.stateChange} 
@@ -286,39 +283,38 @@ class FretPnl extends React.Component{
     if(qry.ivl === null) return null
     
     let btn = null
-    if( (qry.rootType === 'fretRoot' && nobj.tab === qry.root.tab)
-    ||  (qry.rootType === 'noteSelect' && nobj.notes.indexOf(qry.note) >= 0) ){ //this is the root note object
+    if( (qry.mode === 'fretRoot' && nobj.tab === qry.root.tab)
+    ||  (qry.mode === 'noteSelect' && nobj.notes.indexOf(qry.note) >= 0) ){ //this is the root note object
       btn = 'root'
     } else
-    if(qry.rootType === 'fretRoot' && q.fretboard.fretInRange(nobj, qry.root, 4) === true){
+    if(qry.mode === 'fretRoot' && q.fretboard.fretInRange(nobj, qry.root, 4) === true){
       if( nobj.notes.indexOf(qry.ivl.note) >= 0 )
         btn = true
     }else
-    if(qry.rootType === 'noteSelect' && nobj.notes.indexOf(qry.ivl.note) >= 0){
+    if(qry.mode === 'noteSelect' && nobj.notes.indexOf(qry.ivl.note) >= 0){
       btn = true
     }
 
     if(btn === 'root'){
       nobj.ivl = q.intervals.byName('P1')
       nobj.note = qry.note
-      // btn = qq.button( nobj, qry.root  )
     }else
     if(btn === true){
       if(qry.octave === 0 || qry.octave === nobj.octave){
         nobj.ivl = qry.ivl
         nobj.note = qry.ivl.note
-        nobj.state = 'interval'   //new, allow for color coding of intervals
-        // btn =  qq.button( nobj, qry.root  )
       }
       else
         btn = null
     }
-    if(btn != null)
-      return <FretButton key={this.key()} 
+    if(btn != null){
+      nobj.mode = 'interval'
+      return <NoteButton key={this.key()} 
                 root={qry.root} nobj={nobj}  qry={qry} 
                 fretSelectFind={this.props.fretSelectFind} 
                 stateChange={this.props.stateChange} 
               />
+    }
     return null
   }
 
@@ -327,20 +323,20 @@ class FretPnl extends React.Component{
     let btn = null
 
     // ordering is critical because it determines which buttons are on top
-    // all modes respect selOctave filter
 
-    //All notes mode
-    if(qry.rootType === 'noteSelect' && this.props.selNoteVal === 'All')
-      btn = <FretButton key={this.key()} 
+    if(qry.mode === 'AllNotes'){
+      btn = <NoteButton key={this.key()} 
               root={'ALL'} nobj={nobj}  qry={qry} 
               fretSelectFind={this.props.fretSelectFind} 
               stateChange={this.props.stateChange} 
             />
-    //fretSelect mode
-    if(btn === null) btn = this.fretSelectMatchFind( nobj )
-    if(btn === null) btn = this.fretSelectFind( nobj )
+    }
 
-    //noteSelect mode
+    //fretSelect mode
+    if(btn === null) btn = this.fretSelectFind( nobj )
+    if(btn === null) btn = this.fretSelectMatchFind( nobj )
+
+    //noteSelect and fretRoot mode
     if(btn === null) btn = this.ivlFind( nobj )
     if(btn === null) btn = this.chordFind( nobj )
     if(btn === null) btn = this.scaleTriadFind( nobj )
@@ -401,14 +397,14 @@ class FretPnl extends React.Component{
             ?'borderRight col'+col      // right border
             :'fret fret'+col)
 
-          //process fret button
+          //process note button
           let nobj = null
           if( strN <= 6
-           && fretFltr === false    //no filter applied to fret
-           && strgFltr === false    //no filter applied to string
            && col >= this.props.fretFirst 
            && col <= this.props.fretLast){         //filter by fretboard range
             nobj = q.notes.obj( strN, col )
+            nobj.fretFltr = fretFltr
+            nobj.strgFltr = strgFltr
             content = this.buttonFind( nobj )
           }
         }

@@ -82,7 +82,16 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 
 ## Updates
 
-#### 2021207:  
+#### 20211212:  
+- converted FretButton.jsx to NoteButton.jsx to: refactor styling in Javascript; mirror help docs
+- converted FretButton.css to NoteButton.scss to: refactor styling with Sass; tweak colors
+- string/fret filter update: when a noteButton exists on a filtered string it is now made transparent
+- FretSelect mode update: prevented InfoPnl from closing and opening when chords/scales are selected
+- FretRoot mode update: now when only root button selected, clicking remove button instead of turning green
+- iPhone/iPad update: removed special handling of flat notes as they are formattted correctly by Safari 15
+- miscellaneous tweaks
+
+#### 20211207:  
 This update was pushed to address a critical error that was overlooked in testing: clicking a string did not work.
 
 The ArrowPanel open and close animations were added, but it will be refactored to use the shouldComponentUpdate() lifecycle method.
@@ -262,25 +271,20 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo  
-- selecting chord and interval removes root highlighting; should follow border color pattern for root note  
--- refactor noteButton css with saas to simplify logic  
+- NoteButtons: change captions to position:absolute to provide greater control
+- NoteButtons: fully implement modeRoot; add white border for other root notes (triad, inversions etc)
+- fretSelect mode: for selected chords/scales the root must be reset: qry.root = (chord/scale).root
+- implement onClose rollup with shouldComponentUpdate()
 - transfer AboutDlg content to HelpData.js ; update AboutDlg to use markdown
-- add Links in content to Related Topics: See also linkToHelpManager:About
-- refactor FretButton.jsx: rename to NoteButton for consistency with help docs
-- is this a bug: when a string or fret is filtered, selected notes are not removed, but cannot be seen; this may confuse users; however, should it stay this way until user de-selects the notes?
-- change layout of FretButton's controls to position:absolute to prevent them from jumping up and down
 - allow the first created Fretboard control to be deleted.  Currently, only its children may be deleted.
 - fix ./public/favicon.svg colors: image appears dim on white backgrounds  
 - browser bug: zooming out causes random frets and strings to disappear (assume due to x/y location; test by adjusting)   
+- allow for number and range of frets to be changed by user 
 - add backup feature:  
 -- allow multiple backups by user assigning backup name  
 -- default backup name = 'Auto', will restore on startup; others must be manually loaded by user   
 -- add header button: Backups  
 -- functions: backup, restore, delete, save/load from file?  
 -- default save to Local Storage  
-- FretSelect mode update: create an interface allowing the chords and scales looked up to be filtered
-- allow for number and range of frets to changed by user 
-- add ability to play videos in background  
-- dig into source-map-explorer details  
 
 

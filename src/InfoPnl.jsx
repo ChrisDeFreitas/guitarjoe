@@ -10,10 +10,21 @@ import PropTypes from 'prop-types';
 import ArrowPnl from './controls/ArrowPnl'
 import q from "./guitar_lib.js";
 
-function InfoPnl( props ){
-  // console.log('InfoPnl.render()', props)
+let LastMode = false
+let FSLength = 0    //last qry.fretSelect.length for triggering anims
 
+function InfoPnl( props ){
+  console.log('InfoPnl.render()', props)
+  
   let {qry} = props
+
+  // console.log(1, LastMode, FSLength, qry.mode, qry.fretSelect.length)
+  React.useEffect(() => { 
+    //reset history vars
+    LastMode = qry.mode
+    FSLength = (LastMode === 'fretSelect' ?qry.fretSelect.length :0)
+    // console.log(2, LastMode, FSLength)
+  })
 
   function chordShapeClick(event){
     event.stopPropagation()
@@ -63,7 +74,7 @@ function InfoPnl( props ){
       props.stateChange( 'scaleTriadSelected', null )
       props.stateChange( 'chordShape', null )
     }
-    else {   //default noteFilter: highlight all FretButtons with selected note
+    else {   //default noteFilter: highlight all NoteButtons with selected note
       if(btn.className !== 'ivl')
         btn = btn.parentNode
       
@@ -280,7 +291,8 @@ function InfoPnl( props ){
       arrowTitle = 'Show/hide matching chords and scales'
       arrowFunc = toggleFretSelectMatchDisplay
 
-      firstRender = (qry.fretSelectMatchDisplay === 'Show')
+      firstRender = ( qry.fretSelectMatchDisplay !== 'Show'
+                      ?false :LastMode !== 'fretSelect' || FSLength !== qry.fretSelect.length)
       isOpen = (qry.fretSelectMatchDisplay === 'Show')
       closeCB = null
 
@@ -534,7 +546,6 @@ function InfoPnl( props ){
     }
   }
   
-
   if(html.length === 0) return null
   return (
     <div className='infoPnl' >
