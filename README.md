@@ -69,7 +69,7 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
  - Application hosted on <a href='https://github.com/ChrisDeFreitas/guitarjoe' target='_new'>GitHub</a>   
  - Background image from <a href='https://www.flickr.com/photos/webtreatsetc/with/4514047664/' target='_new'>WebTreats ETC</a>  
  - Built with the <a href='https://reactjs.org/' target='_new'>React</a> Javascript library  
- - <a href='https://github.com/sass/dart-sass' target='_new'>Dart Sass</a>, a Dart implementation of [Sass](https://sass-lang.com/).  
+ - <a href='https://github.com/sass/dart-sass' target='_new'>Dart Sass</a>, a Dart implementation of [Sass](https://sass-lang.com/)  
  - <a href='https://www.framer.com/motion/' target='_new'>Framer Motion</a> animation library for React
  - Fuggles font by Robert Leuschke on <a href='https://fonts.google.com/?query=Robert+Leuschke/' target='_new'>Google Fonts</a>  
  - Guitar icon by monkik from the <a href='https://thenounproject.com/term/guitar/2588464/' target='_new'>Noun Project</a>  
@@ -88,7 +88,7 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 - string/fret filter update: when a noteButton exists on a filtered string it is now made transparent
 - FretSelect mode update: prevented InfoPnl from closing and opening when chords/scales are selected
 - FretRoot mode update: now when only root button selected, clicking removes button instead of turning green
-- iPhone/iPad update: removed special handling of flat notes as they are formattted correctly by Safari 15
+- iPhone/iPad update: removed special handling of flat notes as they are formattted correctly by Safari in latest OS
 - miscellaneous tweaks
 
 #### 20211207:  
