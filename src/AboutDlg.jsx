@@ -58,10 +58,12 @@ results in certain inversions having no selections on the fretboard, such as CMa
 &nbsp;- Application hosted on <a href='https://github.com/ChrisDeFreitas/guitarjoe' target='_new'>Github</a>  <br />
 &nbsp;- Background image from <a href='https://www.flickr.com/photos/webtreatsetc/with/4514047664/' target='_new'>WebTreats ETC</a> <br />
 &nbsp;- Built with the <a href='https://reactjs.org/' target='_new'>React</a> Javascript library <br />
+&nbsp;- <a href='https://github.com/sass/dart-sass' target='_new'>Dart Sass</a>, a Dart implementation of <a href='https://sass-lang.com/'>Sass</a>  <br />
 &nbsp;- <a href='https://www.framer.com/motion/' target='_new'>Framer Motion</a> animation library for React <br />
 &nbsp;- Fuggles font by Robert Leuschke on <a href='https://fonts.google.com/?query=Robert+Leuschke/' target='_new'>Google Fonts</a> <br />
 &nbsp;- Guitar icon by monkik from the <a href='https://thenounproject.com/term/guitar/2588464/' target='_new'>Noun Project</a> <br />
-&nbsp;- Popup control from <a href='https://react-popup.elazizi.com/' target='_new'>reactjs-popup</a> <br />
+&nbsp;- <a href='https://www.npmjs.com/package/markdown-to-jsx/'>markdown-to-jsx</a>  React markdown component  <br />
+ &nbsp;- Popup control from <a href='https://react-popup.elazizi.com/' target='_new'>reactjs-popup</a> <br />
 &nbsp;- <a href='https://github.com/rigobauer/react-abcjs'>react-abcjs</a>, a React component that renders notes on music staffs <br />
 <br />
 <br />
