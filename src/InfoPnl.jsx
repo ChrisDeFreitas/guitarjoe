@@ -14,7 +14,7 @@ let LastMode = false
 let FSLength = 0    //last qry.fretSelect.length for triggering anims
 
 function InfoPnl( props ){
-  console.log('InfoPnl.render()', props)
+  // console.log('InfoPnl.render()', props)
   
   let {qry} = props
 
