@@ -280,14 +280,14 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo  
+- wrap changeExecList in try/catch  
 - Dig deeper into Framer Motion's events and methods to trigger animations.  Can the animations be triggered at the HTML level, bypassing render()?  Figure out why AnimatePresence is not working.  
 - Note Select: when 'All Notes' selected, and qry.scale/qry.chord not null should run close animation for InfoPnl (via changeHandler)
 - Scale and Chord Select: need label.style.cursor:pointer when scale/chord in buffer, but null is displayed
 - NoteButtons: change captions to position:absolute to provide greater control
 - NoteButtons: fully implement modeRoot; add white border and bgnd shading to other root notes (triad, inversions etc)
 - fretSelect mode: for selected chords/scales the root must be reset: qry.root = (chord/scale).root
-- implement onClose rollup with shouldComponentUpdate()
-- transfer AboutDlg content to HelpData.js ; update AboutDlg to use markdown
+- transfer AboutDlg content to HelpData.js; update AboutDlg to use markdown
 - allow the first created Fretboard control to be deleted.  Currently, only its children may be deleted.
 - fix ./public/favicon.svg colors: image appears dim on white backgrounds  
 - browser bug: zooming out causes random frets and strings to disappear (assume due to x/y location; test by adjusting)   
