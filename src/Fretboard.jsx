@@ -18,8 +18,9 @@ class Fretboard extends React.Component{
   constructor (props) {
     console.log('Fretboard.constructor()', props)
     super(props)
+
     this.qry = null
-    //keep state private to isolate from children
+    this.newqry = null    //used by this.changeHandlers in shouldComponentUpdate()
 
     let helpManager = (props.helpManager ?props.helpManager : false)
     if(props.firstRender === true) helpManager = true
@@ -27,16 +28,18 @@ class Fretboard extends React.Component{
     this.state = {
 			fbid:(props.fbid ?props.fbid :0),
 			
+      //eventually replace rootType with mode
+      rootType:(props.rootType ?props.rootType :''),    //one of: ['', 'AllNotes', fretRoot, fretSelect, noteSelect]
+      helpManager:helpManager, 
+      
       collapsed:(props.collapsed ?props.collapsed :false),
+      fretBtnStyle:(props.fretBtnStyle ?props.fretBtnStyle :'NoteFirst'),    //one of: NoteFirst, IvlFirst, NoteTab, NoteAbc
       fretFirst:(props.fretFirst ?props.fretFirst :0),
       fretLast:(props.fretLast ?props.fretLast :q.fretboard.fretMax),
       fretFilter:(props.fretFilter ?props.fretFilter :[]),      //csv of fretN, if found then disable fret
       strgFilter:(props.strgFilter ?props.strgFilter :[]),    //csv of strN, if found then hide notes
       noteFilter:(props.noteFilter ?props.noteFilter :[]),    //notes on fetboard where button.data-selected=2; set by clicking infoPnl note
       
-      fretBtnStyle:(props.fretBtnStyle ?props.fretBtnStyle :'NoteFirst'),    //one of: NoteFirst, IvlFirst, NoteTab, NoteAbc
-      rootType:(props.rootType ?props.rootType :''),    //one of: ['', fretRoot, fretSelect, noteSelect]
-
       fretRoot:(props.fretRoot ?props.fretRoot :null),          //note object, set when fret clicked
       selNoteVal:(props.selNoteVal ?props.selNoteVal :''),   //string, contains note selected in selNote control
       octave:(props.octave ?props.octave :0), 
@@ -46,17 +49,15 @@ class Fretboard extends React.Component{
       fretSelectMatchDisplay:(props.fretSelectMatchDisplay ?props.fretSelectMatchDisplay :'Show'),    //Show or Collapse
 
       scaleName:(props.scaleName ?props.scaleName :''),
-      scaleTriadDisplay:(props.scaleTriadDisplay ?props.scaleTriadDisplay :'Show'),    // Show or Collapse
-      scaleTriadSelected:(props.scaleTriadSelected ?props.scaleTriadSelected :null),    //null or degree of selected triad
+      scaleTriadDisplay:(props.scaleTriadDisplay ?props.scaleTriadDisplay :'Show'),    // Show, Collapse, or Close
+      scaleTriadSelected:(props.scaleTriadSelected ?props.scaleTriadSelected :null),   //null or degree of selected triad
       
       chordName:(props.chordName ?props.chordName :''),
-      chordInvrDisplay:(props.chordInvrDisplay ?props.chordInvrDisplay :'Show'),    // Show/Collapse
+      chordInvrDisplay:(props.chordInvrDisplay ?props.chordInvrDisplay :'Show'),    // Show, Collapse, or Close
       chordInvrSelected:(props.chordInvrSelected ?props.chordInvrSelected :null),    //user selected inversion position to display
       chordShape:(props.chordShape ?props.chordShape :''),
 
       ivlName:(props.ivlName ?props.ivlName :''), 
-      // helpManager:(props.helpManager ?props.helpManager : false), 
-      helpManager:helpManager, 
     }
     this.duplicate = this.duplicate.bind(this)
     this.remove = this.remove.bind(this)
@@ -66,8 +67,49 @@ class Fretboard extends React.Component{
     this.makeQuery = this.makeQuery.bind(this)
     this.fretSelectFind = this.fretSelectFind.bind(this)
     this.inversionNoteByTab = this.inversionNoteByTab.bind(this)
+    
+    //children can prevent state from chaning until they complete their own processing
+    this.changeHandlers = []
+    this.changeExecList = []    
+    this.setChangeHandler = this.setChangeHandler.bind(this)
+
   }  
+  setChangeHandler(tag = null, testFunc = null, execFunc = null){ //currently used by InfoPnl
+    if(tag === null || testFunc === null || execFunc === null)
+      throw new Error('Fretboard.setChangeHandler() error, all parameters must be supplied.')
+    
+    const found = this.changeHandlers.find( obj => obj.tag === tag)
+    if(found === undefined)
+      this.changeHandlers.push({
+        tag: tag,            // name 
+        testFunc: testFunc,  // return true to pause state change
+        execFunc: execFunc   // executed when testFunc returns true; on done call Fretboard.stateChange('changeHandled', tag)
+      })
+  }
+  shouldComponentUpdate(nextProps, nextState){
+    
+    this.newqry = this.makeQuery( nextState )
+    
+    //allow children to do stuff before state changes
+    this.changeExecList = []
+    for(let obj of this.changeHandlers){  // any children with work to do?
+      let result = obj.testFunc( this.newqry )
+      if(result === true)
+        this.changeExecList.push( obj )
+    }
+    if(this.changeExecList.length > 0){   // allow children to do work
+      for(let obj of this.changeExecList){
+        // console.log('shouldComponentUpdate() changeExec:', obj.tag)
+        obj.execFunc( this.newqry )
+      }
+      return false
+    }
+    return true
+  }
   reset(){
+    this.changeHandlers = []
+    this.changeExecList = []
+    
     this.setState({ collapsed:false })
     this.setState({ fretSelect:[] })
     this.setState({ fretSelectMatch:null })
@@ -127,6 +169,17 @@ class Fretboard extends React.Component{
     // if(key === 'rootType')   //only manually set below; can be prop instead of state
     //   this.setState({ rootType:val })
     // else
+    if(key === 'changeHandled'){  // when changeExecList.length === 0 then forceUpdate()
+      const idx = this.changeExecList.findIndex( obj => obj.tag === val)
+      if( idx >= 0 ){
+        this.changeExecList.splice( idx, 1 )
+        if(this.changeExecList.length === 0)
+          this.forceUpdate()
+      }
+      else
+        throw new Error('Fretboard.stateChange() error, object not found for tag: '+val)
+    }
+    else
     if(key === 'collapsed'){
       if(val === true){
         this.setState({ fretSelectMatchDisplay: 'Collapse' })
@@ -181,8 +234,12 @@ class Fretboard extends React.Component{
     if(key === 'selNoteVal'){
       this.setState({ selNoteVal:val })
 
+      
       if(val === '')
         this.setState({ rootType:'' })
+      else
+      if(val === 'All')
+        this.setState({ rootType:'AllNotes' })
       else
         this.setState({ rootType:'noteSelect' })
       this.setState({ fretRoot:null })
@@ -266,6 +323,8 @@ class Fretboard extends React.Component{
     else
     if(key === 'scaleName'){
       this.setState({ scaleName:val })
+      if( this.state.scaleTriadDisplay === 'Close')
+        this.setState({ scaleTriadDisplay: 'Show' })
     }else
     if(key === 'scaleTriadSelected'){
       if(val !== null) val = Number(val)
@@ -279,6 +338,8 @@ class Fretboard extends React.Component{
     }else
     if(key === 'chordName'){
       this.setState({ chordName:val })
+      if( this.state.chordInvrDisplay === 'Close')
+        this.setState({ chordInvrDisplay: 'Show' })
     }else
     if(key === 'chordInvrSelected'){
      if(this.state.chordInvrSelected === val)
@@ -304,56 +365,55 @@ class Fretboard extends React.Component{
     if(key === 'semis')
       this.setState({ semis:val })
   }
-  makeQuery(){
+  makeQuery( state ){
     let qry = {
-      fbid: this.state.fbid,
+      fbid: state.fbid,
       firstRender: this.props.firstRender,
-      mode: '',
-      rootType: this.state.rootType,    //eventually replace with mode 
+      mode: state.rootType,
+      rootType: state.rootType,    //eventually replace with mode 
 
-      collapsed: this.state.collapsed,
-      fretBtnStyle: this.state.fretBtnStyle,
-      fretFilter: this.state.fretFilter,
-      noteFilter: this.state.noteFilter,
+      collapsed: state.collapsed,
+      fretBtnStyle: state.fretBtnStyle,
+      fretFilter: state.fretFilter,
+      noteFilter: state.noteFilter,
 
       root: null,
-      note: (this.state.rootType === 'fretRoot' 
-              ? this.state.fretRoot.notes[0] 
-              : this.state.selNoteVal ), 
-      octave: this.state.octave,
+      note: (state.rootType === 'fretRoot' 
+              ? state.fretRoot.notes[0] 
+              : state.selNoteVal ), 
+      octave: state.octave,
       
       scale: null,
-      scaleTriadDisplay:this.state.scaleTriadDisplay,
+      scaleTriadDisplay:state.scaleTriadDisplay,
       scaleTriadIvls:null,
       scaleTriads:null,
-      scaleTriadSelected:this.state.scaleTriadSelected,
+      scaleTriadSelected:state.scaleTriadSelected,
       
       chord:null,
-      chordInvrDisplay:this.state.chordInvrDisplay,
-      chordInvrSelected:this.state.chordInvrSelected,
+      chordInvrDisplay:state.chordInvrDisplay,
+      chordInvrSelected:state.chordInvrSelected,
       chordInvrNotes:null,
-      chordShape:this.state.chordShape,
+      chordShape:state.chordShape,
       chordShapeData:null,
       inversions:null,
 
       ivl: null,
 
-      fretSelect: this.state.fretSelect,
-      fretSelectMatch: this.state.fretSelectMatch,
-      fretSelectMatchDisplay: this.state.fretSelectMatchDisplay,
+      fretSelect: state.fretSelect,
+      fretSelectMatch: state.fretSelectMatch,
+      fretSelectMatchDisplay: state.fretSelectMatchDisplay,
      
-      helpManager: this.state.helpManager,
+      helpManager: state.helpManager,
     }
 
-    if(qry.note === 'All'){
-      qry.mode = 'AllNotes'
+    // if(qry.note === 'All'){
+    if(qry.mode === 'AllNotes'){
+      // qry.mode = 'AllNotes'
       if( ['NoteAbc','NoteTab'].indexOf( qry.fretBtnStyle ) < 0 )
         qry.fretBtnStyle = 'NoteAbc'
     } else
-      qry.mode = qry.rootType
-
-    if(qry.rootType === 'fretSelect'){
-      qry.root = this.state.fretSelect[0]    //note object, set in FretPnl.fretClick()
+    if(qry.mode === 'fretSelect'){
+      qry.root = state.fretSelect[0]    //note object, set in FretPnl.fretClick()
   
       if(qry.fretSelectMatch != null){
         if(qry.fretSelectMatch.type === 'chord')
@@ -364,20 +424,21 @@ class Fretboard extends React.Component{
       }
     } 
     else{
-      if(qry.rootType === 'fretRoot')
-        qry.root = this.state.fretRoot    //note object, set in FretPnl.fretClick()
-      if(qry.rootType === 'noteSelect' && qry.note !== '' && qry.note !== 'All')
+      if(qry.mode === 'fretRoot')
+        qry.root = state.fretRoot    //note object, set in FretPnl.fretClick()
+      // if(qry.rootType === 'noteSelect' && qry.note !== '' && qry.note !== 'All')
+      if(qry.mode === 'noteSelect')
         qry.root = q.notes.byNote( qry.note )    //note object
 
 
-      if(this.state.scaleName !== '' && qry.root){
-        qry.scale = q.scales.obj( qry.note, this.state.scaleName )
-        qry.scaleTriads = q.scales.degreeTriads( qry.note, this.state.scaleName )
+      if(state.scaleName !== '' && qry.root){
+        qry.scale = q.scales.obj( qry.note, state.scaleName )
+        qry.scaleTriads = q.scales.degreeTriads( qry.note, state.scaleName )
         if(qry.scaleTriadSelected != null)
           qry.scaleTriadIvls = qry.scaleTriads.list[ qry.scaleTriadSelected -1 ].ivls
       }
-      if(this.state.chordName !== '' && qry.root){
-        qry.chord = q.chords.obj( qry.note, this.state.chordName )
+      if(state.chordName !== '' && qry.root){
+        qry.chord = q.chords.obj( qry.note, state.chordName )
         qry.inversions = q.chords.inversions(qry.root.note, qry.chord.abr, qry.root.octave )
         if(qry.chordInvrSelected !== null){
           qry.chordInvrNotes = q.chords.inversionNotes(  qry.inversions, qry.chordInvrSelected )
@@ -386,8 +447,8 @@ class Fretboard extends React.Component{
           qry.chordShapeData = q.chords.shapeTabs(qry.chordShape, qry.root.note)
         }
       }
-      if(this.state.ivlName !== '' && qry.root){
-        qry.ivl = q.intervals.byName( this.state.ivlName )    //this.state.ivlName == abr
+      if(state.ivlName !== '' && qry.root){
+        qry.ivl = q.intervals.byName( state.ivlName )    //this.state.ivlName == abr
         qry.ivl.note = q.notes.calc( qry.note, qry.ivl )
       }
     }
@@ -395,7 +456,13 @@ class Fretboard extends React.Component{
     return qry
   }
   render(){
-    let qry = this.makeQuery()
+    let qry = (this.newqry !== null
+      ? this.newqry
+      : this.makeQuery( this.state )
+    )
+    this.changeHandlers = []    //reset on every render as children may be removed from DOM
+    this.changeExecList = []
+    
     // console.log('Fretboard.render()', this.props, this.state, qry)
     return(
       <div className='fretboard' id={'Fretboard'+qry.fbid}>
@@ -408,6 +475,7 @@ class Fretboard extends React.Component{
 
           qry={qry}
           stateChange={this.stateChange}
+          setChangeHandler={this.setChangeHandler}
           strgFiltered={this.strgFiltered}
           fretSelectFind={this.fretSelectFind}
           inversionNoteByTab={this.inversionNoteByTab}
@@ -427,6 +495,7 @@ class Fretboard extends React.Component{
           remove={this.remove}
           reset={this.reset} 
           stateChange={this.stateChange}
+          setChangeHandler={this.setChangeHandler}
           strgFiltered={this.strgFiltered} 
          />
       </div>

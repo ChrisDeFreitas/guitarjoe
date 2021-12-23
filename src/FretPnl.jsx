@@ -354,6 +354,7 @@ class FretPnl extends React.Component{
 
   render(){
     // console.log('fretPnl.render()', this.props)
+    this.keyii = 0    //should return stable keys for same props and state
     let qry = this.props.qry
 
     //make table's tr and td

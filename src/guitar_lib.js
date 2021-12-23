@@ -272,8 +272,8 @@ var q = {
       // https://appliedguitartheory.com/lessons/minor-caged-system/
       // https://www.cagedguitarsystem.net/caged-seventh-chords/
       //
-      // a bar object defines the numerical relationship between the root fret
-      //   and frets on other strings
+      // a shape object defines the numerical relationship between the root note
+      //   and notes on other strings
       //
       //rules:      
       //  strg: root note found on this string, this is a tab string letter
@@ -347,23 +347,19 @@ var q = {
       }
       return list
     },
-    shapeTabs( shape, note ){    //return object wirh name and tabs for note's barre chord
+    shapeTabs( shape, note ){    //return object with name and tabs for note's barre chord
       if( typeof shape === 'string' )
         shape = q.chords.shapeByName( shape )
       if(typeof note === 'object')
         note = note.note
-      // console.log( 111, shape )
         
       //find root string, fret
       let roots = q.notes.find( shape.string, note )
-      // console.log( 222, shape.string, note, roots )
       if( roots === null ) 
         return null
         
       //calculate notes on remaining strings
       let chord = q.chords.obj( note, shape.chordAbr )
-      // console.log( 333, chord )
-
       let min = q.fretboard.fretMin
       let max = q.fretboard.fretMax
       let filter = 'right'
@@ -376,7 +372,6 @@ var q = {
       }
       if(filter === 'left') min += (shape.cnt -1)  //frets start at 0 (nut)
       else max -= (shape.cnt -1)
-      // console.log( 444, shape.cnt, filter, q.fretboard.fretMin, min, q.fretboard.fretMax, max )
 
       let result = []
       for( let root of roots){
@@ -727,7 +722,7 @@ var q = {
     },
 
     match( ivls, nobjList ){    //return true/false if notes in nobjList contained within ivls
-      //used to match scales and chords to user selected frets
+      //used to match scales and chords to user selected notes
       //assume: ivls is a list of intervals.list[n]
       //assume: nobjList is a list of notes.obj()
       //assume: no duplicate items allowed

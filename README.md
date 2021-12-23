@@ -26,7 +26,7 @@ I am not a musician (I often say I'll be ready to play in a band around the age 
 The Blues Heptatonic scale has different representations online, so it is debatable.  I love learning about cultures and history so I've included some exotic scales like the Japanese Akebono I and II for practice.
 
 #### Chords
-Typically guitar chords are represented as fixed pattern of notes, leading to approaches like the CAGED system.  This app takes a different approach.  When a chord is selected all chord notes are displayed.  The user can superimpose patterns onto the selection.  The short term goal is to simplify coding at this early stage.  But, I like this approach because it allows me to see the anatomy of the chord, and find alternative chord voicings, triads, and power chords.
+Typically guitar chords are represented as fixed pattern of notes, leading to approaches like the CAGED system.  This app takes a different approach.  When a chord is selected all chord notes are displayed.  I like this approach because it allows me to see the anatomy of the chord, and find alternative chord voicings, triads, and power chords.  However, you can select Bar Chord Shapes for Major, Minor, and Dominant Seventh chords--this provides access to the typical bar chords up and down the fretboard.
 
 #### Chord Inversions
 On a guitar, chord inversions work differently than in general music theory.  For guitar, the important part is the bass note, other notes may appear in any order.  In music theory all inversions require the shifted note to be exactly one octave higher.  Because the guitar provides so many possible combinations for inversions, the app straddles these uses by trying to display the ideal inversion:  The bass note is highlighted, then the remaining notes are selected in order on higher strings, ignoring octaves, and filtering by distance frets are from the bass note.  Unfortunately, this results in certain inversion having no selections on the fretboard, such as CMaj7 third position.  
@@ -34,7 +34,7 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 ## Technical Notes
 - The entire application is contained within a single web page; it does not require a remote server.  The only external link is to the <a href='https://fonts.google.com/?query=Robert+Leuschke/' target='_new'>Fuggles Google Font</a> used in the header. So one could use the ./docs folder on any webserver.
 - The logic of the application resides in <a href='https://github.com/ChrisDeFreitas/guitarjoe/blob/main/src/guitar_lib.js'>guitar_lib.js</a>--the code should be readable by non-techies so  feel free to review/use/suggest changes.  I created the library's test suite as I initially built the library, so it will not test all functionality. The test suite is used primarily to develop complex functionality, such as guitar_lib.notes.match() that matches a list of notes to a list of intervals.
-- In terms of security, the application currently does not store or access browser data.  The future plans include saving/restoring application state using <a href='https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage'>HTML5 Local Storage</a>--but that is way in the future.  As the code is hosted on GitHub it is scanned regularly for security vulnerabilities and open for review by the public.
+- In terms of security, the application currently does not store or access browser data.  Nor does it require personal information.  The future plans include saving/restoring application state using <a href='https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage'>HTML5 Local Storage</a>--but that is way in the future.  As the code is hosted on GitHub it is scanned regularly for security vulnerabilities and open for review by the public.
 - The application is a standard <a href='https://create-react-app.dev/'>Create React App</a>, except the ./build folder is renamed to ./docs to work with <a href='https://pages.github.com/'>GitHub Pages</a>.  See <a href='https://create-react-app.dev/docs/advanced-configuration'>BUILD_PATH environment variable</a> for details on that redirection.
 
 
@@ -81,6 +81,15 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 
 
 ## Updates
+
+#### 20211222:  
+Still working out the details of implementing the animations.  Still not perfect but closer.  In the future, I expect using a toolkit like Fluent UI will solve alot of these issues -- primarily pausing the render process to run close animations, and managing animations requires lots of code.  Next I'll be digging deeper into Framer Motion to see about triggering animations via Motion component events and methods.
+  
+- FretBoard: added shouldComponentUpdate, and changeHandler system to control close animations; the changeHandler system allows children to be notified of new states before render() called (Observer-ish pattern)
+- refactored QueryPnl, InfoPnl and ArrowPnl for animations
+- created InfoPnl.scss to simplify and update InfoPnl layout
+- help data updates
+- code and UI tweaks
 
 #### 20211212:  
 - converted FretButton.jsx to NoteButton.jsx to: refactor styling in Javascript; mirror help docs
@@ -271,8 +280,11 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo  
+- Dig deeper into Framer Motion's events and methods to trigger animations.  Can the animations be triggered at the HTML level, bypassing render()?  Figure out why AnimatePresence is not working.  
+- Note Select: when 'All Notes' selected, and qry.scale/qry.chord not null should run close animation for InfoPnl (via changeHandler)
+- Scale and Chord Select: need label.style.cursor:pointer when scale/chord in buffer, but null is displayed
 - NoteButtons: change captions to position:absolute to provide greater control
-- NoteButtons: fully implement modeRoot; add white border for other root notes (triad, inversions etc)
+- NoteButtons: fully implement modeRoot; add white border and bgnd shading to other root notes (triad, inversions etc)
 - fretSelect mode: for selected chords/scales the root must be reset: qry.root = (chord/scale).root
 - implement onClose rollup with shouldComponentUpdate()
 - transfer AboutDlg content to HelpData.js ; update AboutDlg to use markdown

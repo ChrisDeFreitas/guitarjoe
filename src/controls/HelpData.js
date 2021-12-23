@@ -33,7 +33,7 @@ GuitarJoe works in four modes that are automatically activated:
 - Click a note on the fretboard - this is the Root note.
 - Selected octaves, scales, and chords will be within 3 frets of the Root.
 \n
-**FretSelect Mode** - Find matching chords and notes\n
+**FretSelect Mode** - Find matching chords and scales\n
 - Click multiple notes on the fretboard - related chords and scales will be 
 displayed within the InfoPanel.\n
 \n 
@@ -45,7 +45,7 @@ helpData.Fretboard = {
   title:'Fretboard',
   related:['QueryPanel', 'InfoPanel', 'Modes'],
   content:`
-The Fretboard contains the first 14 frets of a guitar fretboard.
+The Fretboard contains 14 frets, allowing for 15 notes per string (including nut).
 It has many clickable features:\n
 ### Notes 
 - Click on any note to place a NoteButton -   
@@ -53,12 +53,12 @@ If it is the only button, click again to remove it.
 If more than one, they will have left and right captions.  
 - Click the left caption to highlight the button in green.  
 In FretSelect mode, this will remove the button from the Fretboard.  
-- Click the right caption to cycle combinations of note, interval, staff and tab data.  
+- Click the right caption to cycle through combinations of note, interval, staff and tab data.  
 In AllNotes mode, the caption cycles between staff and tab data.   
 \n
 ### Fret Numbers
 - Fret numbers are located above the FretBoard.
-If the FretBoard is collapsed the buttons are removed and green lines be 
+If the FretBoard is collapsed the buttons are removed, and green lines placed
 above frets 5, 7, 9, and 12.
 - Click a Fret Number to disable a fret and hide any NoteButtons on the fret.
 The fret is grayed and it's notes are not clickable.
@@ -66,10 +66,9 @@ The fret is grayed and it's notes are not clickable.
 - If the FretBoard is collapsed the space remains clickable.
 \n
 ### String Filter Buttons
-- The String Filter Buttons are green rectangles on the string's left edge.
-- Click one to disable the string and hide NoteButtons on the string. 
-The string is grayed and it's notes are not clickable.
-- When clicked again, existing NoteButtons will be replaced.
+- The String Filter Buttons are green rectangles on it's left edge.
+- Click to disable the string and NoteButtons on the string. 
+- Click again to undo.
 \n
   `
 }
@@ -82,9 +81,10 @@ Use it to tell GuitarJoe what work you want to do.
 Features:\n
 
 **Collapse Button**\n
-- This is the arrow button on the far left.  Click to compact or expand the display.
+- This is the arrow button on the far left.  Click to compact/expand the information displayed.
 \n
 **List Captions**\n
+- This is the text above the lists: Note, Octave, etc.
 - Clicking a caption will toggle the last selected value on and off.  
 - You can also turn off a selection by selecting the blank list item.
 \n
@@ -96,22 +96,20 @@ Selected Octaves, Scales, Chords, and Intervals will use this as their root.
 \n
 **Octave List**\n
 - When selected, only NoteButtons within the selected Octave are displayed.
-- This may remove all NoteButtons because they are not within the selected Octave.
+- This will hide all NoteButtons not within the selected Octave.
 \n
 **Scale List**\n
-- Select from a variety of scales. 
-- When a scale is selected, Scale Degrees based on the Root note are displayed 
-below, within the InfoPanel.
-- The scale's NoteButtons displayed are determined by the Mode.
+- Select from a variety of Scales. 
+- The NoteButtons displayed are determined by the Mode (FretRoot or NoteSelect).
+- The InfoPanel displays technical details for the Scale.
 \n
 **Chord List**\n
-- Select from a variety of chords. 
-- When a chord is selected, Chord Inversions based on the Root note are displayed 
-below, within the InfoPanel.
-- The chord's NoteButtons displayed are determined by the Mode.
+- Select from a variety of Chords. 
+- The NoteButtons displayed are determined by the Mode (FretRoot or NoteSelect).
+- The InfoPanel displays technical details for the Chord.
 \n
 **Interval List**\n
-- Display NoteButtons the selected Interval from the Root note.
+- Display NoteButtons the selected interval from the Root note.
 \n
 **Reset Button**\n
 - Remove all changes to the Fretboard.
@@ -160,7 +158,7 @@ and the InfoPanel.
 This is similar to, but not, the CAGED system.
 - Chord inversions are displayed for all chords.
 - Clicking a note will highlight it's NoteButtons on the Fretboard and the InfoPanel.
-- Clicking the name of a chord shape or inversion will highlight it's NoteButtons.
+- Clicking the name of a Chord Shape or Inversion will highlight it's NoteButtons.
 \n
 **Interval Info**\n
 - The Interval name and it's note and interval are displayed.

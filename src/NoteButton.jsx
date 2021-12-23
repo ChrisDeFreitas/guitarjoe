@@ -101,10 +101,6 @@ function NoteButton( props ){
   }
 
   let note = <span>{nobj.note}</span>
-  // if( note.indexOf('♭') >= 1 )    //safari does not render ♭ properly
-  //   note = <span className='btnFlatNote'>{note}</span>
-  // else
-    // note = 
   
   if(ivl === undefined || ivl === null){
     switch(btnStyle){

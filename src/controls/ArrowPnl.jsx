@@ -1,10 +1,10 @@
 /*
   ArrowPnl.jsx
   - by Chris DeFreitas, ChrisDeFreitas777@gmail.com
-  - used by QueryPnl.jsx of GuitrJoe app
+  - used by InfoPnl.jsx of GuitrJoe app
 
 */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from "framer-motion"
 
@@ -13,40 +13,54 @@ import   './ArrowPnl.css'
 
 function ArrowPnl( props ){
 
-  let keyidx = 0
+  let [forceClose, setForceClose] = useState( false )
   
+  useEffect(() => {
+    if(props.setCloseFunc !== null){
+      props.setCloseFunc( close, props.arrowTitle )   // pass to parent
+    }
+  })
+
+  let keyidx = 0
   function key(){ return 'ArrowPanel' +( ++keyidx ) }
-  function onAniComplete(){
-    if(props.closeCallback !== null)
-      props.closeCallback()
+  function close(){
+    if(props.openState !== 'Close')
+      setForceClose( true )   // do rollup animation
+    else
+    if(props.onAniComplete !== null)
+      props.onAniComplete( true, props.arrowTitle )
+    // else
+      // throw Error('ArrowPnl.close() called but nothing to do.')
   }
-  function onChange(){
-    let val = !props.isOpen
+  function onAniComplete(){
+    if(props.onAniComplete !== null)
+      props.onAniComplete( forceClose, props.arrowTitle )
+  }
+  function onChange( newud ){
+    // let val = !props.openState
+    let val = (newud === 'up' ?'Show' :'Collapse')
     if(props.onChange) props.onChange( val )
   }
-
-  let animate = (props.isOpen ? 'open' : 'collapse')
+  
+  let animate = props.openState
   let initial = animate
-  let firstRender = (props.firstRender === true)
 
-  if(firstRender === true){
-    initial = 'close'
-    animate = 'open'
+  if(props.firstRender === true){
+    initial = 'Close'
+    animate = 'Show'
   }else
-  if(props.closeCallback !== null){
-    initial = 'open'
-    animate = 'close'
+  if(forceClose === true){
+    animate = 'Close'
   }
-  // console.log('Ap render', firstRender, props.isOpen, initial, animate, props)
 
   return (
     <motion.div key={key()} className='ArrowPnl' 
       initial={initial}
       animate={animate}
       variants={{
-        open: { height: 'auto', opacity:1, margin:'0.2em  0' },
-        collapse: { height: '1.1em', opacity:1, margin:'0.2em  0' },
-        close: { height: '0px', opacity:0, margin:0 },
+        Show: { height: 'auto', opacity:1 },
+        Collapse: { height: '1.1em', opacity:1 },
+        Close: { height: '0px', opacity:0  },
       }}
       transition={{ ease:"easeOut", duration:0.3 }}
       onAnimationComplete={onAniComplete}
@@ -54,7 +68,7 @@ function ArrowPnl( props ){
 
       <div key={key()} className='ArrowPnlCaption' >
         <ArrowButton key={key()} 
-          upOrDn={props.isOpen === true ?'up' :'dn'} 
+          upOrDn={props.openState === 'Show' ?'up' :'dn'} 
           width={props.arrowWidth}
           title={props.arrowTitle} 
           onChange={onChange}
@@ -75,27 +89,29 @@ ArrowPnl.propTypes = {
   caption: PropTypes.array,   //array of jsx
   items: PropTypes.array,     //array of jsx
 
-  // arrowUpOrDn: PropTypes.string,
   arrowTitle: PropTypes.string,
   arrowWidth: PropTypes.string,
-  onChange: PropTypes.func,
 
   firstRender: PropTypes.bool,
-  isOpen: PropTypes.bool,
-  closeCallback: PropTypes.func,
+  openState: PropTypes.string,   //Show, Collapse, Close
+
+  onAniComplete: PropTypes.func,  // call parent: onAniComplete( forceClose, props.arrowTitle )
+  onChange: PropTypes.func,       // notify parent on open/collapse change
+  setCloseFunc: PropTypes.func,   // allow parent to call close()
 }
 ArrowPnl.defaultProps = {
   caption: [<span>'ArrowPnl Caption'</span>],
   items: null,
 
-  // arrowUpOrDn: 'up',     //up or dn
-  arrowTitle: 'Click to collapse',
+  arrowTitle:'',
   arrowWidth:'1em',
-  onChange: null,
 
   firstRender: true,
-  isOpen: true,
-  closeCallback: null,
+  openState: 'open',
+
+  onAniComplete: null,
+  onChange: null,
+  setCloseFunc: null,
 }
 
 export default ArrowPnl

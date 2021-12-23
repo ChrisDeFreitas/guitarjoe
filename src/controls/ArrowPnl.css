@@ -5,7 +5,7 @@
 
 */
 
-.ArrowPnl{ border:none; height:auto; outline:none; margin:0.2em  0; opacity:1; overflow:hidden;  padding:0;  }
+.ArrowPnl{ border:none; height:auto; outline:none; margin:0; opacity:1; overflow:hidden;  padding:0;  }
 .ArrowPnlCaption{ border:none; margin:0; outline:none; padding:0; overflow:hidden; }
 .ArrowPnlCaption .ArrowBtn{ position:relative; left:8px; top:-1px; }
 .ArrowPnlItems{ border:none; margin:0; outline:none; padding:0; opacity:1; overflow:hidden; }

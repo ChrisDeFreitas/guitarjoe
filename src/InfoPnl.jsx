@@ -4,27 +4,25 @@
   - used by QueryPnl.jsx of GuitrJoe app
 
 */
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
+import { motion } from "framer-motion"
 
+import './InfoPnl.scss'
 import ArrowPnl from './controls/ArrowPnl'
 import q from "./guitar_lib.js";
 
-let LastMode = false
-let FSLength = 0    //last qry.fretSelect.length for triggering anims
+let forceClose = false
+let scaleInfoNew = false
+let chordInfoNew = false
 
 function InfoPnl( props ){
   // console.log('InfoPnl.render()', props)
   
   let {qry} = props
+  let closeHandlerTag = 'InfoPnl Change Handler'
+  let [forceRedraw, setForceRedraw] = useState( 0 ) //toggle, value has no meaning
 
-  // console.log(1, LastMode, FSLength, qry.mode, qry.fretSelect.length)
-  React.useEffect(() => { 
-    //reset history vars
-    LastMode = qry.mode
-    FSLength = (LastMode === 'fretSelect' ?qry.fretSelect.length :0)
-    // console.log(2, LastMode, FSLength)
-  })
 
   function chordShapeClick(event){
     event.stopPropagation()
@@ -107,14 +105,6 @@ function InfoPnl( props ){
     props.stateChange( 'chordInvrDisplay', ss)
   }
   
-  function scaleCloseCallback(){
-    props.stateChange( 'scaleName', '' )
-  }
-  function chordCloseCallback(){
-    props.stateChange( 'chordName', '' )
-  }
-  
-
   function drawFretSelectMatches( html, key ){    //push matching chords and scales onto html[]
     let selected = 0
     
@@ -228,19 +218,67 @@ function InfoPnl( props ){
     return key
   }
 
+  function thisAniComplete(){
+    if( forceClose === true ){
+      forceClose = false
+      props.stateChange( 'changeHandled', closeHandlerTag )
+    }
+  }
+  function scaleAniComplete(){
+    if(qry.scaleTriadDisplay === 'Close')
+      props.stateChange( 'scaleName', '' )
+  }
+  function chordAniComplete(){
+    if(qry.chordInvrDisplay === 'Close')
+      props.stateChange( 'chordName', '' )
+  }
 
-  let selected = 0, html = [], key=0, lastkey=null
+  if(props.setChangeHandler !== undefined){   //handler controls closing ArrowPnl
+    props.setChangeHandler(
+      closeHandlerTag,
+      function( newqry ){   // test whether to fire exec function
+
+        // handle state changes
+        scaleInfoNew = (qry.scale === null)   //if newqry.scale === null, no effect
+        chordInfoNew = (qry.chord === null)
+
+        if(qry.mode === 'fretSelect' && newqry.mode !== 'fretSelect')
+          return true
+        return false
+      },
+      function( newqry ){   // exec function
+        if(qry.mode === 'fretSelect' && newqry.mode !== 'fretSelect'){
+          forceClose = true
+          setForceRedraw( forceRedraw++ )
+        }
+        // for testing, to cancel this activity:
+        //props.stateChange( 'changeHandled', closeHandlerTag )
+      } 
+    )
+  }
+ 
+
+  let selected = 0, html = [], key=0 //, lastkey=null
   let  //for ArrowPnl
     arrowTitle, arrowFunc, 
-    firstRender, isOpen, closeCB,
+    firstRender, openState, aniComplete,
     htmlCaption = [], htmlItems = []    
 
-  if(qry.rootType === 'fretSelect'){    
+  if(qry.mode === 'AllNotes'){
+    let octave = (qry.octave === 0 ?null :<span key={++key} className='ivl'>{': Octave '}{qry.octave} </span>)
+    html.push( <div key={++key} className='ArrowPnl' >
+      <span key={++key} className='propName'
+       data-selected='label' onClick={infoItemClick}
+      >{'All Notes'}</span> 
+      {octave}
+    </div>)
+
+  } else
+  if(qry.mode === 'fretSelect'){    
       htmlCaption = []
       htmlItems = []
 
-      htmlCaption.push( 
-        <span key={++key} className='propName' onClick={infoItemClick} data-selected='label'>{
+      htmlCaption.push( <span key={++key} className='propName' onClick={infoItemClick} data-selected='label'>{
           'Fret select: '
         }</span> 
       )
@@ -290,11 +328,9 @@ function InfoPnl( props ){
 
       arrowTitle = 'Show/hide matching chords and scales'
       arrowFunc = toggleFretSelectMatchDisplay
-
-      firstRender = ( qry.fretSelectMatchDisplay !== 'Show'
-                      ?false :LastMode !== 'fretSelect' || FSLength !== qry.fretSelect.length)
-      isOpen = (qry.fretSelectMatchDisplay === 'Show')
-      closeCB = null
+      firstRender = ( qry.fretSelectMatchDisplay !== 'Show' )
+      openState = qry.fretSelectMatchDisplay
+      // aniComplete = fsAniComplete //null
 
       html.push(<ArrowPnl 
         key={++key} 
@@ -303,26 +339,15 @@ function InfoPnl( props ){
 
         arrowWidth='1em' 
         arrowTitle={arrowTitle} 
-
         onChange={arrowFunc}
 
         firstRender={firstRender}
-        isOpen={isOpen} 
-        closeCallback={closeCB}
+        openState={openState} 
+        // onAniComplete={aniComplete}
       />)
-  } else
-  if(qry.rootType === 'noteSelect' && props.selNoteVal === 'All'){    //special case
-    html.push( <span key={++key} className='propName'
-       data-selected='label' onClick={infoItemClick}
-      >{'All Notes'}</span> )
-
-    if(qry.octave !== 0){
-      html.push( <span key={++key} className='ivl'>{': Octave '}{qry.octave} </span> )
-    }
   }
   else{   //draw scale, chord and interval labels and notes
-    lastkey = key
-
+    //lastkey = key
     if(qry.scale !== null){
       htmlCaption = []
       htmlItems = []
@@ -382,14 +407,9 @@ function InfoPnl( props ){
 
       arrowTitle = 'Show/hide scale degree triads'
       arrowFunc = toggleScaleTriadDisplay
-
-      firstRender = (props.scaleInfoNew === true && qry.scaleTriadDisplay === 'Show')
-      isOpen = (qry.scaleTriadDisplay === 'Show')
-      closeCB = null
-      if(props.scaleInfoClose === true) {
-        isOpen = false
-        closeCB = scaleCloseCallback
-      }
+      firstRender = (scaleInfoNew === true && qry.scaleTriadDisplay === 'Show')
+      openState = qry.scaleTriadDisplay    //Show, Collapse, Close
+      aniComplete = (qry.scaleTriadDisplay === 'Close' ?scaleAniComplete :null)
 
       html.push(<ArrowPnl 
         key={++key} 
@@ -398,12 +418,11 @@ function InfoPnl( props ){
 
         arrowWidth='1em' 
         arrowTitle={arrowTitle} 
-
         onChange={arrowFunc}
 
         firstRender={firstRender}
-        isOpen={isOpen} 
-        closeCallback={closeCB}
+        openState={openState} 
+        onAniComplete={aniComplete}
       />)
     }
     if(qry.chord !== null){
@@ -451,7 +470,6 @@ function InfoPnl( props ){
           )
         }
       }
-      
 
       if( qry.inversions !== null ){    //draw inversions
         let invrs = qry.inversions
@@ -501,14 +519,9 @@ function InfoPnl( props ){
 
       arrowTitle = 'Show/hide inversions'
       arrowFunc = toggleChordInvrDisplay
-
-      firstRender = (props.chordInfoNew === true && qry.chordInvrDisplay === 'Show')
-      isOpen = (qry.chordInvrDisplay === 'Show')
-      closeCB = null
-      if(props.chordInfoClose === true) {
-        isOpen = false
-        closeCB = chordCloseCallback
-      }
+      firstRender = (chordInfoNew === true && qry.chordInvrDisplay === 'Show')
+      openState = qry.chordInvrDisplay
+      aniComplete = (qry.chordInvrDisplay === 'Close' ?chordAniComplete :null)
 
       html.push(<ArrowPnl 
         key={++key} 
@@ -517,42 +530,50 @@ function InfoPnl( props ){
 
         arrowWidth='1em' 
         arrowTitle={arrowTitle} 
-        
         onChange={arrowFunc}
        
         firstRender={firstRender}
-        isOpen={isOpen} 
-        closeCallback={closeCB}
+        openState={openState} 
+        onAniComplete={aniComplete}
       />)
     }
     if(qry.ivl !== null){
       if(qry.noteFilter.indexOf( qry.ivl.note ) >= 0) selected = 'noteFilter'
       else selected = 0
       
-      if(lastkey !== key)
-        html.push( <div key={++key} className='lineBreak'>&nbsp; </div>)
-
-      html.push( <span key={++key} className='propName'
-       data-selected='label' onClick={infoItemClick}
-      >{qry.note 
-        +(qry.rootType === 'fretRoot' ?qry.root.octave :'')
-        +' + ' 
-        +qry.ivl.name +' interval:'
-       }</span> )
-  
-      html.push( <span key={++key} className='ivl' onClick={infoItemClick}
-        data-note={qry.ivl.note} data-selected={selected}
-      >&nbsp;{qry.ivl.note}<sub>{qry.ivl.abr}</sub></span> )
+      html.push( <div key={++key} className='ArrowPnl' >
+        <span key={++key} className='propName'
+        data-selected='label' onClick={infoItemClick}
+        >{qry.note 
+          +(qry.rootType === 'fretRoot' ?qry.root.octave :'')
+          +' + ' 
+          +qry.ivl.name +' interval:'
+        }</span>
+          <span key={++key} className='ivl' onClick={infoItemClick}
+          data-note={qry.ivl.note} data-selected={selected}
+        >&nbsp;{qry.ivl.note}&nbsp;<sub>{qry.ivl.abr}</sub></span> 
+      </div> )
     }
   }
   
   if(html.length === 0) return null
+
+  let initial = 'open'
+  let animate = (forceClose === true ?'close' :'open')
+
   return (
-    <div className='infoPnl' >
-       <div className='infoDiv'>
-         {html}
-       </div>
-    </div>
+    <motion.div className='infoPnl' data-drawn={forceRedraw}
+      initial={initial}
+      animate={animate}
+      variants={{
+        open: { height: 'auto', opacity:1 },
+        close: { height: '0px', opacity:0 },
+      }}
+      transition={{ ease:"easeOut", duration:0.3 }}
+      onAnimationComplete={thisAniComplete}
+    >
+      {html}
+    </motion.div>
   )      
 }
 
@@ -560,12 +581,7 @@ InfoPnl.propTypes = {
   qry: PropTypes.object,
   selNoteVal: PropTypes.string,
   stateChange: PropTypes.func,
-
-  scaleInfoNew: PropTypes.bool,
-  scaleInfoClose: PropTypes.bool,
-
-  chordInfoNew: PropTypes.bool,
-  chordInfoClose: PropTypes.bool,
+  setChangeHandler: PropTypes.func,
 }
 
 export default InfoPnl

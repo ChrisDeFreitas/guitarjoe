@@ -1,0 +1,37 @@
+/*
+    InfoPnl.sass
+    by Chris DeFreitas, ChrisDeFreitas777@gmail.com
+    styles for InfoPnl.jsx
+*/
+
+.infoPnl{ 
+  background: none; 
+  display: block; margin:0 auto; overflow-y: hidden;
+  height: auto; width:98%;
+
+  & .ArrowPnl{ 
+    background: #00000045; border:none; margin:0; padding:0.2em 0;
+  }
+  & .ArrowPnl:first-child { 
+    border-top-left-radius: 5px; border-top-right-radius: 5px;  
+    margin-top:0.2em;
+  }
+  & .ArrowPnl:last-child { 
+    border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;  
+    margin-bottom:0.2em;
+  }
+
+  & .propName{ color:white; cursor:pointer; font-weight:bold; margin:0 0 0 0.5em; }
+  & .lineBreak{ line-height:5%; }
+  & .propName:first-child{ margin:0; }
+  & .propName[data-selected="note"]{ display:block; font-size:0.8em; font-weight:normal; font-style:italic; }
+  & .ivl{ border-radius:3px; cursor:pointer; font-weight:normal; }
+  & .ivl:hover{ background:#7f77;  }
+  & .ivl[data-selected="noteFilter"] { background:#aaf; border-radius:3px; }  /* note in props.noteFilter */
+  & .ivl[data-selected="fretSelectMatch"] { background:#b1e6ff7a; border-radius:3px; }  /* user selected matching chord or scale */
+  & .ivl[data-selected="invr"]{ background-color:#e7e; }  
+  & .ivl[data-selected="triad"]{ background-color:#0cc; }  
+  & .ivl[data-selected="chordShape"]{ background-color:#f1601e; }  
+  & .ivl sub{ font-size:0.6em; position:relative; left:-3px; top:-3px; }
+  
+} 
