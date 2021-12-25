@@ -435,9 +435,7 @@ class Fretboard extends React.Component{
       helpManager: state.helpManager,
     }
 
-    // if(qry.note === 'All'){
     if(qry.mode === 'AllNotes'){
-      // qry.mode = 'AllNotes'
       if( ['NoteAbc','NoteTab'].indexOf( qry.fretBtnStyle ) < 0 )
         qry.fretBtnStyle = 'NoteAbc'
     } else

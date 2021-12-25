@@ -39,7 +39,8 @@ function InfoPnl( props ){
       chordAniControl.start('Show')
   })
   function aniComplete( arrowTitle ){
-    if(qry.mode === 'fretSelect'){
+    // if(qry.mode === 'fretSelect'){
+    if(arrowTitle == 'Close'){
 
       if( thisClose === true ){
         thisClose = false

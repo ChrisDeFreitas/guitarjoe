@@ -294,6 +294,7 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 ## ToDo  
 - Hmmm!?: Fretboard changeHandler logic should be moved to children's own ShouldComponentUpdate() but they are function components.  Check Hooks (again!) for equivalent before applying updates below.
+- ArrowPnl: arrow buttons aren't working; need to be integrated into new code
 - ArrowPnl: add logic for motion.initial ?based on props.openState?
 - InfoPnl: prevent changeHandler assignment from running when component not loaded in DOM
 - InfoPnl: in FretSelect mode, prevent from flashing when scales/chords selected

@@ -15,7 +15,7 @@ function ArrowPnl( props ){
 
   let keyidx = 0
   function key(){ return 'ArrowPanel' +( ++keyidx ) }
-  function onAniComplete(){
+  function onAniComplete( variantName ){
     if( props.onAniComplete )
       props.onAniComplete( props.arrowTitle )
   }
