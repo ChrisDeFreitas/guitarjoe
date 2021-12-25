@@ -17,7 +17,7 @@ function ArrowPnl( props ){
   function key(){ return 'ArrowPanel' +( ++keyidx ) }
   function onAniComplete( variantName ){
     if( props.onAniComplete )
-      props.onAniComplete( props.arrowTitle )
+      props.onAniComplete( props.arrowTitle, variantName )
   }
   function onChange( newud ){
     let val = (newud === 'up' ?'Show' :'Collapse')
@@ -25,14 +25,10 @@ function ArrowPnl( props ){
       props.onChange( val )
   }
   
-  let animate = (props.aniControl !== null ?props.aniControl :props.openState)
-  let initial = 'Close'
-  
-
   return (
     <motion.div key={key()} className='ArrowPnl' 
-      initial={initial}
-      animate={animate}
+      initial={props.openState}
+      animate={(props.aniControl !== null ?props.aniControl :props.openState)}
       inherit={false}   // add to ArrowBtn
       variants={{
         Show: { height: 'auto', opacity:1 },
@@ -42,7 +38,6 @@ function ArrowPnl( props ){
       transition={{ ease:"easeOut", duration:0.3 }}
       onAnimationComplete={onAniComplete}
     >
-
       <div key={key()} className='ArrowPnlCaption' >
         <ArrowButton key={key()} 
           upOrDn={props.openState === 'Show' ?'up' :'dn'} 
@@ -82,11 +77,10 @@ ArrowPnl.defaultProps = {
   arrowTitle:'',
   arrowWidth:'1em',
 
-  openState: 'open',
-  onChange: null,
-
-  aniControl: null,
-  onAniComplete: null,
+  aniControl:   null,
+  onAniComplete:null,
+  onChange:     null,
+  openState:    'Show',
 }
 
 export default ArrowPnl

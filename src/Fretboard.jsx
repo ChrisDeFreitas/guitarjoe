@@ -317,6 +317,11 @@ class Fretboard extends React.Component{
         this.stateChange( 'fretRoot', list[0] )
       }
       else{
+        if(list.length === 2 && this.qry.mode !== 'fretSelect' ){
+          if( this.state.fretSelectMatchDisplay !== 'Show')
+            this.setState({ fretSelectMatchDisplay: 'Show' })
+        }
+
         this.setState({ fretSelect:list })
         if(this.state.rootType !== 'fretSelect'){   //set rootType to fretSelect
           this.setState({ rootType:'fretSelect' })

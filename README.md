@@ -82,6 +82,12 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 
 ## Updates
 
+#### 20211225:  
+Finished implementing InfoPnl animations with shouldComponentUpdate and motion.useAnimation.  So far working perfectly with a lot less code.  The combination of shouldComponentUpdate and the changeHandlers is critical as it allows the functional components to share in the shouldComponentUpdate processing; without it, I don't think the consistent animations would be possible.  Perhaps re-buildinig from scratch would yield other solutions--perhaps adding a Close state between mode changes.
+
+- ArrowPnl: completed animation code
+- InfoPnl: completed animation code; resolved issues with flashing content
+
 #### 20211224:  
 Pushing this out because there is an error in the FretSelect animation that causes a lockup.  The new animation code works but needs tuning:
 
@@ -293,12 +299,8 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo  
-- Hmmm!?: Fretboard changeHandler logic should be moved to children's own ShouldComponentUpdate() but they are function components.  Check Hooks (again!) for equivalent before applying updates below.
-- ArrowPnl: arrow buttons aren't working; need to be integrated into new code
-- ArrowPnl: add logic for motion.initial ?based on props.openState?
+- AllNotes mode: clicking notes label does not toggle off/on
 - InfoPnl: prevent changeHandler assignment from running when component not loaded in DOM
-- InfoPnl: in FretSelect mode, prevent from flashing when scales/chords selected
-- InfoPnl Scales/Chords: prevent from flashing when new list item selected (requires FirstRender logic)
 - QueryPnl: fix animation logic; configured but needs updating
 - Scale and Chord Select: need label.style.cursor:pointer when scale/chord in buffer, but null is displayed
 - NoteButtons: change captions to position:absolute to provide greater control

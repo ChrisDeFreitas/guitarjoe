@@ -19,7 +19,7 @@ const About = () => (
       <div className="modal">
         <div className="header"> 
           About GuitarJoe 
-          <span className='hdVer'>v0.1.8 20211224</span> 
+          <span className='hdVer'>v0.1.8 20211225</span> 
           <hr className='hrLine' /> 
         </div>
         <div className="content">

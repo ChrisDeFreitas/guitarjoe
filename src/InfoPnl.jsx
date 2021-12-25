@@ -12,11 +12,8 @@ import './InfoPnl.scss'
 import ArrowPnl from './controls/ArrowPnl'
 import q from "./guitar_lib.js";
 
-let thisClose = false
-let scaleInfoClose = false
-let chordInfoClose = false
-// let scaleInfoNew = false
-// let chordInfoNew = false
+let scaleFirstRender = false
+let chordFirstRender = false
 
 function InfoPnl( props ){
   // console.log('InfoPnl.render()', props)
@@ -31,35 +28,31 @@ function InfoPnl( props ){
   let chordHandlerTag = 'chordChangeHandler'
 
   useEffect(() => {
-    if(qry.mode === 'fretSelect')
-      thisAniControl.start('Open')
-    if(qry.scale !== null)
-      scaleAniControl.start('Show')
-    if(qry.chord !== null)
-      chordAniControl.start('Show')
+    thisAniControl.start('Open')
+    if(qry.scale !== null){
+      scaleAniControl.start( qry.scaleTriadDisplay )
+    }
+    if(qry.chord !== null){
+      chordAniControl.start( qry.chordInvrDisplay )
+    }
   })
-  function aniComplete( arrowTitle ){
-    // if(qry.mode === 'fretSelect'){
-    if(arrowTitle == 'Close'){
+  function aniComplete( arrowTitle, variantName ){
 
-      if( thisClose === true ){
-        thisClose = false
-        props.stateChange( 'changeHandled', closeHandlerTag )
-      }
+    if(arrowTitle === 'Close'){
+
+      props.stateChange( 'changeHandled', closeHandlerTag )
 
     } else
     if(arrowTitle.indexOf( 'scale') >= 0){
 
-      if( scaleInfoClose === true ){
-        scaleInfoClose = false
+      if( variantName === 'Close' ){
         props.stateChange( 'changeHandled', scaleHandlerTag )
       }
 
     }else
     if(arrowTitle.indexOf( 'chord') >= 0){
 
-      if( chordInfoClose === true ){
-        chordInfoClose = false
+      if( variantName === 'Close' ){
         props.stateChange( 'changeHandled', chordHandlerTag )
       }
   
@@ -76,12 +69,14 @@ function InfoPnl( props ){
       } else
       if( tag === scaleHandlerTag ){
   
+        scaleFirstRender = (qry.scale === null)
         if(qry.scale !== null && newqry.scale === null)
           return true
   
       } else
       if( tag === chordHandlerTag ){
   
+        chordFirstRender = (qry.chord === null)
         if(qry.chord !== null && newqry.chord === null)
           return true
   
@@ -94,7 +89,6 @@ function InfoPnl( props ){
       closeHandlerTag,
       changeHandlerTest,
       function( newqry, tag ){   // exec function
-        thisClose = true
         thisAniControl.start('Close')
         // for testing, to cancel this activity:
         //   props.stateChange( 'changeHandled', closeHandlerTag )
@@ -104,7 +98,6 @@ function InfoPnl( props ){
       scaleHandlerTag,
       changeHandlerTest,
       function( newqry, tag ){   // exec function
-        scaleInfoClose = true
         scaleAniControl.start('Close')
       } 
     )    
@@ -112,7 +105,6 @@ function InfoPnl( props ){
       chordHandlerTag,
       changeHandlerTest,
       function( newqry, tag ){   // exec function
-        chordInfoClose = true
         chordAniControl.start('Close')
       } 
     )    
@@ -391,8 +383,8 @@ function InfoPnl( props ){
         items={htmlItems}
         arrowWidth='1em' 
         arrowTitle={arrowTitle} 
-        openState={openState} 
         onChange={arrowFunc}
+        openState={openState} 
       />)
   }
   else{   //draw scale, chord and interval labels and notes
@@ -457,6 +449,7 @@ function InfoPnl( props ){
       arrowTitle = 'Show/hide scale degree triads'
       arrowFunc = toggleScaleTriadDisplay
       aniControl = scaleAniControl
+      openState = (scaleFirstRender ?'Close' :qry.scaleTriadDisplay)
 
       html.push(<ArrowPnl 
         key={++key} 
@@ -467,6 +460,7 @@ function InfoPnl( props ){
         aniControl={aniControl}
         onAniComplete={aniComplete}
         onChange={arrowFunc}
+        openState={openState} 
       />)
     }
     if(qry.chord !== null){
@@ -564,6 +558,7 @@ function InfoPnl( props ){
       arrowTitle = 'Show/hide chord inversions'
       arrowFunc = toggleChordInvrDisplay
       aniControl = chordAniControl
+      openState = (chordFirstRender ?'Close' :qry.chordInvrDisplay)
 
       html.push(<ArrowPnl 
         key={++key} 
@@ -574,6 +569,7 @@ function InfoPnl( props ){
         aniControl={aniControl}
         onAniComplete={aniComplete}
         onChange={arrowFunc}
+        openState={openState} 
       />)
     }
     if(qry.ivl !== null){
