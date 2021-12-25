@@ -69,6 +69,7 @@ class Fretboard extends React.Component{
     this.inversionNoteByTab = this.inversionNoteByTab.bind(this)
     
     //children can prevent state from chaning until they complete their own processing
+    this.changeHandlerActive = false
     this.changeHandlers = []
     this.changeExecList = []    
     this.setChangeHandler = this.setChangeHandler.bind(this)
@@ -88,27 +89,48 @@ class Fretboard extends React.Component{
   }
   shouldComponentUpdate(nextProps, nextState){
     
-    this.newqry = this.makeQuery( nextState )
-    
-    //allow children to do stuff before state changes
-    this.changeExecList = []
-    for(let obj of this.changeHandlers){  // any children with work to do?
-      let result = obj.testFunc( this.newqry )
-      if(result === true)
-        this.changeExecList.push( obj )
-    }
-    if(this.changeExecList.length > 0){   // allow children to do work
-      for(let obj of this.changeExecList){
-        // console.log('shouldComponentUpdate() changeExec:', obj.tag)
-        obj.execFunc( this.newqry )
-      }
+    if(this.changeHandlerActive === true){
+      // note: this is normal as React calls shouldComponentUpdate at its own discretion
+      // note: we are waiting for changeHandlers to complete execution by calling stateChange('changeHandled', handlerTag)
+      //console.log(`Fretboard.shouldComponentUpdate() called but changeHandlerActive == true; False returned.`)
       return false
     }
-    return true
+    
+    try{    //allow children to do stuff before state changes
+
+      this.newqry = this.makeQuery( nextState )
+      this.changeExecList = []
+
+      for(let obj of this.changeHandlers){  // any children with work to do?
+        let result = obj.testFunc( this.newqry, obj.tag )
+        if(result === true)
+          this.changeExecList.push( obj )
+      }
+      if(this.changeExecList.length > 0){   // allow children to do work
+        this.changeHandlerActive = true
+        for(let obj of this.changeExecList){
+          obj.execFunc( this.newqry, obj.tag )
+        }
+        return false
+      }
+
+      return true
+    }
+    catch( err ){
+      alert(`
+        Warning: An error has occurred in Fretboard.shouldComponentUpdate().
+
+        Please reload the webpage as the application is now unstable.
+
+        ${err}      
+      `)
+      return false
+    }
   }
   reset(){
     this.changeHandlers = []
     this.changeExecList = []
+    this.changeHandlerActive = false
     
     this.setState({ collapsed:false })
     this.setState({ fretSelect:[] })
@@ -170,11 +192,18 @@ class Fretboard extends React.Component{
     //   this.setState({ rootType:val })
     // else
     if(key === 'changeHandled'){  // when changeExecList.length === 0 then forceUpdate()
+      if(this.changeHandlerActive !== true){
+        console.log(`Fretboard.stateChange('changeHandled', ${val}) called but changeHandlerActive != true.`)
+        return
+      }
+
       const idx = this.changeExecList.findIndex( obj => obj.tag === val)
       if( idx >= 0 ){
         this.changeExecList.splice( idx, 1 )
-        if(this.changeExecList.length === 0)
+        if(this.changeExecList.length === 0){
+          this.changeHandlerActive = false
           this.forceUpdate()
+        }
       }
       else
         throw new Error('Fretboard.stateChange() error, object not found for tag: '+val)

@@ -82,6 +82,19 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 
 ## Updates
 
+#### 20211224:  
+Pushing this out because there is an error in the FretSelect animation code that causes a lockup.  The new animation code works but needs tuning:
+
+Found that motion.useAnimation and ShouldComponentUpdate() provides the control I was looking for.  Removed a lot of code, but need to reset animation logic due to this new method.  Getting closer to perfect!
+
+- Fretboard.shouldComponentUpdate: added gateKeeper, changeHandlerActive, as React calls at its own discetion
+- Fretboard.shouldComponentUpdate: wrap changeHandler code in try/catch block
+- ArrowPnl Update: updated to use motion.useAnimation control from parent; removed lots of code
+- InfoPnl Update: animations updated with motion.useAnimation control; removed lots of code
+- InfoPnl Update: the Close animation is now run when 'All Notes' selected and InfoPnl displays scale/chord info
+- InfoPnl fixed: in FretSelect mode it would sometimes lock up.  This was due to missing logic in the old animation code.
+
+
 #### 20211222:  
 Still working out the details of implementing the animations.  Still not perfect but closer.  In the future, I expect using a toolkit like Fluent UI will solve alot of these issues -- primarily pausing the render process to run close animations, and managing animations requires lots of code.  Next I'll be digging deeper into Framer Motion to see about triggering animations via Motion component events and methods.
   
@@ -280,9 +293,12 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo  
-- wrap changeExecList in try/catch  
-- Dig deeper into Framer Motion's events and methods to trigger animations.  Can the animations be triggered at the HTML level, bypassing render()?  Figure out why AnimatePresence is not working.  
-- Note Select: when 'All Notes' selected, and qry.scale/qry.chord not null should run close animation for InfoPnl (via changeHandler)
+- Hmmm!?: Fretboard changeHandler logic should be moved to children's own ShouldComponentUpdate() but they are function components.  Check Hooks (again!) for equivalent before applying updates below.
+- ArrowPnl: add logic for motion.initial ?based on props.openState?
+- InfoPnl: prevent changeHandler assignment from running when component not loaded in DOM
+- InfoPnl: in FretSelect mode, prevent from flashing when scales/chords selected
+- InfoPnl Scales/Chords: prevent from flashing when new list item selected (requires FirstRender logic)
+- QueryPnl: fix animation logic; configured but needs updating
 - Scale and Chord Select: need label.style.cursor:pointer when scale/chord in buffer, but null is displayed
 - NoteButtons: change captions to position:absolute to provide greater control
 - NoteButtons: fully implement modeRoot; add white border and bgnd shading to other root notes (triad, inversions etc)

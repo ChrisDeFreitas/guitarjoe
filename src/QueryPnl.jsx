@@ -82,12 +82,14 @@ class QueryPnl extends React.Component {
       if(lbl.dataset.type === 'scale'){
         if(qry.scale === null) return
         this.last['scaleName'] = qry.scale.name
-        this.props.stateChange( 'scaleTriadDisplay', 'Close' )
+        this.props.stateChange( 'scaleName', '' )
+        // this.props.stateChange( 'scaleTriadDisplay', 'Close' )
       }else
       if(lbl.dataset.type === 'chord'){
         if(qry.chord === null) return
         this.last['chordName'] = qry.chord.name
-        this.props.stateChange( 'chordInvrDisplay', 'Close' )
+        this.props.stateChange( 'chordName', '' )
+        //this.props.stateChange( 'chordInvrDisplay', 'Close' )
       }else
       if(lbl.dataset.type === 'octave'){
         this.last['octave'] = qry.octave
@@ -147,18 +149,12 @@ class QueryPnl extends React.Component {
   selScaleChange( event ){
     let sel = event.target,
       val = sel.options[sel.selectedIndex].text
-    if(val === '' && this.props.qry.scale !== null)
-      this.props.stateChange( 'scaleTriadDisplay', 'Close' )
-    else
-      this.props.stateChange( 'scaleName', val )
+    this.props.stateChange( 'scaleName', val )
   }
   selChordChange( event ){
     let sel = event.target,
       val = sel.options[sel.selectedIndex].text.trim()
-    if(val === '' && this.props.qry.chord !== null)
-      this.props.stateChange( 'chordInvrDisplay', 'Close' )
-    else
-      this.props.stateChange( 'chordName', val )
+    this.props.stateChange( 'chordName', val )
   }
   selIntervalChange( event ){
     let sel = event.target,
@@ -311,7 +307,7 @@ class QueryPnl extends React.Component {
             animate={ qry.collapsed === true ?'collapsed' :'default' }
             variants={{
               collapsed: { height:'0px', borderWidth:'0px' },
-              default: { height:'auto', borderWidth:'1px' },
+              default: { height:'auto', borderWidth:'0px' },
             }}
             transition={{ ease:"easeOut", duration:0.3 }}
           >
