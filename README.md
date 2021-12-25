@@ -83,7 +83,7 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 ## Updates
 
 #### 20211224:  
-Pushing this out because there is an error in the FretSelect animation code that causes a lockup.  The new animation code works but needs tuning:
+Pushing this out because there is an error in the FretSelect animation that causes a lockup.  The new animation code works but needs tuning:
 
 Found that motion.useAnimation and ShouldComponentUpdate() provides the control I was looking for.  Removed a lot of code, but need to reset animation logic due to this new method.  Getting closer to perfect!
 
