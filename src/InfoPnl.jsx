@@ -10,24 +10,54 @@ import { motion, useAnimation } from "framer-motion"
 
 import './InfoPnl.scss'
 import ArrowPnl from './controls/ArrowPnl'
-import q from "./guitar_lib.js";
+import q from "./guitar_lib.js"
 
 let scaleFirstRender = false
 let chordFirstRender = false
 
 function InfoPnl( props ){
   // console.log('InfoPnl.render()', props)
+
+  let {qry} = props
+  let htmlReturned = false    //prevent useEffect when no components returned
   
   const thisAniControl = useAnimation()
   const scaleAniControl = useAnimation()
   const chordAniControl = useAnimation()
 
-  let {qry} = props
-  let closeHandlerTag = 'InfoPnlChangeHandler'
-  let scaleHandlerTag = 'scaleChangeHandler'
-  let chordHandlerTag = 'chordChangeHandler'
+  const changeHandlerTag = 'InfoPnlHandler'
+  const scaleHandlerTag = 'scaleHandler'
+  const chordHandlerTag = 'chordHandler'
 
-  useEffect(() => {
+  useEffect(() => {     //changeHandler and aniControl.start code here
+    if(htmlReturned === false) return
+
+    if(props.setChangeHandler !== undefined){
+      props.setChangeHandler(
+        changeHandlerTag,
+        changeHandlerTest,
+        function( newqry, tag ){   // exec function
+          thisAniControl.start('Close')
+          // for testing, to cancel this activity:
+          //   props.stateChange( 'changeHandled', changeHandlerTag )
+        } 
+      )
+      props.setChangeHandler(
+        scaleHandlerTag,
+        changeHandlerTest,
+        function( newqry, tag ){   // exec function
+          scaleAniControl.start('Close')
+        } 
+      )    
+      props.setChangeHandler(
+        chordHandlerTag,
+        changeHandlerTest,
+        function( newqry, tag ){   // exec function
+          chordAniControl.start('Close')
+        } 
+      )    
+    }
+
     thisAniControl.start('Open')
     if(qry.scale !== null){
       scaleAniControl.start( qry.scaleTriadDisplay )
@@ -40,7 +70,7 @@ function InfoPnl( props ){
 
     if(arrowTitle === 'Close'){
 
-      props.stateChange( 'changeHandled', closeHandlerTag )
+      props.stateChange( 'changeHandled', changeHandlerTag )
 
     } else
     if(arrowTitle.indexOf( 'scale') >= 0){
@@ -59,55 +89,29 @@ function InfoPnl( props ){
     }
   }
   function changeHandlerTest( newqry, tag ){
-      if( tag === closeHandlerTag ){
-  
-        if(qry.mode === 'fretSelect' && newqry.mode !== 'fretSelect')
-          return true
-        if(newqry.mode === 'AllNotes' && (qry.scale !== null || qry.chord !== null))
-          return true
-    
-      } else
-      if( tag === scaleHandlerTag ){
-  
-        scaleFirstRender = (qry.scale === null)
-        if(qry.scale !== null && newqry.scale === null)
-          return true
-  
-      } else
-      if( tag === chordHandlerTag ){
-  
-        chordFirstRender = (qry.chord === null)
-        if(qry.chord !== null && newqry.chord === null)
-          return true
-  
-      }
-      return false
-  }
+    if( tag === changeHandlerTag ){
 
-  if(props.setChangeHandler !== undefined){   //changeHandler code here
-    props.setChangeHandler(
-      closeHandlerTag,
-      changeHandlerTest,
-      function( newqry, tag ){   // exec function
-        thisAniControl.start('Close')
-        // for testing, to cancel this activity:
-        //   props.stateChange( 'changeHandled', closeHandlerTag )
-      } 
-    )
-    props.setChangeHandler(
-      scaleHandlerTag,
-      changeHandlerTest,
-      function( newqry, tag ){   // exec function
-        scaleAniControl.start('Close')
-      } 
-    )    
-    props.setChangeHandler(
-      chordHandlerTag,
-      changeHandlerTest,
-      function( newqry, tag ){   // exec function
-        chordAniControl.start('Close')
-      } 
-    )    
+      if(qry.mode === 'fretSelect' && newqry.mode !== 'fretSelect')
+        return true
+      if(newqry.mode === 'AllNotes' && (qry.scale !== null || qry.chord !== null))
+        return true
+  
+    } else
+    if( tag === scaleHandlerTag ){
+
+      scaleFirstRender = (qry.scale === null)
+      if(qry.scale !== null && newqry.scale === null)
+        return true
+
+    } else
+    if( tag === chordHandlerTag ){
+
+      chordFirstRender = (qry.chord === null)
+      if(qry.chord !== null && newqry.chord === null)
+        return true
+
+    }
+    return false
   }
 
 
@@ -592,16 +596,17 @@ function InfoPnl( props ){
   if(html.length === 0){
     return null
   } 
+  htmlReturned = true
 
   return (
     <motion.div className='infoPnl'
       initial={(qry.mode === 'fretSelect' ?'Close' :'Open')}
+      animate={thisAniControl}
       variants={{
         Open: { height: 'auto', opacity:1 },
         Close: { height: '0px', opacity:0 },
       }}
       transition={{ ease:"easeOut", duration:0.3 }}
-      animate={thisAniControl}
       onAnimationComplete={aniComplete}
     >
       {html}
@@ -611,7 +616,6 @@ function InfoPnl( props ){
 
 InfoPnl.propTypes = {
   qry: PropTypes.object,
-  selNoteVal: PropTypes.string,
   stateChange: PropTypes.func,
   setChangeHandler: PropTypes.func,
 }

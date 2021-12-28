@@ -7,7 +7,7 @@
 .infoPnl{ 
   background: none; 
   display: block; margin:0 auto; overflow-y: hidden;
-  height: auto; width:100%;
+  height: auto; max-width:100%; 
 
   & .ArrowPnl{ 
     background: #00000045; border:none; margin:0; padding:0.2em 0;

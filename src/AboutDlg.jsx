@@ -19,7 +19,7 @@ const About = () => (
       <div className="modal">
         <div className="header"> 
           About GuitarJoe 
-          <span className='hdVer'>v0.1.8 20211225</span> 
+          <span className='hdVer'>v0.1.8 20211227</span> 
           <hr className='hrLine' /> 
         </div>
         <div className="content">
@@ -41,6 +41,8 @@ This application has successfully reduced my hair loss--I hope it has the same e
 1. Added  a Help component<br />
 2. Now displays "Quick Tips" when application starts<br />
 3. NoteButtons on Filtered Frets and Strings are made translucent<br />
+4. Fixed issues when clicking strings and areas near strings<br />
+5. Clicking the Notes and Intervals labels now toggle values properly<br />
 <br />
 
 <h3>About Chord Inversions</h3>

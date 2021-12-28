@@ -36,6 +36,8 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 - The logic of the application resides in <a href='https://github.com/ChrisDeFreitas/guitarjoe/blob/main/src/guitar_lib.js'>guitar_lib.js</a>--the code should be readable by non-techies so  feel free to review/use/suggest changes.  I created the library's test suite as I initially built the library, so it will not test all functionality. The test suite is used primarily to develop complex functionality, such as guitar_lib.notes.match() that matches a list of notes to a list of intervals.
 - In terms of security, the application currently does not store or access browser data.  Nor does it require personal information.  The future plans include saving/restoring application state using <a href='https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage'>HTML5 Local Storage</a>--but that is way in the future.  As the code is hosted on GitHub it is scanned regularly for security vulnerabilities and open for review by the public.
 - The application is a standard <a href='https://create-react-app.dev/'>Create React App</a>, except the ./build folder is renamed to ./docs to work with <a href='https://pages.github.com/'>GitHub Pages</a>.  See <a href='https://create-react-app.dev/docs/advanced-configuration'>BUILD_PATH environment variable</a> for details on that redirection.
+- The technique used to manage animations appears to be unique.  Because the animations were introduced late in development, the goal was to delay Fretboard.render() until child components performed their close animation.  For this project, I really wanted to dig into React and its esoteric corners. My research into synchronizing activities in child components returned a lot of examples, but none directly address this situation.  The technique I developed allows children with close animations to pause Fretboard.render() until they complete their animation sequence.  A side effect is that function components gain access to the new state.  See Fretboard.jsx for the changeHandler implementation; QueryBar.jsx and InfoPnl.jsx contain changeHandlers.
+ 
 
 
 ## Helpful References
@@ -82,8 +84,22 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 
 ## Updates
 
+#### 20211227:  
+Animations completed and 99% perfect!  It looks like the Fretboard.changeHandler functionality was required to get the close animations working properly (in addition to framerMotion.useAnimation).  It allows the child components to synchronize animations and detect state changes.  In addition:  
+&nbsp;  1: child class components using shouldComponentUpdate would break animation synchronization  
+&nbsp;  2: framerMotion.useAnimation only works with function components   
+
+I'll be closely monitoring this code for optimizations and bugs.
+
+- InfoPnl: prevent changeHandler assignment from running when component not loaded in DOM
+- QueryBar.jsx: created from QueryPnl.jsx to support use of framerMotion.useAnimation
+- QueryBar.jsx: refactored open/collapse/close animations
+- QueryBar.jsx: refactored label.click handlers
+- QueryPnl.jsx: some code cleanup
+
+
 #### 20211225:  
-Finished implementing InfoPnl animations with shouldComponentUpdate and motion.useAnimation.  So far working perfectly with a lot less code.  The combination of shouldComponentUpdate and the changeHandlers is critical as it allows the functional components to share in the shouldComponentUpdate processing; without it, I don't think the consistent animations would be possible.  Perhaps re-buildinig from scratch would yield other solutions--perhaps adding a Close state between mode changes.
+Finished implementing InfoPnl animations with shouldComponentUpdate and framerMotion.useAnimation.  So far working perfectly with a lot less code.  The combination of shouldComponentUpdate and the changeHandlers is critical as it allows the functional components to share in the shouldComponentUpdate processing; without it, I don't think the consistent animations would be possible.  Perhaps re-building from scratch would yield other solutions--perhaps adding a Close state between mode changes.
 
 - ArrowPnl: completed animation code
 - InfoPnl: completed animation code; resolved issues with flashing content
@@ -91,12 +107,12 @@ Finished implementing InfoPnl animations with shouldComponentUpdate and motion.u
 #### 20211224:  
 Pushing this out because there is an error in the FretSelect animation that causes a lockup.  The new animation code works but needs tuning:
 
-Found that motion.useAnimation and ShouldComponentUpdate() provides the control I was looking for.  Removed a lot of code, but need to reset animation logic due to this new method.  Getting closer to perfect!
+Found that framerMotion.useAnimation and ShouldComponentUpdate() provides the control I was looking for.  Removed a lot of code, but need to reset animation logic due to this new method.  Getting closer to perfect!
 
-- Fretboard.shouldComponentUpdate: added gateKeeper, changeHandlerActive, as React calls at its own discetion
+- Fretboard.shouldComponentUpdate: added gateKeeper, changeHandlerActive, as React calls at its own discretion
 - Fretboard.shouldComponentUpdate: wrap changeHandler code in try/catch block
-- ArrowPnl Update: updated to use motion.useAnimation control from parent; removed lots of code
-- InfoPnl Update: animations updated with motion.useAnimation control; removed lots of code
+- ArrowPnl Update: updated to use framerMotion.useAnimation control from parent; removed lots of code
+- InfoPnl Update: animations updated with framerMotion.useAnimation control; removed lots of code
 - InfoPnl Update: the Close animation is now run when 'All Notes' selected and InfoPnl displays scale/chord info
 - InfoPnl fixed: in FretSelect mode it would sometimes lock up.  This was due to missing logic in the old animation code.
 
@@ -299,10 +315,6 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo  
-- AllNotes mode: clicking notes label does not toggle off/on
-- InfoPnl: prevent changeHandler assignment from running when component not loaded in DOM
-- QueryPnl: fix animation logic; configured but needs updating
-- Scale and Chord Select: need label.style.cursor:pointer when scale/chord in buffer, but null is displayed
 - NoteButtons: change captions to position:absolute to provide greater control
 - NoteButtons: fully implement modeRoot; add white border and bgnd shading to other root notes (triad, inversions etc)
 - fretSelect mode: for selected chords/scales the root must be reset: qry.root = (chord/scale).root

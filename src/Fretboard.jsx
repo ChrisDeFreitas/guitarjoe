@@ -73,8 +73,18 @@ class Fretboard extends React.Component{
     this.changeHandlers = []
     this.changeExecList = []    
     this.setChangeHandler = this.setChangeHandler.bind(this)
-
   }  
+  // componentDidCatch(error, errorInfo) {
+  //   console.log('Fretboard.componentDidCatch:', error, errorInfo)
+  //   alert(`
+  //     Warning: An unknown error has occurred.
+
+  //     Please reload the webpage as the application is now unstable.
+
+  //     ${error}      
+  //     ${JSON.stringify( errorInfo )}      
+  //   `)
+  // }
   setChangeHandler(tag = null, testFunc = null, execFunc = null){ //currently used by InfoPnl
     if(tag === null || testFunc === null || execFunc === null)
       throw new Error('Fretboard.setChangeHandler() error, all parameters must be supplied.')
@@ -92,7 +102,7 @@ class Fretboard extends React.Component{
     if(this.changeHandlerActive === true){
       // note: this is normal as React calls shouldComponentUpdate at its own discretion
       // note: we are waiting for changeHandlers to complete execution by calling stateChange('changeHandled', handlerTag)
-      //console.log(`Fretboard.shouldComponentUpdate() called but changeHandlerActive == true; False returned.`)
+      // console.log(`Fretboard.shouldComponentUpdate() called but changeHandlerActive == true; False returned.`)
       return false
     }
     
@@ -103,8 +113,10 @@ class Fretboard extends React.Component{
 
       for(let obj of this.changeHandlers){  // any children with work to do?
         let result = obj.testFunc( this.newqry, obj.tag )
-        if(result === true)
+        // console.log('ChangeHandler test:', obj.tag)
+        if(result === true){
           this.changeExecList.push( obj )
+        }
       }
       if(this.changeExecList.length > 0){   // allow children to do work
         this.changeHandlerActive = true
@@ -154,39 +166,6 @@ class Fretboard extends React.Component{
     this.setState({ octave:0 })
     this.setState({ fretBtnStyle:'NoteFirst' })
   }
-  strgFiltered( strN ){
-    strN = Number(strN)
-    return ( this.state.strgFilter.indexOf( strN ) >= 0 )
-  }
-  remove(){
-    this.props.remove( this )
-  }
-  duplicate(){
-    this.props.duplicate( this )
-  }
-
-  inversionNoteByTab( tab ){
-    if(this.state.chordInvrSelected === null) return null
-    for(let nobj of this.qry.chordInvrNotes){
-      if(nobj.tab === tab) return nobj 
-    } 
-    return null
-  }
-  fretSelectFind( objOrTab ){
-    let list = this.state.fretSelect,
-      fnd = -1
-
-    if(list.length === 0 || objOrTab === null) return fnd  //empty list
-
-    let  tab = (typeof objOrTab === 'string' ?objOrTab :objOrTab.tab)    //find in list
-    for(let ii = 0; ii < list.length; ii++){
-      if(tab === list[ii].tab){
-        fnd = ii
-        break
-      }
-    }
-    return fnd
-  }
   stateChange( key, val){
     // if(key === 'rootType')   //only manually set below; can be prop instead of state
     //   this.setState({ rootType:val })
@@ -205,8 +184,8 @@ class Fretboard extends React.Component{
           this.forceUpdate()
         }
       }
-      else
-        throw new Error('Fretboard.stateChange() error, object not found for tag: '+val)
+      // else   ==> this is ok
+        // throw new Error('Fretboard.stateChange() error, object not found for tag: '+val)
     }
     else
     if(key === 'collapsed'){
@@ -399,8 +378,43 @@ class Fretboard extends React.Component{
     if(key === 'semis')
       this.setState({ semis:val })
   }
+
+  strgFiltered( strN ){
+    strN = Number(strN)
+    return ( this.state.strgFilter.indexOf( strN ) >= 0 )
+  }
+  remove(){
+    this.props.remove( this )
+  }
+  duplicate(){
+    this.props.duplicate( this )
+  }
+
+  inversionNoteByTab( tab ){
+    if(this.state.chordInvrSelected === null) return null
+    for(let nobj of this.qry.chordInvrNotes){
+      if(nobj.tab === tab) return nobj 
+    } 
+    return null
+  }
+  fretSelectFind( objOrTab ){
+    let list = this.state.fretSelect,
+      fnd = -1
+
+    if(list.length === 0 || objOrTab === null) return fnd  //empty list
+
+    let  tab = (typeof objOrTab === 'string' ?objOrTab :objOrTab.tab)    //find in list
+    for(let ii = 0; ii < list.length; ii++){
+      if(tab === list[ii].tab){
+        fnd = ii
+        break
+      }
+    }
+    return fnd
+  }
   makeQuery( state ){
     let qry = {
+
       fbid: state.fbid,
       firstRender: this.props.firstRender,
       mode: state.rootType,
@@ -516,11 +530,6 @@ class Fretboard extends React.Component{
           collapsed={this.state.collapsed}
           fretFirst={this.state.fretFirst}
           fretLast={this.state.fretLast}
-
-          selNoteVal={this.state.selNoteVal} 
-          chordName={this.state.chordName}
-          scaleName={this.state.scaleName}
-          ivlName={this.state.ivlName}
 
           duplicate={this.duplicate}
           qry={qry}
