@@ -46,7 +46,7 @@
   //chords
   $bgColor: #e7e;  // 
   &.invr{ background:$bgColor; } 
-  &.invr.root{ background:color.scale( $bgColor, $lightness: -30% ); } 
+  &.invrRoot{ background:color.scale( $bgColor, $lightness: -30% ); } 
 
   $bgColor: #f1601e;  //   
   &.chordShape{ background:$bgColor; } 
@@ -59,7 +59,7 @@
   //scales
   $bgColor: #00e0e0;  //   
   &.triad{ background:$bgColor; } 
-  &.triad.root{ background:color.scale( $bgColor, $lightness: -20% ); } 
+  &.triadRoot{ background:color.scale( $bgColor, $lightness: -20% ); } 
 
   //apply to all modes
   $bgColor: #3ac664;  //   

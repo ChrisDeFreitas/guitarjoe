@@ -87,6 +87,7 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 #### 20220102:  
 - NoteButtons: refactored caption css
 - NoteButtons: clicking any part of caption's right-side will toggle data displayed
+- NoteButtons: fixed scale/chord roots not given correct background color
 - Refactored fretboard.state.rootType to 'mode'
 - iOS: flat notes are again rendered with incorrect character spacing; not fixed because because works in iPadOS.
 

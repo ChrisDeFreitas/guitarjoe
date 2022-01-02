@@ -176,7 +176,7 @@ class FretPnl extends React.Component{
 
     nobj.note = ivl.note
     nobj.ivl = ivl
-    nobj.mode = 'triad'
+    nobj.mode = (ivl.num === 1 ?'triadRoot' :'triad')
     return <NoteButton key={this.key()} 
               root={qry.root} nobj={nobj}  qry={qry} 
               fretSelectFind={this.props.fretSelectFind} 
@@ -249,7 +249,7 @@ class FretPnl extends React.Component{
         if(qry.octave === 0 || qry.octave === nobj.octave){
           nobj.note = inv.note
           nobj.ivl = inv.invr
-          nobj.mode = 'invr'
+          nobj.mode = (inv.invr.num === 1 ?'invrRoot' :'invr')
           return <NoteButton key={this.key()} 
                     root={qry.root} nobj={nobj}  qry={qry} 
                     fretSelectFind={this.props.fretSelectFind} 
