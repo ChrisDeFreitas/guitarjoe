@@ -63,13 +63,13 @@ class FretPnl extends React.Component{
       //   btn.click( event )
       return
     } else
-    if(['','noteSelect'].indexOf(qry.rootType) >= 0){
+    if(['','noteSelect'].indexOf(qry.mode) >= 0){
 		  this.props.stateChange( 'fretRoot', note )
     }else
-    if(qry.rootType === 'fretRoot'){
+    if(qry.mode === 'fretRoot'){
 		  this.props.stateChange( 'fretSelect', [qry.root, note] )
     }else
-    if(qry.rootType === 'fretSelect'){
+    if(qry.mode === 'fretSelect'){
 	    this.props.stateChange( 'fretSelect', note )
     }
   }
@@ -90,7 +90,7 @@ class FretPnl extends React.Component{
   
   rootFind( nobj ){    //select fret = selected fret
     let qry = this.props.qry
-    if(qry.rootType !== 'fretRoot') return null
+    if(qry.mode !== 'fretRoot') return null
 
     if(nobj.tab === qry.root.tab){
       return <NoteButton key={this.key()}
@@ -103,7 +103,7 @@ class FretPnl extends React.Component{
   }
   noteFind( nobj ){    //select all frets with note = selNoteVal
     let qry = this.props.qry
-    if(qry.rootType !== 'noteSelect') return null
+    if(qry.mode !== 'noteSelect') return null
 
     let idx = nobj.notes.indexOf(qry.note)
     if(qry.note === '' ||  idx >= 0){
@@ -122,7 +122,7 @@ class FretPnl extends React.Component{
   fretSelectFind( nobj ){
     let qry = this.props.qry
 
-    if(qry.rootType !== 'fretSelect') return null
+    if(qry.mode !== 'fretSelect') return null
     if(qry.fretSelect.length === 0) return null
 
     for(let fso of qry.fretSelect){
@@ -144,7 +144,7 @@ class FretPnl extends React.Component{
   fretSelectMatchFind( nobj ){
     let qry = this.props.qry
 
-    if(qry.rootType !== 'fretSelect') return null
+    if(qry.mode !== 'fretSelect') return null
     if(qry.fretSelectMatch === null) return null
 
     for(let ivl of qry.fretSelectMatch.obj.ivls){
@@ -201,7 +201,7 @@ class FretPnl extends React.Component{
     let qry = this.props.qry
     if(qry.scale === null) return null
 
-    if(qry.rootType === 'fretRoot'){    //exclude frets
+    if(qry.mode === 'fretRoot'){    //exclude frets
       if(q.fretboard.fretInRange(nobj, qry.root) !== true)
         return null
     }
@@ -258,7 +258,7 @@ class FretPnl extends React.Component{
         }
       }
     }
-    if(qry.rootType === 'fretRoot'){    //exclude frets out of range
+    if(qry.mode === 'fretRoot'){    //exclude frets out of range
       if(q.fretboard.fretInRange(nobj, qry.root) !== true)
         return null
     }
@@ -342,10 +342,10 @@ class FretPnl extends React.Component{
     if(btn === null) btn = this.scaleTriadFind( nobj )
     if(btn === null) btn = this.scaleFind( nobj )
     if(btn === null){
-      if(qry.rootType === 'fretRoot')
+      if(qry.mode === 'fretRoot')
         btn = this.rootFind( nobj )  //only select the fret clicked
       else
-      if(qry.rootType === 'noteSelect')
+      if(qry.mode === 'noteSelect')
         btn = this.noteFind( nobj )  //select all frets with note = selNoteVal
     }
     if(btn === null) btn = this.octaveFind( nobj )

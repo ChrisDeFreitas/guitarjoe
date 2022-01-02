@@ -474,7 +474,6 @@ function InfoPnl( props ){
       htmlCaption.push(     //chord caption
         <span key={++key} className='propName' onClick={infoItemClick} data-selected='label'>
           {qry.root.note 
-            // +(qry.rootType === 'fretRoot' ?qry.root.octave :'')
             +' ' +qry.chord.name +': '}
         </span> 
       )
@@ -521,7 +520,7 @@ function InfoPnl( props ){
           <span key={++key} className='propName' onClick={infoItemClick}
             data-selected='label'>{
             invrs.root 
-            +(qry.rootType === 'fretRoot' ?qry.root.octave +' ' :'')
+            +(qry.mode === 'fretRoot' ?qry.root.octave +' ' :'')
             +qry.chord.abr +' Inversions:'
            }</span> 
          )
@@ -583,7 +582,7 @@ function InfoPnl( props ){
       html.push( <div key={++key} className='ArrowPnl' >
         <span key={++key} className='propName' onClick={infoItemClick} data-selected='label' 
         >{qry.note 
-          +(qry.rootType === 'fretRoot' ?qry.root.octave :'')
+          +(qry.mode === 'fretRoot' ?qry.root.octave :'')
           +' + ' +qry.ivl.name +' interval:'
         }</span>
         <span key={++key} className='ivl' onClick={infoItemClick} data-note={qry.ivl.note} data-selected={selected}>

@@ -84,7 +84,7 @@ function App(){
         fretSelectMatch={state.fretSelectMatch}
         fretSelectMatchDisplay={state.fretSelectMatchDisplay}
 
-				rootType={state.rootType}
+				mode={state.mode}
 				fretRoot={state.fretRoot}
 				selNoteVal={state.selNoteVal} 
 				octave={state.octave} 

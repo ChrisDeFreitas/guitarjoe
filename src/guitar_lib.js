@@ -1,6 +1,6 @@
 /*
   ♭ &flat; alt+?
-  
+
   GuitarJoe's guitar theory logic
   by Chris DeFreitas, ChrisDeFreitas777@gmail.com
   

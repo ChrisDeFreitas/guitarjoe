@@ -5,7 +5,7 @@
 */
 @use 'sass:color';
 
-// position buttons over strings
+// position button over strings
 .fret0 .noteButton { left:39px; }
 .strg2 .noteButton,
 .strg3 .noteButton,
@@ -13,6 +13,7 @@
 .strg5 .noteButton,
 .strg6 .noteButton{ top:calc( 1em + 8px) }
 
+// format for scales, chords etc
 .noteButton { 
     
   background:linear-gradient(180deg, #fff,#eec 50%,hsl(60deg 5% 36%) 100%);
@@ -70,44 +71,39 @@
 
 }
 
-// appearance of interval captions 
-.noteButton[data-ivl='P1'] sup{ color: #fff; text-shadow:1px 1px 1px #441616; }
-.noteButton[data-ivl='m3'] .supInterval,
-.noteButton[data-ivl='M3'] .supInterval{ color: #fff; text-shadow:1px 1px 1px #000; }
-.noteButton[data-ivl='P5'] .supInterval{ color: #fff; text-shadow:1px 1px 1px #000; }
-.noteButton[data-ivl='m7'] .supInterval,
-.noteButton[data-ivl='M7'] .supInterval{ color: #fff; text-shadow:1px 1px 1px #000;  }
+// format captions
+.noteButton {
+  // left side
+  & .note,
+  & .ivl   { position:absolute; top:0px; left:9px; }
+  
+  .note .octave,
+  .ivl span{ color:#0006; font-size:0.6em; }
 
-// format button text/caption 
-.noteButton sup{ color:#0f000fa0; font-size:0.7em; position:absolute; top:0px; text-shadow:none;  }
-.noteButton sub{ color:#00000050; text-shadow:none; position:relative; }
-.noteButton .subInterval{ cursor:alias; top:0px; right:-12px; }
-.noteButton .abc{ cursor:alias; top:-15px; right:-25px; display:block; max-width:20px; }
-.noteButton .ivlabc{ cursor:alias; top:-12px; right:-25px; display:block; max-width:20px; }
-.noteButton .tab{ cursor:alias; top:-1px; right:-12px; }
-.noteButton .spanNote .subOctave{ color:#0008; font-size:0.6em; }
-.noteButton .spanIvl span{ color:#0007; font-size:0.7em; }
-.noteButton .subNote{ cursor:alias; top:0px; right:-12px; }
-
+  // right side
+  .interval,
+  .subNote,
+  .tab,
+  .abc { color:#0004; cursor:help; position:absolute; 
+    margin:0; padding:0; padding-top:6px;
+    left:2.5em; top:0px; height:100%; width:3em;
+  }
+}
 
 // for Safari 11+ 
 @media not all and (min-resolution:.001dpcm)
 { @supports (-webkit-appearance:none) and (stroke-color:transparent) {
   
-  /* adjust button captions */
-  .noteButton .spanNote { display:block; position:relative; left:-5px; top:0px; }
-  // .btnFlatNote{ letter-spacing:-4px; position:relative; top:-2px; }
-  .noteButton .subInterval{ cursor:alias; top:-15px; right:-20px; }
-  .noteButton .abc{ cursor:alias; top:-16px; right:-15px; display:block; max-width:15px; }
-  .noteButton .ivlabc{ cursor:alias; top:-14px; right:-15px; display:block; max-width:15px; }
-  .noteButton .ivltab{ cursor:alias; top:0px; right:-5px; }
-  .noteButton .notetab{ cursor:alias; top:-15px; right:-20px; }
+  // adjust right side captions
+  .noteButton .interval,
+  .noteButton .subNote,
+  .noteButton .tab,
+  .noteButton .abc{ color:#0006; cursor:help; position:absolute; margin:0; padding:0; 
+    padding-top:3px; left:2.5em; top:0px; height:100%; width:3em;
+  }
+  .noteButton .abc{ padding-top:0px; }
 
-  /* position noteButton over string */
-  .strg1 .noteButton{ top:calc( 6px) }
-  .strg2 .noteButton{ top:calc( 1em + 11px) }
-  .strg3 .noteButton,
-  .strg4 .noteButton{ top:calc( 1em + 12.5px) }
-  .strg5 .noteButton,
-  .strg6 .noteButton{ top:calc( 1em + 12px) }
+  // iOS only so ignore (not iPadOS:
+  // fix extra space in front of flat symbol
+  //.noteButton .flatNote{ letter-spacing:-3px; position:relative; top:-2px; }
 }}

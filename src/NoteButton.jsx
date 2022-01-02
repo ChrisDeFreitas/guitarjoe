@@ -13,10 +13,10 @@ import Abcjs from "./controls/react-abcjs"
 
 // sample:
 // <button className='noteButton'>
-//   <span className=spanNote >C
-//     <sub className='subOctave' >octave</sub>
+//   <span className=note >C
+//     <span className='octave' >octave</span>
 //   </span>
-//   <sub className='subInterval' >interval</sub>
+//   <span className='interval' >interval</span>
 // </button>
 
 
@@ -100,7 +100,11 @@ function NoteButton( props ){
     textboxpadding:0,
   }
 
-  let note = <span>{nobj.note}</span>
+  let note = nobj.note
+  // iOS only so ignore (not iPadOS):
+  // if(note.indexOf('♭') >= 0){
+  //   note = <span className='flatNote'>{note}</span>
+  // }
   
   if(ivl === undefined || ivl === null){
     switch(btnStyle){
@@ -114,78 +118,78 @@ function NoteButton( props ){
   //apply button caption style
   if(btnStyle === 'IvlFirst'){
     btncaption.push(
-      <span key={key()} className='spanIvl' onClick={buttonClick} >
+      <span key={key()} className='ivl' onClick={buttonClick} >
         <span key={key()} onClick={buttonClick} >{ivl.abr.substr(0,1)}</span>
         {ivl.abr.substr(1)}
       </span>
     )
     btncaption.push(
-      <sub key={key()} className='subNote' onClick={btnStyleChange}>{nobj.note}
-          <sub key={key()} className='subOctave' >{nobj.octave}</sub>
-      </sub>
+      <span key={key()} className='subNote' onClick={btnStyleChange}>{nobj.note}
+          <span key={key()} className='octave' >{nobj.octave}</span>
+      </span>
     )
   }else
   if(btnStyle === 'IvlAbc'){
     btncaption.push(
-      <span key={key()} className='spanIvl' onClick={buttonClick} >
+      <span key={key()} className='ivl' onClick={buttonClick} >
         <span key={key()} onClick={buttonClick} >{ivl.abr.substr(0,1)}</span>
         {ivl.abr.substr(1)}
       </span>
     )
     btncaption.push(
-      <sub key={key()} className='ivlabc abc' onClick={btnStyleChange}
+      <span key={key()} className='ivlabc abc' onClick={btnStyleChange}
          ><Abcjs key={key()} 
         abcNotation={'K:clef=none\n y' +q.notes.toAbc( nobj )}
         renderParams={renderParams} parserParams={{}} engraverParams={{}}
-      /></sub>
+      /></span>
     )
   } else
   if(btnStyle === 'IvlTab'){
     btncaption.push(
-      <span key={key()} className='spanIvl' onClick={buttonClick} >
+      <span key={key()} className='ivl' onClick={buttonClick} >
         <span key={key()} onClick={buttonClick} >{ivl.abr.substr(0,1)}</span>
         {ivl.abr.substr(1)}
       </span>
     )
     btncaption.push(
-      <sub key={key()} className='ivltab tab' onClick={btnStyleChange}
-        >{nobj.tab}</sub>
+      <span key={key()} className='ivltab tab' onClick={btnStyleChange}
+        >{nobj.tab}</span>
     )
   }else
   if(btnStyle === 'NoteTab'){      
     btncaption.push(
-      <span key={key()} className='spanNote'  onClick={buttonClick} >{note}
-          <sub key={key()} className='subOctave' onClick={buttonClick} >{nobj.octave}</sub>
+      <span key={key()} className='note'  onClick={buttonClick} >{note}
+          <span key={key()} className='octave' onClick={buttonClick} >{nobj.octave}</span>
       </span>
     )
     btncaption.push(
-      <sub key={key()} className='notetab tab' onClick={btnStyleChange}
-        >{nobj.tab}</sub>
+      <span key={key()} className='notetab tab' onClick={btnStyleChange}
+        >{nobj.tab}</span>
     )
   }else
   if(btnStyle === 'NoteAbc'){
     btncaption.push(
-      <span key={key()} className='spanNote'  onClick={buttonClick} >{note}
-          <sub key={key()} className='subOctave' onClick={buttonClick} >{nobj.octave}</sub>
+      <span key={key()} className='note'  onClick={buttonClick} >{note}
+          <span key={key()} className='octave' onClick={buttonClick} >{nobj.octave}</span>
       </span>
     )
     btncaption.push(
-      <sub key={key()} className='abc' onClick={btnStyleChange}
+      <span key={key()} className='abc' onClick={btnStyleChange}
          ><Abcjs key={key()} 
         abcNotation={'K:clef=none\n y' +q.notes.toAbc( nobj )}
         renderParams={renderParams} parserParams={{}} engraverParams={{}}
-      /></sub>
+      /></span>
     )
   } 
   else {  // (btnStyle === 'NoteFirst')
     btncaption.push(
-      <span key={key()} className='spanNote'  onClick={buttonClick} >{note}
-          <sub key={key()} className='subOctave' onClick={buttonClick} >{nobj.octave}</sub>
+      <span key={key()} className='note'  onClick={buttonClick} >{note}
+          <span key={key()} className='octave' onClick={buttonClick} >{nobj.octave}</span>
       </span>
     )
     if(nobj.ivl){
       btncaption.push(
-        <sub key={key()} className='subInterval' onClick={btnStyleChange} >{ivl.abr}</sub>
+        <span key={key()} className='interval' onClick={btnStyleChange} >{ivl.abr}</span>
       )
     }
   }

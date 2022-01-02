@@ -84,6 +84,12 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 
 ## Updates
 
+#### 20220102:  
+- NoteButtons: refactored caption css
+- NoteButtons: clicking any part of caption's right-side will toggle data displayed
+- Refactored fretboard.state.rootType to 'mode'
+- iOS: flat notes are again rendered with incorrect character spacing; not fixed because because works in iPadOS.
+
 #### 20211227:  
 Animations completed and 99% perfect!  It looks like the Fretboard.changeHandler functionality was required to get the close animations working properly (in addition to framerMotion.useAnimation).  It allows the child components to synchronize animations and detect state changes.  In addition:  
 &nbsp;  1: child class components using shouldComponentUpdate would break animation synchronization  
@@ -315,9 +321,7 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo  
-- NoteButtons: change captions to position:absolute to provide greater control
-- NoteButtons: fully implement modeRoot; add white border and bgnd shading to other root notes (triad, inversions etc)
-- fretSelect mode: for selected chords/scales the root must be reset: qry.root = (chord/scale).root
+- Help Doc: add reference page containing definition of all queryable items w/url ref
 - transfer AboutDlg content to HelpData.js; update AboutDlg to use markdown
 - allow the first created Fretboard control to be deleted.  Currently, only its children may be deleted.
 - fix ./public/favicon.svg colors: image appears dim on white backgrounds  

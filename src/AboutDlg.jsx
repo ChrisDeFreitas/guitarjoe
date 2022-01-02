@@ -19,7 +19,7 @@ const About = () => (
       <div className="modal">
         <div className="header"> 
           About GuitarJoe 
-          <span className='hdVer'>v0.1.8 20211227</span> 
+          <span className='hdVer'>v0.1.8 20220102</span> 
           <hr className='hrLine' /> 
         </div>
         <div className="content">
@@ -43,6 +43,8 @@ This application has successfully reduced my hair loss--I hope it has the same e
 3. NoteButtons on Filtered Frets and Strings are made translucent<br />
 4. Fixed issues when clicking strings and areas near strings<br />
 5. Clicking the Notes and Intervals labels now toggle values properly<br />
+6. Clicking NoteButton caption's right side properly toggles data displayed <br />
+7. Note: iOS renders flat symbols with extra space; this is a bug.  It does not occur on iPadOS so I expect the fix will be migrated to iOS at some point.<br />
 <br />
 
 <h3>About Chord Inversions</h3>
