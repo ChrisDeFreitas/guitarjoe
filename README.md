@@ -85,6 +85,8 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 ## Updates
 
 #### 20220106:  
+- Intervals: no longer coloring root note to simplify color coding
+- NoteButtons: changed precedence of coloring (from highest to lowest): filtered notes, intervals, chord shapes, inversions, triads, chords, scales
 - removed unused modules
 - removed App.test.js because it was not used and causing false errors
 - HelpManager: internal linking bug fix 
@@ -92,8 +94,6 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 - updated react Build and Start scripts with "--openssl-legacy-provider" for compatibility with Node.js v17
 
 #### 20220102:  
-- Intervals: no longer coloring root note to simplify color coding
-- NoteButtons: changed precedence of coloring (from highest to lowest): filtered notes, intervals, chord shapes, inversions, triads, chords, scales
 - NoteButtons: refactored caption css
 - NoteButtons: clicking any part of caption's right-side will toggle data displayed
 - NoteButtons: root notes of scale triads and chord inversions  are now given the correct background color
