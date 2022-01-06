@@ -84,7 +84,16 @@ On a guitar, chord inversions work differently than in general music theory.  Fo
 
 ## Updates
 
+#### 20220106:  
+- removed unused modules
+- removed App.test.js because it was not used and causing false errors
+- HelpManager: internal linking bug fix 
+- Help Data: updated 
+- updated react Build and Start scripts with "--openssl-legacy-provider" for compatibility with Node.js v17
+
 #### 20220102:  
+- Intervals: no longer coloring root note to simplify color coding
+- NoteButtons: changed precedence of coloring (from highest to lowest): filtered notes, intervals, chord shapes, inversions, triads, chords, scales
 - NoteButtons: refactored caption css
 - NoteButtons: clicking any part of caption's right-side will toggle data displayed
 - NoteButtons: root notes of scale triads and chord inversions  are now given the correct background color
@@ -322,10 +331,11 @@ Usage of ♭♭ and ## removed from app. This simplifies manipulation of interva
 
 
 ## ToDo  
+- add keyboard shortcuts to toggle: alt+s = scale; alt+shift+s = scale info; ...
+- Help Doc: add info about color coding NoteButtons
 - Help Doc: add reference page containing definition of all queryable items w/url ref
 - transfer AboutDlg content to HelpData.js; update AboutDlg to use markdown
 - allow the first created Fretboard control to be deleted.  Currently, only its children may be deleted.
-- fix ./public/favicon.svg colors: image appears dim on white backgrounds  
 - browser bug: zooming out causes random frets and strings to disappear (assume due to x/y location; test by adjusting)   
 - allow for number and range of frets to be changed by user 
 - add backup feature:  

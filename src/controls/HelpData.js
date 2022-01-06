@@ -101,12 +101,12 @@ Selected Octaves, Scales, Chords, and Intervals will use this as their root.
 **Scale List**\n
 - Select from a variety of Scales. 
 - The NoteButtons displayed are determined by the Mode (FretRoot or NoteSelect).
-- The InfoPanel displays technical details for the Scale.
+- The [InfoPanel](#InfoPanel/scales) displays technical details for the Scale.
 \n
 **Chord List**\n
 - Select from a variety of Chords. 
 - The NoteButtons displayed are determined by the Mode (FretRoot or NoteSelect).
-- The InfoPanel displays technical details for the Chord.
+- The [InfoPanel](#InfoPanel/chords) displays technical details for the Chord.
 \n
 **Interval List**\n
 - Display NoteButtons the selected interval from the Root note.
@@ -145,14 +145,14 @@ Features:\n
 - To dig deeper into a scale or chord, duplicate the Fretboard, then Reset 
 and configure the new QueryPanel as needed.
 \n
-**Scale Info (for NoteSelect and FretRoot modes)**\n
+<h3 id="scales">Scale Info (for NoteSelect and FretRoot modes)</h3>\n
 - The scale name is displayed with notes and intervals of the scale.
 - Scale degree triads with their notes and intervals are also displayed.
 - Clicking a note will highlight it's NoteButtons on the Fretboard 
 and the InfoPanel.
 - Clicking a triad's name will highlight it's NoteButtons on the Fretboard.
 \n
-**Chord Info  (for NoteSelect and FretRoot modes)**\n
+<h3 id="chords">Chord Info  (for NoteSelect and FretRoot modes)</h3>\n
 - The chord name is displayed with notes and intervals of the chord.
 - For Major, Minor, and Dominant Seventh chords, bar chord shapes are displayed.
 This is similar to, but not, the CAGED system.

@@ -41,7 +41,7 @@
   //intervals
   $bgColor: #ffff9b;  //pale yellow
   &.interval{ background:$bgColor; } 
-  &.interval.root{ background:color.scale( $bgColor, $lightness: -30% ); } 
+  // &.interval.root{ background:color.scale( $bgColor, $lightness: -30% ); } 
 
   //chords
   $bgColor: #e7e;  // 

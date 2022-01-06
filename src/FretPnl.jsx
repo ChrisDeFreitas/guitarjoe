@@ -225,39 +225,6 @@ class FretPnl extends React.Component{
     let qry = this.props.qry
     if(qry.chord === null) return null
 
-    if(qry.chordShapeData != null){
-      for( let shape of qry.chordShapeData ){
-        for( let strlet in shape.strings ){
-          if(shape.strings[strlet] === null) continue
-          let tab = shape.strings[strlet].tab
-          if( nobj.tab === tab ){
-            nobj.note = shape.strings[strlet].note
-            nobj.ivl = shape.strings[strlet]
-            nobj.mode = 'chordShape' 
-            return <NoteButton key={this.key()} 
-                      root={qry.root} nobj={nobj}  qry={qry} 
-                      fretSelectFind={this.props.fretSelectFind} 
-                      stateChange={this.props.stateChange} 
-                    />
-          }
-        }
-      }
-    }
-    if(qry.chordInvrNotes !== null){    //inversion format take precedence
-      let inv = this.props.inversionNoteByTab( nobj.tab )
-      if(inv !== null){
-        if(qry.octave === 0 || qry.octave === nobj.octave){
-          nobj.note = inv.note
-          nobj.ivl = inv.invr
-          nobj.mode = (inv.invr.num === 1 ?'invrRoot' :'invr')
-          return <NoteButton key={this.key()} 
-                    root={qry.root} nobj={nobj}  qry={qry} 
-                    fretSelectFind={this.props.fretSelectFind} 
-                    stateChange={this.props.stateChange} 
-                  />
-        }
-      }
-    }
     if(qry.mode === 'fretRoot'){    //exclude frets out of range
       if(q.fretboard.fretInRange(nobj, qry.root) !== true)
         return null
@@ -278,6 +245,50 @@ class FretPnl extends React.Component{
     }
     return null
   }
+  chordShapeFind( nobj ){
+    let qry = this.props.qry
+    if(qry.chord === null) return null
+    if(qry.chordShapeData === null) return null
+
+    for( let shape of qry.chordShapeData ){
+      for( let strlet in shape.strings ){
+        if(shape.strings[strlet] === null) continue
+        let tab = shape.strings[strlet].tab
+        if( nobj.tab === tab ){
+          nobj.note = shape.strings[strlet].note
+          nobj.ivl = shape.strings[strlet]
+          nobj.mode = 'chordShape' 
+          return <NoteButton key={this.key()} 
+                    root={qry.root} nobj={nobj}  qry={qry} 
+                    fretSelectFind={this.props.fretSelectFind} 
+                    stateChange={this.props.stateChange} 
+                  />
+        }
+      }
+    }
+    return null
+  }
+  chordInvrFind( nobj ){
+    let qry = this.props.qry
+    if(qry.chord === null) return null
+    if(qry.chordInvrNotes === null) return null
+
+    let inv = this.props.inversionNoteByTab( nobj.tab )
+    if(inv === null) return null
+
+    if(qry.octave === 0 || qry.octave === nobj.octave){
+      nobj.note = inv.note
+      nobj.ivl = inv.invr
+      nobj.mode = (inv.invr.num === 1 ?'invrRoot' :'invr')
+      return <NoteButton key={this.key()} 
+                root={qry.root} nobj={nobj}  qry={qry} 
+                fretSelectFind={this.props.fretSelectFind} 
+                stateChange={this.props.stateChange} 
+              />
+    }
+    else 
+      return null
+  }
   ivlFind( nobj ){     //select frets matching interval
     let qry = this.props.qry
     if(qry.ivl === null) return null
@@ -285,7 +296,8 @@ class FretPnl extends React.Component{
     let btn = null
     if( (qry.mode === 'fretRoot' && nobj.tab === qry.root.tab)
     ||  (qry.mode === 'noteSelect' && nobj.notes.indexOf(qry.note) >= 0) ){ //this is the root note object
-      btn = 'root'
+      // btn = 'root'
+      btn = null
     } else
     if(qry.mode === 'fretRoot' && q.fretboard.fretInRange(nobj, qry.root, 4) === true){
       if( nobj.notes.indexOf(qry.ivl.note) >= 0 )
@@ -338,8 +350,10 @@ class FretPnl extends React.Component{
 
     //noteSelect and fretRoot mode
     if(btn === null) btn = this.ivlFind( nobj )
-    if(btn === null) btn = this.chordFind( nobj )
+    if(btn === null) btn = this.chordShapeFind( nobj )
+    if(btn === null) btn = this.chordInvrFind( nobj )
     if(btn === null) btn = this.scaleTriadFind( nobj )
+    if(btn === null) btn = this.chordFind( nobj )
     if(btn === null) btn = this.scaleFind( nobj )
     if(btn === null){
       if(qry.mode === 'fretRoot')

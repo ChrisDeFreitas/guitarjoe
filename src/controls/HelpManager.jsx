@@ -25,7 +25,7 @@
   To link from one help topic to a heading in another topic:
     1. in the destination topic create a heading and note the id generated
       create markup: ## Subtopic II
-      translated html: <h3 id="subtopic-ii">Subtopic</a>
+      translated html: <h3 id="subtopic-ii">Subtopic</h3>
     2. insert a markup link: [Jump to topic2 heading](#topic2/subtopic-ii)
       - HelpManager will intercept the click and process the request
 
@@ -69,7 +69,7 @@ function HelpManager( props ) {
   }
   function contentClick( event ){
     let ctrl = event.target 
-    if( ctrl.nodeName === 'A' && ctrl.hostname === 'localhost'){
+    if( ctrl.nodeName === 'A' && ctrl.hash !== ''){
       let topic = ctrl.hash.substr(1)
       let subtopic = null
       let idx = topic.indexOf('/')
@@ -78,8 +78,8 @@ function HelpManager( props ) {
         topic = topic.substr(0, idx)
       }
       // console.log('contentClick\n', topic, subtopic, '\n', ctrl.hash, event.target, event)
-      event.stopPropagation()
       topicSelect( topic, subtopic )
+      event.preventDefault()
       return
      }
   }
